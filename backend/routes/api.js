@@ -23,4 +23,17 @@ router.post("/ticket", validateAndSanitize, (req, res) => {
   });
 });
 
+// Dans backend/routes/api.js
+router.post("/contact", validateAndSanitize, (req, res) => {
+  const { name, email, subject, message } = req.cleanData;
+
+  // Ici, tu pourrais ajouter `nodemailer` pour envoyer un vrai mail à comiteetuinfo@cegepstfe.ca
+  console.log(`[SAV] Message de ${name} (${email}) : ${subject} - ${message}`);
+
+  res.status(200).json({
+    success: true,
+    message:
+      "Votre demande a bien été transmise à notre équipe. Nous vous répondrons sous peu.",
+  });
+});
 export { router as apiRoutes };

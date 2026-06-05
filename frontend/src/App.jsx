@@ -2,11 +2,15 @@ import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
+// Contexte
 import { AuthProvider } from "./context/AuthContext";
 
+// Layouts
 import Navbar from "./components/layout/Navbar";
 import Loader from "./components/layout/Loader";
 import Footer3D from "./components/layout/Footer3D";
+
+// Pages / Composants
 import HeroCanvas from "./components/home/HeroCanvas";
 import BioConcept from "./components/home/BioConcept";
 import PartnerBanner from "./components/home/PartnerBanner";
@@ -14,6 +18,7 @@ import FoundationBlock from "./components/home/FoundationBlock";
 import Timeline from "./components/calendar/Timeline";
 import MapOverlay from "./components/calendar/MapOverlay";
 import TicketsPage from "./components/tickets/TicketsPage";
+import ContactPage from "./components/contact/ContactPage"; // Assure-toi d'avoir ce fichier
 
 const Home = () => (
   <main>
@@ -34,14 +39,13 @@ const CalendarPage = () => (
 function App() {
   const [loading, setLoading] = useState(true);
 
+  // Simulation du temps de chargement des assets 3D
   useEffect(() => {
     setTimeout(() => setLoading(false), 2800);
   }, []);
 
   return (
     <AuthProvider>
-      {" "}
-      {/* <-- Enveloppe toute l'application */}
       <Router>
         <AnimatePresence mode="wait">
           {loading ? (
@@ -54,6 +58,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/calendrier" element={<CalendarPage />} />
                   <Route path="/billetterie" element={<TicketsPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
                 </Routes>
               </div>
               <Footer3D />
