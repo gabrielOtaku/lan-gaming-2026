@@ -1,0 +1,27 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+body {
+  background-color: #0a0a0a; /* Noir Abyssal */
+  color: #e5e5e5;
+  overflow-x: hidden;
+} /* <-- Ajout */
+
+/* Scrollbar personnalisée Gaming */
+::-webkit-scrollbar {
+  width: 8px;
+} /* <-- Ajout */
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+} /* <-- Ajout */
+
+::-webkit-scrollbar-thumb {
+  background: #d4af37; /* Or */
+  border-radius: 4px;
+} /* <-- Ajout */
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c21f1f; /* Rouge */
+} /* <-- Ajout */
