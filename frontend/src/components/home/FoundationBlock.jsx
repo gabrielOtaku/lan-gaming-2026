@@ -14,17 +14,16 @@ const FoundationBlock = () => {
           </h2>
           <p className="text-gray-300 mb-4 leading-relaxed">
             Nous sommes fiers de compter la Fondation du Cégep de Saint-Félicien
-            comme notre partenaire institutionnel[cite: 19]. La mission de la
-            Fondation est d'appuyer financièrement la population étudiante.
+            comme notre partenaire institutionnel. La mission de la Fondation
+            est d'appuyer financièrement la population étudiante.
           </p>
           <p className="text-gray-300 leading-relaxed">
-            Chaque année, elle distribue entre 30 000 $ et 50 000 $ en
-            bourses[cite: 22]. Tous les dons récoltés lors de notre diffusion
-            Twitch seront 100% reversés à la Fondation.
+            Chaque année, elle distribue entre 30 000 $ et 50 000 $ en bourses.
+            Tous les dons récoltés lors de notre diffusion Twitch seront 100%
+            reversés à la Fondation.
           </p>
         </motion.div>
 
-        {/* Graphique ou Logo stylisé */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}

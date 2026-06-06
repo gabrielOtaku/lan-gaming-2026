@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
-const PartnerBanner = () => {
-  // Liste des partenaires mentionnés dans le dossier[cite: 2]
+const Sponsors = () => {
+  // Liste des partenaires officiels
   const partners = [
     "Metro",
     "Centre Hi-Fi",
@@ -19,15 +19,12 @@ const PartnerBanner = () => {
       <h3 className="text-center font-gaming text-lanGold mb-8 text-xl tracking-widest">
         Nos Commanditaires Officiels
       </h3>
-
       <div className="relative flex whitespace-nowrap">
-        {/* On duplique la div pour créer l'effet de boucle infinie */}
         <motion.div
           className="flex items-center space-x-16 px-8"
           animate={{ x: ["0%", "-50%"] }}
           transition={{ ease: "linear", duration: 20, repeat: Infinity }}
         >
-          {/* Rendu double pour éviter la coupure visuelle */}
           {[...partners, ...partners].map((partner, index) => (
             <div
               key={index}
@@ -44,4 +41,4 @@ const PartnerBanner = () => {
   );
 };
 
-export default PartnerBanner;
+export default Sponsors;

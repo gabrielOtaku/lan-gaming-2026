@@ -130,7 +130,6 @@ const TicketsPage = () => {
             <ul className="space-y-3 mb-8 flex-grow">
               {tier.features.map((feat, i) => (
                 <li key={i} className="flex items-center text-gray-300 text-sm">
-                  {/* Coche colorée selon la couleur du bloc */}
                   <span
                     className={`mr-3 ${tier.color.replace("border-", "text-")}`}
                   >
@@ -143,6 +142,7 @@ const TicketsPage = () => {
 
             {/* Le lien est intercepté par le widget LePointDeVente grâce au script */}
             <a
+              target="_blank"
               href="https://lepointdevente.com/billets/530135"
               className={`block text-center py-4 w-full font-gaming uppercase tracking-widest transition-colors ${tier.popular ? "bg-lanAccent text-white hover:bg-red-700" : "bg-transparent border border-gray-600 text-white hover:border-white"}`}
             >

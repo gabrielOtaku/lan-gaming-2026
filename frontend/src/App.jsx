@@ -13,7 +13,7 @@ import Footer3D from "./components/layout/Footer3D";
 // Pages / Composants
 import HeroCanvas from "./components/home/HeroCanvas";
 import BioConcept from "./components/home/BioConcept";
-import PartnerBanner from "./components/home/PartnerBanner";
+import Sponsors from "./components/home/Sponsors";
 import FoundationBlock from "./components/home/FoundationBlock";
 import Timeline from "./components/calendar/Timeline";
 import MapOverlay from "./components/calendar/MapOverlay";
@@ -24,7 +24,7 @@ const Home = () => (
   <main>
     <HeroCanvas />
     <BioConcept />
-    <PartnerBanner />
+    <Sponsors />
     <FoundationBlock />
   </main>
 );
