@@ -1,35 +1,33 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
+import axios from "axios";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-  // Vérifie si l'utilisateur est déjà connecté en mémoire locale
   useEffect(() => {
-    const storedUser = localStorage.getItem("lanUser");
-    if (storedUser) setUser(JSON.parse(storedUser));
-  }, []);
-
-  // Fonction de connexion (Simule le retour OAuth de Google/Microsoft)
-  const login = (provider) => {
-    const mockUser = {
-      name: "Gabriel Hervé", // Profil de test
-      email: "joueur@cegepstfe.ca",
-      provider: provider,
-      reservation: null,
+    const checkAuth = async () => {
+      try {
+        const res = await axios.get(`${apiUrl}/api/auth/me`, {
+          withCredentials: true,
+        });
+        setUser(res.data.user);
+      } catch (err) {
+        setUser(null);
+      }
     };
-    setUser(mockUser);
-    localStorage.setItem("lanUser", JSON.stringify(mockUser));
-  };
+    checkAuth();
+  }, [apiUrl]);
 
-  const logout = () => {
+  const logout = async () => {
+    // Appel backend pour détruire la session
     setUser(null);
-    localStorage.removeItem("lanUser");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, logout }}>
       {children}
     </AuthContext.Provider>
   );

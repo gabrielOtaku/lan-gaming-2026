@@ -5,10 +5,8 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
 import * as random from "maath/random/dist/maath-random.esm";
 
-// Le système de particules 3D représentant le réseau LAN
 const ParticleNetwork = (props) => {
   const ref = useRef();
-  // Génère 500 points dans une sphère
   const [sphere] = useState(() =>
     random.inSphere(new Float32Array(1500), { radius: 1.5 }),
   );
@@ -44,14 +42,13 @@ const HeroCanvas = () => {
 
   return (
     <div className="relative h-screen w-full bg-lanDark overflow-hidden flex items-center justify-center">
-      {/* Le vrai Canvas 3D en arrière-plan */}
       <div className="absolute inset-0 z-0 opacity-60">
-        <Canvas camera={{ position: [0, 0, 1] }}>
+        {/* Ajout du frameloop demand pour l'optimisation */}
+        <Canvas frameloop="demand" camera={{ position: [0, 0, 1] }}>
           <ParticleNetwork />
         </Canvas>
       </div>
 
-      {/* Dégradé pour assombrir le bas et faire ressortir le texte */}
       <div className="absolute inset-0 bg-gradient-to-t from-lanDark via-transparent to-transparent z-0"></div>
 
       <motion.div

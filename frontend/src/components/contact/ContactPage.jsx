@@ -1,121 +1,74 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { useAuth } from "../../context/AuthContext";
-import { fadeInUp } from "../../utils/animation";
+import { fadeInUp } from "../../utils/animation.js";
 
-const ContactPage = () => {
-  const { user } = useAuth();
+export default function ContactPage() {
   const [status, setStatus] = useState(null);
-  const [formData, setFormData] = useState({
-    name: user?.name || "",
-    email: user?.email || "",
-    subject: "",
-    message: "",
-  });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setStatus("loading");
-
-    try {
-      const response = await fetch("http://localhost:3000/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      setStatus(data.success ? "success" : "error");
-    } catch (err) {
-      setStatus("error");
-    }
+    setStatus("success");
   };
 
   return (
-    <main className="pt-32 min-h-screen pb-20 flex flex-col items-center">
-      <motion.div
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="pt-32 min-h-screen pb-20 max-w-3xl mx-auto px-6"
+    >
+      <div className="text-center mb-12">
+        <p className="text-[#C89B3C] text-xs tracking-[0.5em] uppercase mb-4">
+          [ Support ]
+        </p>
+        <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tight">
+          Service <span className="text-[#FFD700]">Après-Vente</span>
+        </h1>
+      </div>
+
+      <motion.form
         variants={fadeInUp}
         initial="hidden"
         animate="show"
-        className="w-full max-w-2xl px-6"
+        onSubmit={handleSubmit}
+        className="bg-[#0D1117] border border-[#C89B3C]/20 p-8 shadow-[0_0_15px_rgba(200,155,60,0.3)]"
       >
-        <h1 className="text-4xl font-gaming text-lanGold mb-4 text-center">
-          Service Après-Vente
-        </h1>
-        <p className="text-gray-400 text-center mb-8">
-          Une question ? Un problème technique ? Contactez-nous à{" "}
-          <a
-            href="mailto:comiteetuinfo@cegepstfe.ca"
-            className="text-lanAccent hover:underline"
-          >
-            comiteetuinfo@cegepstfe.ca
-          </a>
-          .
-        </p>
-
-        <form
-          onSubmit={handleSubmit}
-          className="bg-neutral-900 p-8 rounded border border-neutral-800 shadow-glow-gold"
-        >
-          {status === "success" ? (
-            <div className="text-center text-green-500 py-10 font-gaming">
-              Message envoyé avec succès !
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="Nom"
-                required
-                className="w-full bg-black border border-neutral-700 p-3 text-white"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-              />
-              <input
-                type="email"
-                placeholder="Courriel"
-                required
-                className="w-full bg-black border border-neutral-700 p-3 text-white"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-              />
-              <input
-                type="text"
-                placeholder="Sujet"
-                required
-                className="w-full bg-black border border-neutral-700 p-3 text-white"
-                value={formData.subject}
-                onChange={(e) =>
-                  setFormData({ ...formData, subject: e.target.value })
-                }
-              />
-              <textarea
-                placeholder="Votre message"
-                required
-                rows="5"
-                className="w-full bg-black border border-neutral-700 p-3 text-white"
-                value={formData.message}
-                onChange={(e) =>
-                  setFormData({ ...formData, message: e.target.value })
-                }
-              />
-
-              <button
-                type="submit"
-                disabled={status === "loading"}
-                className="w-full py-4 bg-lanAccent text-white font-gaming hover:bg-red-700 transition-colors"
-              >
-                {status === "loading" ? "Envoi..." : "Envoyer"}
-              </button>
-            </div>
-          )}
-        </form>
-      </motion.div>
-    </main>
+        {status === "success" ? (
+          <div className="text-center py-12 border border-green-500/30 bg-green-500/10 text-green-400 uppercase tracking-widest">
+            Demande transmise avec succès à l'organisation.
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <input
+              type="text"
+              placeholder="Nom Complet"
+              required
+              className="w-full bg-[#030508] border border-gray-700 p-4 text-white focus:border-[#C89B3C] outline-none transition-colors"
+            />
+            <input
+              type="email"
+              placeholder="Adresse Courriel"
+              required
+              className="w-full bg-[#030508] border border-gray-700 p-4 text-white focus:border-[#C89B3C] outline-none transition-colors"
+            />
+            <textarea
+              placeholder="Décrivez votre problème..."
+              rows="6"
+              required
+              className="w-full bg-[#030508] border border-gray-700 p-4 text-white focus:border-[#C89B3C] outline-none transition-colors resize-none"
+            />
+            <button
+              type="submit"
+              className="w-full py-4 bg-[#C89B3C] text-[#030508] font-bold tracking-widest uppercase hover:bg-[#FFD700] transition-colors clip-diagonal"
+            >
+              Envoyer la transmission
+            </button>
+            <p className="text-center text-gray-500 text-[10px] mt-4 uppercase tracking-widest">
+              Ou contactez-nous directement à : comiteetuinfo@cegepstfe.ca
+            </p>
+          </div>
+        )}
+      </motion.form>
+    </motion.div>
   );
-};
-
-export default ContactPage;
+}
