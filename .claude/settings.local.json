@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem \"C:\\\\Users\\\\theKi\\\\Downloads\" -Filter \"*.pdf\")",
+      "Bash(Select-Object Name, FullName, LastWriteTime)",
+      "Bash(Sort-Object LastWriteTime -Descending)",
+      "Bash(Select-Object -First 10)",
+      "Read(//c/Users/theKi/Downloads/**)"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Esquie
+* source:	https://sketchfab.com/3d-models/esquie-a9c9793baa8a465488d0cb61c9b60bed
+* author:	Yennesis (https://sketchfab.com/sdarksoul99)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Esquie" (https://sketchfab.com/3d-models/esquie-a9c9793baa8a465488d0cb61c9b60bed) by Yennesis (https://sketchfab.com/sdarksoul99) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

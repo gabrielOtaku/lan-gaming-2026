@@ -1,0 +1,465 @@
+{
+  "lol": {
+    "teams": [
+      {
+        "id": "lol_seed_1",
+        "name": "Team Noxus",
+        "game": "lol",
+        "captainEmail": "captain1@lan2026.ca",
+        "captainName": "Gabriel H.",
+        "registeredAt": "2026-07-09T03:41:25.001Z"
+      },
+      {
+        "id": "lol_seed_2",
+        "name": "Les Demaciens",
+        "game": "lol",
+        "captainEmail": "captain2@lan2026.ca",
+        "captainName": "Jovan K.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_3",
+        "name": "Shadow Isles Gaming",
+        "game": "lol",
+        "captainEmail": "captain3@lan2026.ca",
+        "captainName": "Marc T.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_4",
+        "name": "Ionia Drift",
+        "game": "lol",
+        "captainEmail": "captain4@lan2026.ca",
+        "captainName": "Théo B.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_5",
+        "name": "Piltover Tech",
+        "game": "lol",
+        "captainEmail": "captain5@lan2026.ca",
+        "captainName": "Alexis R.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_6",
+        "name": "Freljord 5",
+        "game": "lol",
+        "captainEmail": "captain6@lan2026.ca",
+        "captainName": "Samuel G.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_7",
+        "name": "Void Hunters",
+        "game": "lol",
+        "captainEmail": "captain7@lan2026.ca",
+        "captainName": "Félix M.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_8",
+        "name": "Bandle City Ballers",
+        "game": "lol",
+        "captainEmail": "captain8@lan2026.ca",
+        "captainName": "Antoine P.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_9",
+        "name": "Bilgewater Buccaneers",
+        "game": "lol",
+        "captainEmail": "captain9@lan2026.ca",
+        "captainName": "Noah C.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_10",
+        "name": "Hextech Syndicate",
+        "game": "lol",
+        "captainEmail": "captain10@lan2026.ca",
+        "captainName": "Raphaël S.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_11",
+        "name": "Dragon Court",
+        "game": "lol",
+        "captainEmail": "captain11@lan2026.ca",
+        "captainName": "Liam D.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_12",
+        "name": "The Iron Order",
+        "game": "lol",
+        "captainEmail": "captain12@lan2026.ca",
+        "captainName": "Étienne V.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_13",
+        "name": "Shurima Rising",
+        "game": "lol",
+        "captainEmail": "captain13@lan2026.ca",
+        "captainName": "William F.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_14",
+        "name": "Targon Ascended",
+        "game": "lol",
+        "captainEmail": "captain14@lan2026.ca",
+        "captainName": "Charles B.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_15",
+        "name": "Zaun Underground",
+        "game": "lol",
+        "captainEmail": "captain15@lan2026.ca",
+        "captainName": "Olivier N.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      },
+      {
+        "id": "lol_seed_16",
+        "name": "Ixtal Jungle",
+        "game": "lol",
+        "captainEmail": "captain16@lan2026.ca",
+        "captainName": "Maxime L.",
+        "registeredAt": "2026-07-09T03:41:25.002Z"
+      }
+    ],
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "matches": [
+          {
+            "id": "r1m1",
+            "roundNumber": 1,
+            "matchNumber": 1,
+            "team1": {
+              "id": "lol_seed_1",
+              "name": "Team Noxus",
+              "game": "lol",
+              "captainEmail": "captain1@lan2026.ca",
+              "captainName": "Gabriel H.",
+              "registeredAt": "2026-07-09T03:41:25.001Z"
+            },
+            "team2": {
+              "id": "lol_seed_8",
+              "name": "Bandle City Ballers",
+              "game": "lol",
+              "captainEmail": "captain8@lan2026.ca",
+              "captainName": "Antoine P.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "pending"
+          },
+          {
+            "id": "r1m2",
+            "roundNumber": 1,
+            "matchNumber": 2,
+            "team1": {
+              "id": "lol_seed_15",
+              "name": "Zaun Underground",
+              "game": "lol",
+              "captainEmail": "captain15@lan2026.ca",
+              "captainName": "Olivier N.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "team2": {
+              "id": "lol_seed_12",
+              "name": "The Iron Order",
+              "game": "lol",
+              "captainEmail": "captain12@lan2026.ca",
+              "captainName": "Étienne V.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "pending"
+          },
+          {
+            "id": "r1m3",
+            "roundNumber": 1,
+            "matchNumber": 3,
+            "team1": {
+              "id": "lol_seed_11",
+              "name": "Dragon Court",
+              "game": "lol",
+              "captainEmail": "captain11@lan2026.ca",
+              "captainName": "Liam D.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "team2": {
+              "id": "lol_seed_2",
+              "name": "Les Demaciens",
+              "game": "lol",
+              "captainEmail": "captain2@lan2026.ca",
+              "captainName": "Jovan K.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "pending"
+          },
+          {
+            "id": "r1m4",
+            "roundNumber": 1,
+            "matchNumber": 4,
+            "team1": {
+              "id": "lol_seed_16",
+              "name": "Ixtal Jungle",
+              "game": "lol",
+              "captainEmail": "captain16@lan2026.ca",
+              "captainName": "Maxime L.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "team2": {
+              "id": "lol_seed_3",
+              "name": "Shadow Isles Gaming",
+              "game": "lol",
+              "captainEmail": "captain3@lan2026.ca",
+              "captainName": "Marc T.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "pending"
+          },
+          {
+            "id": "r1m5",
+            "roundNumber": 1,
+            "matchNumber": 5,
+            "team1": {
+              "id": "lol_seed_4",
+              "name": "Ionia Drift",
+              "game": "lol",
+              "captainEmail": "captain4@lan2026.ca",
+              "captainName": "Théo B.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "team2": {
+              "id": "lol_seed_9",
+              "name": "Bilgewater Buccaneers",
+              "game": "lol",
+              "captainEmail": "captain9@lan2026.ca",
+              "captainName": "Noah C.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "pending"
+          },
+          {
+            "id": "r1m6",
+            "roundNumber": 1,
+            "matchNumber": 6,
+            "team1": {
+              "id": "lol_seed_13",
+              "name": "Shurima Rising",
+              "game": "lol",
+              "captainEmail": "captain13@lan2026.ca",
+              "captainName": "William F.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "team2": {
+              "id": "lol_seed_7",
+              "name": "Void Hunters",
+              "game": "lol",
+              "captainEmail": "captain7@lan2026.ca",
+              "captainName": "Félix M.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "pending"
+          },
+          {
+            "id": "r1m7",
+            "roundNumber": 1,
+            "matchNumber": 7,
+            "team1": {
+              "id": "lol_seed_14",
+              "name": "Targon Ascended",
+              "game": "lol",
+              "captainEmail": "captain14@lan2026.ca",
+              "captainName": "Charles B.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "team2": {
+              "id": "lol_seed_10",
+              "name": "Hextech Syndicate",
+              "game": "lol",
+              "captainEmail": "captain10@lan2026.ca",
+              "captainName": "Raphaël S.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "pending"
+          },
+          {
+            "id": "r1m8",
+            "roundNumber": 1,
+            "matchNumber": 8,
+            "team1": {
+              "id": "lol_seed_5",
+              "name": "Piltover Tech",
+              "game": "lol",
+              "captainEmail": "captain5@lan2026.ca",
+              "captainName": "Alexis R.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "team2": {
+              "id": "lol_seed_6",
+              "name": "Freljord 5",
+              "game": "lol",
+              "captainEmail": "captain6@lan2026.ca",
+              "captainName": "Samuel G.",
+              "registeredAt": "2026-07-09T03:41:25.002Z"
+            },
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "roundNumber": 2,
+        "matches": [
+          {
+            "id": "r2m1",
+            "roundNumber": 2,
+            "matchNumber": 1,
+            "team1": null,
+            "team2": null,
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "completed"
+          },
+          {
+            "id": "r2m2",
+            "roundNumber": 2,
+            "matchNumber": 2,
+            "team1": null,
+            "team2": null,
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "completed"
+          },
+          {
+            "id": "r2m3",
+            "roundNumber": 2,
+            "matchNumber": 3,
+            "team1": null,
+            "team2": null,
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "completed"
+          },
+          {
+            "id": "r2m4",
+            "roundNumber": 2,
+            "matchNumber": 4,
+            "team1": null,
+            "team2": null,
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "completed"
+          }
+        ]
+      },
+      {
+        "roundNumber": 3,
+        "matches": [
+          {
+            "id": "r3m1",
+            "roundNumber": 3,
+            "matchNumber": 1,
+            "team1": null,
+            "team2": null,
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "completed"
+          },
+          {
+            "id": "r3m2",
+            "roundNumber": 3,
+            "matchNumber": 2,
+            "team1": null,
+            "team2": null,
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "completed"
+          }
+        ]
+      },
+      {
+        "roundNumber": 4,
+        "matches": [
+          {
+            "id": "r4m1",
+            "roundNumber": 4,
+            "matchNumber": 1,
+            "team1": null,
+            "team2": null,
+            "score1": null,
+            "score2": null,
+            "winner": null,
+            "status": "completed"
+          }
+        ]
+      }
+    ],
+    "status": "bracket",
+    "generated": true
+  },
+  "cs2": {
+    "teams": [],
+    "rounds": [],
+    "status": "registration",
+    "generated": false
+  },
+  "rocket_league": {
+    "teams": [],
+    "rounds": [],
+    "status": "registration",
+    "generated": false
+  },
+  "magic_tg": {
+    "teams": [],
+    "rounds": [],
+    "status": "registration",
+    "generated": false
+  },
+  "smash_bros": {
+    "teams": [],
+    "rounds": [],
+    "status": "registration",
+    "generated": false
+  },
+  "mario_kart": {
+    "teams": [],
+    "rounds": [],
+    "status": "registration",
+    "generated": false
+  }
+}
