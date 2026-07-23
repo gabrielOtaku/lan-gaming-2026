@@ -93,5 +93,3 @@ export function FoundationBrick({ logoTexture, ...props }) {
     </group>
   );
 }
-
-useGLTF.preload('/models/esquie.glb');

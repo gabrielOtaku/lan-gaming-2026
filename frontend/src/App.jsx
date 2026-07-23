@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import Lenis from "@studio-freight/lenis";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
@@ -11,16 +11,27 @@ import CustomCursor from "./components/layout/CustomCursor.jsx";
 import LiveCursors from "./components/layout/LiveCursors.jsx";
 import Chatbot from "./components/layout/Chatbot.jsx";
 
-import HomePage from "./pages/HomePage.jsx";
-import CalendarPage from "./pages/CalendarPage.jsx";
-import TicketsPage from "./pages/TicketsPage.jsx";
-import ContactPage from "./pages/ContactPage.jsx";
-import AdminPage from "./pages/AdminPage.jsx";
-import BoutiquePage from "./pages/BoutiquePage.jsx";
-import CagnottePage from "./pages/CagnottePage.jsx";
-import CompetitionsPage from "./pages/CompetitionsPage.jsx";
-import InvitesVipPage from "./pages/InvitesVipPage.jsx";
-import NotFoundPage from "./pages/NotFoundPage.jsx";
+// Chaque page (et les scènes 3D + polices/librairies qu'elle importe, ex.
+// socket.io-client pour Competitions) part dans son propre chunk : visiter
+// l'accueil ne doit pas télécharger le code des quatre autres pages.
+const HomePage = lazy(() => import("./pages/HomePage.jsx"));
+const CalendarPage = lazy(() => import("./pages/CalendarPage.jsx"));
+const TicketsPage = lazy(() => import("./pages/TicketsPage.jsx"));
+const ContactPage = lazy(() => import("./pages/ContactPage.jsx"));
+const AdminPage = lazy(() => import("./pages/AdminPage.jsx"));
+const BoutiquePage = lazy(() => import("./pages/BoutiquePage.jsx"));
+const CagnottePage = lazy(() => import("./pages/CagnottePage.jsx"));
+const CompetitionsPage = lazy(() => import("./pages/CompetitionsPage.jsx"));
+const InvitesVipPage = lazy(() => import("./pages/InvitesVipPage.jsx"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage.jsx"));
+
+function RouteFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-ember-400/40 border-t-ember-400 rounded-full animate-spin" />
+    </div>
+  );
+}
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -33,6 +44,7 @@ function AnimatedRoutes() {
 
   return (
     <AnimatePresence mode="wait">
+      <Suspense fallback={<RouteFallback />}>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<HomePage />} />
         <Route path="/calendrier" element={<CalendarPage />} />
@@ -45,6 +57,7 @@ function AnimatedRoutes() {
         <Route path="/cagnotte" element={<CagnottePage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </Suspense>
     </AnimatePresence>
   );
 }

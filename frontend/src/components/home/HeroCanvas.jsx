@@ -1,6 +1,6 @@
 import React, { useRef, useMemo, Suspense, useState, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Stars, Float, MeshDistortMaterial } from "@react-three/drei";
+import { Stars, Float, MeshDistortMaterial, useGLTF } from "@react-three/drei";
 import { EffectComposer, Bloom, ChromaticAberration } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
 import { gsap } from "gsap";
@@ -15,6 +15,8 @@ import { Zap, Shield, ChevronDown } from "lucide-react";
 
 // Shared between GSAP ScrollTrigger and the Three.js camera loop
 const heroScrollProg = { current: 0 };
+
+useGLTF.preload('/models/esquie.glb');
 
 // ── 3D Background Grid ────────────────────────────────────────────────────────
 function HoloGrid() {
