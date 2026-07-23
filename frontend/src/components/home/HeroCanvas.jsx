@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import * as THREE from "three";
 import WebGLErrorBoundary from "../layout/WebGLErrorBoundary.jsx";
+import { EsquieModel } from "../three/GameAssets.jsx";
 import { staggerContainer, fadeInUp } from "../../utils/animations.js";
 import { Zap, Shield, ChevronDown } from "lucide-react";
 
@@ -125,6 +126,51 @@ function EmberCore() {
           />
         </mesh>
       </Float>
+    </group>
+  );
+}
+
+// ── Esquie mascot — flies in on load, then settles into a cute idle pose ──────
+// Esquie has no skeleton (static Sketchfab mesh), so the "pose" is the whole
+// body tumbling in and settling into a gentle curious tilt, not articulated limbs.
+function EsquieMascot() {
+  const groupRef = useRef();
+  const startRef = useRef(null);
+
+  useFrame((state) => {
+    if (!groupRef.current) return;
+    if (startRef.current === null) startRef.current = state.clock.elapsedTime;
+    const t = state.clock.elapsedTime - startRef.current;
+    const introDur = 2.4;
+
+    if (t < introDur) {
+      const p = Math.min(t / introDur, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      groupRef.current.position.set(
+        THREE.MathUtils.lerp(6.5, 3.2, ease),
+        THREE.MathUtils.lerp(6, -0.3, ease),
+        THREE.MathUtils.lerp(-4, 0.9, ease),
+      );
+      groupRef.current.rotation.set(
+        0,
+        THREE.MathUtils.lerp(Math.PI * 3, -0.35, ease),
+        THREE.MathUtils.lerp(Math.PI * 2.2, 0.12, ease),
+      );
+      groupRef.current.scale.setScalar(THREE.MathUtils.lerp(0.08, 1, ease));
+    } else {
+      const idle = t - introDur;
+      groupRef.current.position.x = 3.2 + Math.sin(idle * 0.6) * 0.08;
+      groupRef.current.position.y = -0.3 + Math.sin(idle * 0.9) * 0.15;
+      groupRef.current.position.z = 0.9;
+      groupRef.current.rotation.y = -0.35 + Math.sin(idle * 0.5) * 0.12;
+      groupRef.current.rotation.z = 0.12 + Math.sin(idle * 0.7) * 0.04;
+      groupRef.current.scale.setScalar(1);
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      <EsquieModel />
     </group>
   );
 }
@@ -528,12 +574,14 @@ export default function HeroCanvas() {
           <pointLight position={[0, 0, 3]} intensity={2} color="#C89B3C" />
           <pointLight position={[-5, 3, 0]} intensity={0.5} color="#FF4655" />
           <pointLight position={[5, -3, 0]} intensity={0.5} color="#4FC3F7" />
+          <pointLight position={[3.5, 0.5, 2.5]} intensity={2.2} color="#FFE9A0" distance={6} decay={2} />
 
           <Suspense fallback={null}>
             <CameraRig />
             <HoloGrid />
             <EmberCore />
             <EmberField />
+            <EsquieMascot />
             <Stars
               radius={80}
               depth={30}
