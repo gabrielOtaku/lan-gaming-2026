@@ -13,7 +13,7 @@ import * as THREE from 'three';
 export const MODEL_SCALE = {
   esquie: 0.55,
   maelle: 1.4,
-  sasCs2: 48,
+  sasCs2: 14,
   rifle: 24,
   dominus: 0.02,
   octane: 0.85,
@@ -25,11 +25,17 @@ function ClonedScene({ url, ...props }) {
   // keep their bone bindings when the same glTF is instanced more than once.
   const cloned = useMemo(() => {
     const obj = SkeletonUtils.clone(scene);
-    // meshopt-compressed geometry can carry a stale/empty bounding sphere from
-    // the source export; disable frustum culling so meshes never vanish from
-    // a false-negative visibility test instead of trusting those bounds.
+    // meshopt-compressed geometry can carry a stale/empty bounding box/sphere
+    // from the source export — this breaks both frustum culling (meshes
+    // vanishing) and drei's <Bounds> auto-fit (which unions each mesh's
+    // geometry.boundingBox to frame the camera, silently ignoring anything
+    // with stale bounds). Disable culling and force a fresh recompute.
     obj.traverse((child) => {
-      if (child.isMesh) child.frustumCulled = false;
+      if (child.isMesh) {
+        child.frustumCulled = false;
+        child.geometry.computeBoundingBox();
+        child.geometry.computeBoundingSphere();
+      }
     });
     return obj;
   }, [scene]);

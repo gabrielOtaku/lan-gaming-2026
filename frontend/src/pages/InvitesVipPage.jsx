@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useRef, Suspense } from 'react';
 import { motion } from 'framer-motion';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Bounds } from '@react-three/drei';
 import {
   Instagram, Youtube, Facebook, Crown, Sparkles,
   Calendar, ChevronRight, Gamepad2, Star,
 } from 'lucide-react';
 import { pageTransition, fadeInUp, staggerContainer, scrollReveal, EASE_GAME } from '../utils/animations.js';
+import WebGLErrorBoundary from '../components/layout/WebGLErrorBoundary.jsx';
+import { SasCs2Model, RifleModel } from '../components/three/GameAssets.jsx';
 
 import cocotteImg from '../assets/VIP/cocotte.jpg';
 import koriassImg from '../assets/VIP/Koriass.jpg';
@@ -186,6 +190,77 @@ function GameCard({ game }) {
   );
 }
 
+// ── Scène 3D — l'agent SAS CS2 dévoile son rifle ─────────────────────────────
+function SasCs2ShowcaseScene() {
+  const agentRef = useRef();
+  const rifleRef = useRef();
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (agentRef.current) {
+      agentRef.current.position.y = Math.sin(t * 0.6) * 0.05;
+      agentRef.current.rotation.y = -0.25 + Math.sin(t * 0.3) * 0.08;
+    }
+    if (rifleRef.current) {
+      rifleRef.current.position.y = 0.15 + Math.sin(t * 0.8 + 1) * 0.06;
+      rifleRef.current.rotation.y = t * 0.5;
+    }
+  });
+
+  return (
+    <group>
+      <group ref={agentRef} position={[-0.55, -0.3, 0]}>
+        <SasCs2Model />
+      </group>
+      <group ref={rifleRef} position={[0.55, 0.35, 0.3]}>
+        <RifleModel rotation={[0, 0, Math.PI / 2]} />
+      </group>
+    </group>
+  );
+}
+
+function UltraCharacterTeaser() {
+  return (
+    <motion.div
+      className="mt-10 grid grid-cols-1 sm:grid-cols-[1fr,auto] gap-6 sm:gap-10 items-center border border-ember-400/20 bg-glass p-6 md:p-10 relative overflow-hidden"
+      variants={scrollReveal}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-60px' }}
+    >
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-px w-32 h-px bg-gradient-to-r from-transparent via-ember-400 to-transparent" />
+
+      <div className="text-center sm:text-left order-2 sm:order-1">
+        <p className="font-mono text-ember-500 text-[10px] tracking-widest uppercase mb-3 flex items-center gap-2 justify-center sm:justify-start">
+          <Sparkles size={12} /> [ Teaser exclusif VIP ]
+        </p>
+        <h3 className="font-display text-2xl md:text-4xl font-black uppercase text-white leading-tight">
+          New Ultra <span className="text-ember-300 text-ember-glow">Characters</span> In Coming !
+        </h3>
+        <p className="font-body text-zinc-500 text-sm mt-4 max-w-md">
+          De nouveaux agents ultra rares rejoignent bientôt la collection LAN 2026 — première image en exclusivité pour nos invités VIP.
+        </p>
+      </div>
+
+      <div className="order-1 sm:order-2 w-full sm:w-64 h-64 sm:h-72 mx-auto flex-shrink-0">
+        <WebGLErrorBoundary fallback={<div className="w-full h-full" />}>
+          <Canvas camera={{ fov: 38 }} dpr={[1, 1.5]} gl={{ alpha: true }}>
+            <ambientLight intensity={1.1} />
+            <pointLight position={[2, 2, 2]} intensity={3.2} color="#C89B3C" />
+            <pointLight position={[-2, 0, 1]} intensity={1.4} color="#4FC3F7" />
+            <pointLight position={[0, 1, 2]} intensity={1.6} color="#FFFFFF" />
+            <Suspense fallback={null}>
+              <Bounds fit clip observe margin={1.8}>
+                <SasCs2ShowcaseScene />
+              </Bounds>
+            </Suspense>
+          </Canvas>
+        </WebGLErrorBoundary>
+      </div>
+    </motion.div>
+  );
+}
+
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function InvitesVipPage() {
   return (
@@ -227,6 +302,8 @@ export default function InvitesVipPage() {
               Créateurs, artiste et studio de renom se joignent à LAN Gaming 2026 — plus un partenariat exclusif avec Ubisoft pour des avant-premières jouables sur place.
             </p>
           </motion.div>
+
+          <UltraCharacterTeaser />
         </div>
       </div>
 
