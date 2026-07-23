@@ -51,7 +51,7 @@ HORAIRE:
 BILLETS:
 - Visiteur: 15$ — accès libre à l'événement, zone spectateurs, consoles, arcade
 - Joueur: 30$ — poste LAN fixe, arènes, badge joueur (17 ans et plus requis)
-- Compétiteur: 50$ — tout du joueur + inscription aux tournois officiels, éligible aux cash prizes
+- Compétiteur: 45$ — tout du joueur + inscription aux tournois officiels, éligible aux cash prizes
 - Limite: 1 PC + 1 écran max par joueur ou compétiteur
 - Capacité: 150+ participants
 
@@ -91,7 +91,7 @@ const NEXUS_FAQ = [
   },
   {
     keywords: ['billet', 'billets', 'ticket', 'prix', 'coût', 'combien', 'tarif', 'payer', 'achat'],
-    response: "Visiteur: 15$ | Joueur: 30$ (poste LAN fixe, 17 ans+) | Compétiteur: 50$ (joueur + tournois officiels, cash prizes). Limite de 150 participants — réserve vite!",
+    response: "Visiteur: 15$ | Joueur: 30$ (poste LAN fixe, 17 ans+) | Compétiteur: 45$ (joueur + tournois officiels, cash prizes). Limite de 150 participants — réserve vite!",
   },
   {
     keywords: ['tournoi', 'tournois', 'jeu', 'jeux', 'lol', 'league', 'cs2', 'counter', 'rocket', 'magic', 'smash', 'mario', 'compétition'],
@@ -127,7 +127,7 @@ const NEXUS_FAQ = [
   },
   {
     keywords: ['inscription', 'inscrire', 'comment', 'participer', 'enregistrement', 'register'],
-    response: "Achète un billet Joueur (30$) ou Compétiteur (50$). Le billet Compétiteur inclut automatiquement l'inscription aux tournois officiels. Capacité: 150 participants!",
+    response: "Achète un billet Joueur (30$) ou Compétiteur (45$). Le billet Compétiteur inclut automatiquement l'inscription aux tournois officiels. Capacité: 150 participants!",
   },
   {
     keywords: ['remboursement', 'annulation', 'cancel', 'rembours'],

@@ -1,11 +1,12 @@
-import React, { useState, useRef, useEffect, Suspense } from 'react';
+import React, { useState, useRef, useEffect, useMemo, Suspense } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Stars, Float } from '@react-three/drei';
+import { Stars, Bounds } from '@react-three/drei';
 import * as THREE from 'three';
 import { ShoppingCart, X, Plus, Minus, Check, Package, Truck, Star, ChevronRight, Tag, ShoppingBag } from 'lucide-react';
 import { pageTransition, staggerContainer, fadeInUp, scrollReveal, EASE_GAME } from '../utils/animations.js';
 import WebGLErrorBoundary from '../components/layout/WebGLErrorBoundary.jsx';
+import { RifleModel } from '../components/three/GameAssets.jsx';
 
 // ── Catalogue produits ────────────────────────────────────────────────────────
 const PRODUCTS = [
@@ -110,179 +111,111 @@ const SHIPPING_INFO = [
   { icon: Star,    text: 'Produits officiels — qualité certifiée', color: '#FFD700' },
 ];
 
-// ── Vecteurs réutilisables (évite la GC dans useFrame) ───────────────────────
-const _up  = new THREE.Vector3(0, 1, 0);
-const _vel = new THREE.Vector3();
+// ── Coffre de ravitaillement — le rifle apparaît comme un supply drop ────────
+function CrateLid(props) {
+  const geo = useMemo(() => new THREE.BoxGeometry(1.7, 0.16, 1.7), []);
+  return (
+    <group {...props}>
+      <mesh geometry={geo}>
+        <meshStandardMaterial color="#3A2E1D" roughness={0.65} metalness={0.35} emissive="#C89B3C" emissiveIntensity={0.05} />
+      </mesh>
+      <lineSegments>
+        <edgesGeometry args={[geo]} />
+        <lineBasicMaterial color="#C89B3C" />
+      </lineSegments>
+      {[[-0.78, -0.78], [0.78, -0.78], [-0.78, 0.78], [0.78, 0.78]].map(([x, z], i) => (
+        <mesh key={i} position={[x, 0.09, z]}>
+          <cylinderGeometry args={[0.05, 0.05, 0.04, 10]} />
+          <meshStandardMaterial color="#C89B3C" metalness={0.9} roughness={0.2} emissive="#C89B3C" emissiveIntensity={0.3} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
 
-// ── Manette de jeu 3D ────────────────────────────────────────────────────────
-function Controller() {
-  const bodyRef = useRef();
+function CrateBase() {
+  const geo = useMemo(() => new THREE.BoxGeometry(1.7, 1.0, 1.7), []);
+  return (
+    <group position={[0, -0.55, 0]}>
+      <mesh geometry={geo}>
+        <meshStandardMaterial color="#40331F" roughness={0.7} metalness={0.3} emissive="#C89B3C" emissiveIntensity={0.05} />
+      </mesh>
+      <lineSegments>
+        <edgesGeometry args={[geo]} />
+        <lineBasicMaterial color="#C89B3C" />
+      </lineSegments>
+      {[[-0.86, -0.86], [0.86, -0.86], [-0.86, 0.86], [0.86, 0.86]].map(([x, z], i) => (
+        <mesh key={i} position={[x, 0, z]}>
+          <boxGeometry args={[0.12, 1.05, 0.12]} />
+          <meshStandardMaterial color="#0A0D14" roughness={0.3} metalness={0.85} />
+        </mesh>
+      ))}
+      <mesh position={[0, 0.46, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[1.4, 1.4]} />
+        <meshBasicMaterial color="#FFD700" transparent opacity={0.18} blending={THREE.AdditiveBlending} depthWrite={false} />
+      </mesh>
+    </group>
+  );
+}
+
+function LightBeam({ progressRef }) {
+  const matRef = useRef();
+  useFrame(() => {
+    if (matRef.current) matRef.current.opacity = progressRef.current * 0.35;
+  });
+  return (
+    <mesh position={[0, 1.1, 0]}>
+      <cylinderGeometry args={[0.05, 0.9, 3.2, 24, 1, true]} />
+      <meshBasicMaterial ref={matRef} color="#FFD700" transparent opacity={0} side={THREE.DoubleSide} depthWrite={false} blending={THREE.AdditiveBlending} />
+    </mesh>
+  );
+}
+
+function RifleCrateScene() {
+  const lidRef = useRef();
+  const rifleGroupRef = useRef();
+  const beamProg = useRef(0);
+  const startRef = useRef(null);
 
   useFrame((state) => {
-    const t = state.clock.elapsedTime;
-    if (bodyRef.current) {
-      bodyRef.current.rotation.y = Math.sin(t * 0.22) * 0.35;
-      bodyRef.current.rotation.x = Math.sin(t * 0.17) * 0.12 - 0.08;
+    if (startRef.current === null) startRef.current = state.clock.elapsedTime;
+    const t = state.clock.elapsedTime - startRef.current;
+    const idle = state.clock.elapsedTime;
+
+    // Le couvercle se dégage — 1.2s → 2.4s
+    const lidP = THREE.MathUtils.clamp((t - 1.2) / 1.2, 0, 1);
+    const lidEase = 1 - Math.pow(1 - lidP, 3);
+    if (lidRef.current) {
+      lidRef.current.position.y = THREE.MathUtils.lerp(0, 0.7, lidEase);
+      lidRef.current.position.x = THREE.MathUtils.lerp(0, 0.6, lidEase);
+      lidRef.current.rotation.z = THREE.MathUtils.lerp(0, 0.5, lidEase);
+      lidRef.current.rotation.x = THREE.MathUtils.lerp(0, 0.22, lidEase);
+    }
+
+    // Le fusil s'élève dans le faisceau doré — 1.8s → 3.2s, puis flotte
+    // (scale reste à 1 en permanence : le fusil est simplement occulté par le
+    // coffre fermé au départ, pour que <Bounds> cadre correctement dès le montage)
+    const riseP = THREE.MathUtils.clamp((t - 1.8) / 1.4, 0, 1);
+    const riseEase = 1 - Math.pow(1 - riseP, 3);
+    beamProg.current = riseEase;
+    if (rifleGroupRef.current) {
+      const baseY = THREE.MathUtils.lerp(-0.45, 0.4, riseEase);
+      rifleGroupRef.current.position.y = baseY + (riseP >= 1 ? Math.sin(idle * 1.1) * 0.05 : 0);
+      rifleGroupRef.current.rotation.y = idle * 0.4;
+      rifleGroupRef.current.rotation.z = Math.sin(idle * 0.5) * 0.05;
     }
   });
 
   return (
-    <Float speed={1.4} rotationIntensity={0.05} floatIntensity={0.7}>
-      <group ref={bodyRef} scale={1.05}>
-        {/* ── Corps principal ── */}
-        <mesh position={[0, 0.05, 0]}>
-          <boxGeometry args={[2.7, 0.55, 1.15]} />
-          <meshStandardMaterial color="#0A0D14" roughness={0.18} metalness={0.85} emissive="#C89B3C" emissiveIntensity={0.07} />
-        </mesh>
-
-        {/* ── Poignée gauche ── */}
-        <mesh position={[-0.88, -0.82, 0]} rotation={[0, 0, -0.08]}>
-          <boxGeometry args={[0.78, 1.35, 0.9]} />
-          <meshStandardMaterial color="#090C12" roughness={0.22} metalness={0.8} />
-        </mesh>
-
-        {/* ── Poignée droite ── */}
-        <mesh position={[0.88, -0.82, 0]} rotation={[0, 0, 0.08]}>
-          <boxGeometry args={[0.78, 1.35, 0.9]} />
-          <meshStandardMaterial color="#090C12" roughness={0.22} metalness={0.8} />
-        </mesh>
-
-        {/* ── Gâchette gauche (L1) ── */}
-        <mesh position={[-0.82, 0.38, 0.38]} rotation={[0.4, 0, 0]}>
-          <boxGeometry args={[0.6, 0.14, 0.38]} />
-          <meshStandardMaterial color="#C89B3C" roughness={0.1} metalness={0.95} emissive="#C89B3C" emissiveIntensity={0.4} />
-        </mesh>
-
-        {/* ── Gâchette droite (R1) ── */}
-        <mesh position={[0.82, 0.38, 0.38]} rotation={[0.4, 0, 0]}>
-          <boxGeometry args={[0.6, 0.14, 0.38]} />
-          <meshStandardMaterial color="#C89B3C" roughness={0.1} metalness={0.95} emissive="#C89B3C" emissiveIntensity={0.4} />
-        </mesh>
-
-        {/* ── D-pad horizontal ── */}
-        <mesh position={[-0.72, 0.06, 0.55]}>
-          <boxGeometry args={[0.38, 0.08, 0.11]} />
-          <meshStandardMaterial color="#141820" roughness={0.5} />
-        </mesh>
-        {/* ── D-pad vertical ── */}
-        <mesh position={[-0.72, 0.06, 0.55]}>
-          <boxGeometry args={[0.11, 0.08, 0.38]} />
-          <meshStandardMaterial color="#141820" roughness={0.5} />
-        </mesh>
-
-        {/* ── Boutons ABXY ── */}
-        {[
-          { pos: [0.88,  0.01, 0.55], color: '#22c55e' },
-          { pos: [1.02,  0.12, 0.49], color: '#ef4444' },
-          { pos: [0.74,  0.12, 0.49], color: '#3b82f6' },
-          { pos: [0.88,  0.22, 0.49], color: '#eab308' },
-        ].map(({ pos, color }, i) => (
-          <mesh key={i} position={pos}>
-            <sphereGeometry args={[0.075, 10, 10]} />
-            <meshStandardMaterial color={color} emissive={color} emissiveIntensity={1.2} roughness={0.15} />
-          </mesh>
-        ))}
-
-        {/* ── Stick analogique gauche ── */}
-        <mesh position={[-0.32, -0.1, 0.56]}>
-          <cylinderGeometry args={[0.13, 0.1, 0.07, 14]} />
-          <meshStandardMaterial color="#111418" roughness={0.3} metalness={0.4} />
-        </mesh>
-
-        {/* ── Stick analogique droit ── */}
-        <mesh position={[0.38, -0.28, 0.56]}>
-          <cylinderGeometry args={[0.13, 0.1, 0.07, 14]} />
-          <meshStandardMaterial color="#111418" roughness={0.3} metalness={0.4} />
-        </mesh>
-
-        {/* ── LED centrale dorée ── */}
-        <mesh position={[0, 0.18, 0.56]}>
-          <boxGeometry args={[0.22, 0.05, 0.04]} />
-          <meshStandardMaterial color="#FFD700" emissive="#FFD700" emissiveIntensity={5} />
-        </mesh>
-
-        {/* ── Boutons start/select ── */}
-        <mesh position={[-0.22, 0.15, 0.56]}>
-          <boxGeometry args={[0.1, 0.04, 0.04]} />
-          <meshStandardMaterial color="#1e2230" roughness={0.4} />
-        </mesh>
-        <mesh position={[0.22, 0.15, 0.56]}>
-          <boxGeometry args={[0.1, 0.04, 0.04]} />
-          <meshStandardMaterial color="#1e2230" roughness={0.4} />
-        </mesh>
-
-        {/* ── Reflet bord avant ── */}
-        <mesh position={[0, 0.05, 0.58]}>
-          <boxGeometry args={[2.5, 0.44, 0.015]} />
-          <meshStandardMaterial color="#C89B3C" roughness={0.05} metalness={1} emissive="#C89B3C" emissiveIntensity={0.15} transparent opacity={0.45} />
-        </mesh>
+    <group position={[0, -0.1, 0]}>
+      <CrateBase />
+      <group ref={lidRef}>
+        <CrateLid />
       </group>
-    </Float>
-  );
-}
-
-// ── Comète orbitale ───────────────────────────────────────────────────────────
-function Comet({ radius, speed, phaseOffset, inclinationX, inclinationY, color, size = 1 }) {
-  const groupRef = useRef();
-
-  useFrame((state) => {
-    const a = state.clock.elapsedTime * speed + phaseOffset;
-    const cX = Math.cos(inclinationX);
-    const sX = Math.sin(inclinationX);
-    const cY = Math.cos(inclinationY);
-    const sY = Math.sin(inclinationY);
-
-    // Position sur l'orbite inclinée
-    const x = Math.cos(a) * radius * cY - Math.sin(a) * radius * sY * sX;
-    const y = Math.sin(a) * radius * cX;
-    const z = Math.cos(a) * radius * sY + Math.sin(a) * radius * cY * sX;
-
-    if (!groupRef.current) return;
-    groupRef.current.position.set(x, y, z);
-
-    // Direction de la vitesse (tangente à l'orbite)
-    const vx = (-Math.sin(a) * cY - Math.cos(a) * sY * sX);
-    const vy = (Math.cos(a) * cX);
-    const vz = (-Math.sin(a) * sY + Math.cos(a) * cY * sX);
-    const len = Math.sqrt(vx * vx + vy * vy + vz * vz) || 1;
-    _vel.set(vx / len, vy / len, vz / len);
-
-    // Orienter le groupe : axe +Y local = direction de la vitesse
-    groupRef.current.quaternion.setFromUnitVectors(_up, _vel);
-  });
-
-  const tailLen = 0.9 * size;
-
-  return (
-    <group ref={groupRef}>
-      {/* Tête — noyau blanc */}
-      <mesh>
-        <sphereGeometry args={[0.055 * size, 10, 10]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={8} />
-      </mesh>
-      {/* Tête — halo coloré */}
-      <mesh>
-        <sphereGeometry args={[0.1 * size, 10, 10]} />
-        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={4} transparent opacity={0.7} />
-      </mesh>
-      {/* Queue extérieure — cône translucide (pointe en 0,0,0 ; base vers -Y) */}
-      <mesh position={[0, -(tailLen / 2), 0]}>
-        <coneGeometry args={[0.07 * size, tailLen, 8, 1, true]} />
-        <meshStandardMaterial
-          color={color} emissive={color} emissiveIntensity={1.5}
-          transparent opacity={0.28} side={THREE.DoubleSide} depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </mesh>
-      {/* Queue intérieure — trait brillant */}
-      <mesh position={[0, -(tailLen * 0.28), 0]}>
-        <coneGeometry args={[0.022 * size, tailLen * 0.55, 6, 1, true]} />
-        <meshStandardMaterial
-          color="#ffffff" emissive="#ffffff" emissiveIntensity={4}
-          transparent opacity={0.45} side={THREE.DoubleSide} depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </mesh>
+      <LightBeam progressRef={beamProg} />
+      <group ref={rifleGroupRef} position={[0, -0.45, 0]}>
+        <RifleModel rotation={[0, Math.PI / 2, Math.PI / 2]} />
+      </group>
     </group>
   );
 }
@@ -383,25 +316,21 @@ function FireflyCanvas() {
   );
 }
 
-// ── Scène hero 3D (manette + comètes) ────────────────────────────────────────
+// ── Scène hero 3D (coffre de ravitaillement + fusil) ─────────────────────────
 function BoutiqueHero3D() {
   return (
     <div className="absolute inset-0 pointer-events-none">
       <WebGLErrorBoundary>
       <Canvas camera={{ position: [0, 0.3, 7.5], fov: 58 }} dpr={[1, 1.5]} gl={{ alpha: true }}>
-        <ambientLight intensity={0.12} />
-        <pointLight position={[3, 2, 3]}   intensity={2.5} color="#C89B3C" />
-        <pointLight position={[-3, -1, 2]} intensity={1.0} color="#4FC3F7" />
-        <pointLight position={[0, 3, -2]}  intensity={0.6} color="#FFD700" />
+        <ambientLight intensity={0.25} />
+        <pointLight position={[3, 3, 3]}   intensity={2.2} color="#C89B3C" />
+        <pointLight position={[-3, -1, 2]} intensity={0.8} color="#4FC3F7" />
+        <pointLight position={[0, 2.5, 1.5]} intensity={2.4} color="#FFD700" distance={6} decay={2} />
         <Suspense fallback={null}>
-          <Stars radius={55} depth={20} count={500} factor={1.8} saturation={0} fade speed={0.3} />
-          <Controller />
-          <Comet radius={3.2} speed={0.55} phaseOffset={0}           inclinationX={0.4}  inclinationY={0.2}  color="#C89B3C" size={1.1} />
-          <Comet radius={3.8} speed={0.38} phaseOffset={Math.PI}     inclinationX={1.1}  inclinationY={0.9}  color="#FFD700" size={0.9} />
-          <Comet radius={2.9} speed={0.72} phaseOffset={Math.PI / 2} inclinationX={0.2}  inclinationY={1.5}  color="#4FC3F7" size={0.8} />
-          <Comet radius={4.2} speed={0.30} phaseOffset={2.4}         inclinationX={1.8}  inclinationY={0.5}  color="#FF4655" size={1.0} />
-          <Comet radius={3.5} speed={0.62} phaseOffset={4.0}         inclinationX={0.7}  inclinationY={2.1}  color="#7C3AED" size={0.75} />
-          <Comet radius={2.6} speed={0.88} phaseOffset={1.2}         inclinationX={2.3}  inclinationY={1.2}  color="#C89B3C" size={0.65} />
+          <Stars radius={55} depth={20} count={400} factor={1.6} saturation={0} fade speed={0.3} />
+          <Bounds fit clip observe margin={1.15}>
+            <RifleCrateScene />
+          </Bounds>
         </Suspense>
       </Canvas>
       </WebGLErrorBoundary>
@@ -967,7 +896,7 @@ export default function BoutiquePage() {
             className="font-mono text-ember-500 text-xs tracking-[0.5em] uppercase mb-3"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
           >
-            [ Boutique officielle ]
+            [ Bienvenue sur la boutique ]
           </motion.p>
           <motion.h1
             className="font-display text-5xl md:text-7xl font-black uppercase leading-none"
@@ -983,7 +912,7 @@ export default function BoutiquePage() {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}
           >
             <div className="h-px w-12 bg-ember-400" />
-            <p className="font-body text-zinc-500 text-sm">Collection officielle · Livraison sur place à l'événement</p>
+            <p className="font-body text-zinc-500 text-sm">Voici les ravitaillements du héros · Livraison sur place à l'événement</p>
           </motion.div>
         </div>
       </div>

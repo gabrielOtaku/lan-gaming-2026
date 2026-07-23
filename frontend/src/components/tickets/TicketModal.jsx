@@ -44,7 +44,7 @@ const TICKET_TYPES = [
     id: 'competiteur',
     label: 'Compétiteur',
     subtitle: 'Pour viser le trophée',
-    price: '50$',
+    price: '45$',
     priceNote: '+ taxes',
     color: '#FFD700',
     features: [
