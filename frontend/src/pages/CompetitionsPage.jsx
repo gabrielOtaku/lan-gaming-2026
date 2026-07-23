@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Bounds } from '@react-three/drei';
+import * as THREE from 'three';
 import { io } from 'socket.io-client';
 import {
   Trophy, RefreshCw, Swords, Crown, Shield,
@@ -11,6 +14,8 @@ import {
   generateBracket, updateMatchScore, resetTournament,
 } from '../utils/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import WebGLErrorBoundary from '../components/layout/WebGLErrorBoundary.jsx';
+import { DominusModel, OctaneModel } from '../components/three/GameAssets.jsx';
 
 const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
@@ -722,6 +727,68 @@ function AdminPanel({ game, tournament, onRefresh }) {
   );
 }
 
+// ── Scène 3D — Dominus contre Octane, duel dans l'arène ──────────────────────
+function ArenaBattleScene() {
+  const dominusRef = useRef();
+  const octaneRef = useRef();
+  const sparkRef = useRef();
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (dominusRef.current) {
+      dominusRef.current.position.y = -0.15 + Math.sin(t * 1.1) * 0.05;
+      dominusRef.current.rotation.z = Math.sin(t * 0.8) * 0.04;
+      dominusRef.current.rotation.x = Math.sin(t * 1.3) * 0.02;
+    }
+    if (octaneRef.current) {
+      octaneRef.current.position.y = -0.15 + Math.sin(t * 1.1 + Math.PI) * 0.05;
+      octaneRef.current.rotation.z = Math.sin(t * 0.8 + Math.PI) * 0.04;
+      octaneRef.current.rotation.x = Math.sin(t * 1.3 + Math.PI) * 0.02;
+    }
+    if (sparkRef.current) {
+      const pulse = 0.6 + Math.sin(t * 4) * 0.4;
+      sparkRef.current.scale.setScalar(0.5 + pulse * 0.3);
+      sparkRef.current.material.opacity = 0.35 + pulse * 0.4;
+    }
+  });
+
+  return (
+    <group>
+      <group ref={dominusRef} position={[-1.1, -0.15, 0]} rotation={[0, Math.PI / 2 + 0.3, 0]}>
+        <DominusModel />
+      </group>
+      <group ref={octaneRef} position={[1.1, -0.15, 0]} rotation={[0, -Math.PI / 2 - 0.3, 0]}>
+        <OctaneModel />
+      </group>
+      <mesh ref={sparkRef} position={[0, -0.1, 0]}>
+        <sphereGeometry args={[0.18, 12, 12]} />
+        <meshBasicMaterial color="#FFD700" transparent opacity={0.6} blending={THREE.AdditiveBlending} depthWrite={false} />
+      </mesh>
+    </group>
+  );
+}
+
+function CompetitionsHero3D() {
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      <WebGLErrorBoundary>
+        <Canvas camera={{ fov: 45 }} dpr={[1, 1.5]} gl={{ alpha: true }}>
+          <ambientLight intensity={1.3} />
+          <pointLight position={[3, 2, 3]} intensity={3.4} color="#C89B3C" />
+          <pointLight position={[-3, 1, 2]} intensity={2.4} color="#FF4655" />
+          <pointLight position={[0, 2, -1]} intensity={1.6} color="#4FC3F7" />
+          <pointLight position={[0, 1.5, 3]} intensity={1.8} color="#FFFFFF" />
+          <Suspense fallback={null}>
+            <Bounds fit clip observe margin={1.2}>
+              <ArenaBattleScene />
+            </Bounds>
+          </Suspense>
+        </Canvas>
+      </WebGLErrorBoundary>
+    </div>
+  );
+}
+
 // ── Main Page ──────────────────────────────────────────────────────────────────
 export default function CompetitionsPage() {
   const { user, isAdmin } = useAuth();
@@ -762,7 +829,7 @@ export default function CompetitionsPage() {
   const color = meta?.color || '#C89B3C';
 
   return (
-    <motion.div variants={pageTransition} initial="initial" animate="animate" exit="exit" className="min-h-screen pt-24 pb-20">
+    <motion.div variants={pageTransition} initial="initial" animate="animate" exit="exit" className="min-h-screen pt-16 pb-20">
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none -z-10">
         <div className="absolute inset-0 bg-obsidian-900" />
@@ -774,19 +841,36 @@ export default function CompetitionsPage() {
         <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(200,155,60,0.4),transparent)' }} />
       </div>
 
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Header */}
-        <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="mb-10">
-          <motion.p variants={fadeInUp} className="font-mono text-ember-500 text-xs tracking-[0.5em] uppercase mb-4">
+      {/* ── Hero 3D — Dominus vs Octane ─────────────────────────────────────── */}
+      <div className="relative h-72 md:h-96 flex items-end overflow-hidden mb-10">
+        <CompetitionsHero3D />
+        <div className="absolute inset-0 bg-gradient-to-b from-obsidian-900/40 via-transparent to-obsidian-900" />
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 pb-8">
+          <motion.p
+            className="font-mono text-ember-500 text-xs tracking-[0.5em] uppercase mb-3"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+          >
             [ Arène des tournois ]
           </motion.p>
-          <motion.h1 variants={fadeInUp} className="font-display text-4xl md:text-6xl font-black text-white uppercase tracking-tight leading-none mb-3">
-            Compé<span className="text-ember-300 text-ember-glow">titions</span>
+          <motion.h1
+            className="font-display text-5xl md:text-7xl font-black uppercase leading-none"
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.7 }}
+          >
+            <span className="text-white">Entrez dans</span>{' '}
+            <span style={{ WebkitTextFillColor: 'transparent', WebkitTextStroke: '2px #C89B3C' }}>
+              l'arène
+            </span>
           </motion.h1>
-          <motion.p variants={fadeInUp} className="font-body text-zinc-500 text-sm max-w-lg">
+          <motion.p
+            className="font-body text-zinc-500 text-sm max-w-lg mt-4"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}
+          >
             Sélectionne un jeu pour consulter le bracket, les équipes inscrites et les résultats en temps réel.
           </motion.p>
-        </motion.div>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6">
 
         {/* Game Selector */}
         {loading ? (
