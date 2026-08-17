@@ -138,22 +138,8 @@
             "id": "r1m1",
             "roundNumber": 1,
             "matchNumber": 1,
-            "team1": {
-              "id": "lol_seed_1",
-              "name": "Team Noxus",
-              "game": "lol",
-              "captainEmail": "captain1@lan2026.ca",
-              "captainName": "Gabriel H.",
-              "registeredAt": "2026-07-09T03:41:25.001Z"
-            },
-            "team2": {
-              "id": "lol_seed_8",
-              "name": "Bandle City Ballers",
-              "game": "lol",
-              "captainEmail": "captain8@lan2026.ca",
-              "captainName": "Antoine P.",
-              "registeredAt": "2026-07-09T03:41:25.002Z"
-            },
+            "team1": "lol_seed_1",
+            "team2": "lol_seed_8",
             "score1": null,
             "score2": null,
             "winner": null,
