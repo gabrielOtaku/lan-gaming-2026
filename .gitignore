@@ -8,3 +8,8 @@ build/
 .DS_Store
 Thumbs.db
 .vite/
+
+# Raw Sketchfab/asset-store downloads — compress with gltf-transform into
+# frontend/public/models/*.glb (the app only ever loads from there) before
+# committing anything. See CREDITS.md for attribution requirements.
+frontend/src/assets/3D/
