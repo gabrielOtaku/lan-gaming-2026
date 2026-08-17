@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'lan2026-jwt-secret-change-in-production';
+import { JWT_SECRET } from '../config/secrets.js';
 
 // Cookie takes priority (HttpOnly — XSS-safe). Bearer header is kept as fallback
 // for API clients (Postman, curl) and during the transition window.

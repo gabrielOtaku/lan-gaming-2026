@@ -3,10 +3,10 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as OAuth2Strategy } from 'passport-oauth2';
 import jwt from 'jsonwebtoken';
+import { JWT_SECRET, ADMIN_PASSWORD } from '../config/secrets.js';
 
 const router = Router();
 
-const JWT_SECRET   = process.env.JWT_SECRET   || 'lan2026-jwt-secret-change-in-production';
 const FRONTEND_URL = process.env.FRONTEND_URL  || 'http://localhost:5173';
 
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'gabrielherve94@gmail.com,jovan.knezevic@cegepstfe.ca')
@@ -76,10 +76,9 @@ router.post('/login', (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: 'Email et mot de passe requis.' });
 
-  const adminEmail    = (process.env.ADMIN_EMAIL    || 'gabrielherve94@gmail.com').toLowerCase();
-  const adminPassword =  process.env.ADMIN_PASSWORD || 'LanAdmin2026!';
+  const adminEmail = (process.env.ADMIN_EMAIL || 'gabrielherve94@gmail.com').toLowerCase();
 
-  if (email.toLowerCase() !== adminEmail || password !== adminPassword) {
+  if (email.toLowerCase() !== adminEmail || password !== ADMIN_PASSWORD) {
     return setTimeout(() => res.status(401).json({ error: 'Identifiants incorrects.' }), 400);
   }
 

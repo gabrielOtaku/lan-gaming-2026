@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import { Server as SocketIO } from "socket.io";
 import apiRoutes from "./routes/api.js";
 import authRoutes from "./routes/auth.js";
+import { SESSION_SECRET } from "./config/secrets.js";
 
 dotenv.config();
 
@@ -70,10 +71,7 @@ app.use(
 // ── Session ──────────────────────────────────────────────────────────────────────
 app.use(
   session({
-    secret:
-      process.env.SESSION_SECRET ||
-      process.env.JWT_SECRET ||
-      "lan2026-session-secret",
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
