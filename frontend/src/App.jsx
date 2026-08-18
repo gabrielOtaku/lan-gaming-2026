@@ -23,6 +23,7 @@ const BoutiquePage = lazy(() => import("./pages/BoutiquePage.jsx"));
 const CagnottePage = lazy(() => import("./pages/CagnottePage.jsx"));
 const CompetitionsPage = lazy(() => import("./pages/CompetitionsPage.jsx"));
 const InvitesVipPage = lazy(() => import("./pages/InvitesVipPage.jsx"));
+const CreditsPage = lazy(() => import("./pages/CreditsPage.jsx"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage.jsx"));
 
 function RouteFallback() {
@@ -55,6 +56,7 @@ function AnimatedRoutes() {
         <Route path="/invites-vip" element={<InvitesVipPage />} />
         <Route path="/boutique" element={<BoutiquePage />} />
         <Route path="/cagnotte" element={<CagnottePage />} />
+        <Route path="/credits" element={<CreditsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       </Suspense>
