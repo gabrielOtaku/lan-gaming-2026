@@ -138,6 +138,7 @@ const clipStyle = {
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', subject: 'information', message: '' });
+  const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState(null); // null | 'sending' | 'success' | 'error'
 
@@ -146,6 +147,7 @@ export default function ContactPage() {
     if (!form.name.trim() || form.name.length < 2) errs.name = 'Minimum 2 caractères requis.';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Adresse courriel invalide.';
     if (!form.message.trim() || form.message.length < 10) errs.message = 'Message trop court (10 caractères min).';
+    if (!consent) errs.consent = 'Ton consentement est requis pour envoyer ce formulaire.';
     return errs;
   };
 
@@ -172,6 +174,7 @@ export default function ContactPage() {
       if (res.ok && data.success) {
         setStatus('success');
         setForm({ name: '', email: '', subject: 'information', message: '' });
+        setConsent(false);
       } else {
         setStatus('error');
       }
@@ -444,6 +447,45 @@ export default function ContactPage() {
                         </span>
                       </div>
                     </FormField>
+
+                    {/* Consent checkbox */}
+                    <div>
+                      <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={consent}
+                          onChange={(e) => {
+                            setConsent(e.target.checked);
+                            if (errors.consent) setErrors((er) => ({ ...er, consent: undefined }));
+                          }}
+                          className="mt-0.5 w-4 h-4 flex-shrink-0 accent-ember-400 cursor-pointer"
+                        />
+                        <span className="font-body text-zinc-500 text-xs leading-relaxed">
+                          J'accepte que les informations transmises via ce formulaire soient
+                          utilisées pour traiter ma demande, conformément à la{' '}
+                          <a
+                            href="/mentions-legales"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-ember-400 hover:text-ember-300 underline underline-offset-2"
+                          >
+                            politique de confidentialité
+                          </a>.
+                        </span>
+                      </label>
+                      <AnimatePresence>
+                        {errors.consent && (
+                          <motion.p
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -4 }}
+                            className="flex items-center gap-1.5 mt-1.5 font-mono text-red-400 text-[10px]"
+                          >
+                            <AlertTriangle size={10} /> {errors.consent}
+                          </motion.p>
+                        )}
+                      </AnimatePresence>
+                    </div>
 
                     {/* Error banner */}
                     <AnimatePresence>

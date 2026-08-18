@@ -1,3 +1,10 @@
+// Must run before any local import — those read process.env at module load
+// time (config/secrets.js, routes/auth.js), and static ESM imports are all
+// evaluated in source order before this file's own body runs. Importing
+// dotenv/config here (instead of `import dotenv from "dotenv"` + a later
+// `dotenv.config()` call) guarantees .env is populated first.
+import "dotenv/config";
+
 import { createServer } from 'http';
 import express from "express";
 import helmet from "helmet";
@@ -6,13 +13,10 @@ import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import session from "express-session";
 import passport from "passport";
-import dotenv from "dotenv";
 import { Server as SocketIO } from "socket.io";
 import apiRoutes from "./routes/api.js";
 import authRoutes from "./routes/auth.js";
 import { SESSION_SECRET } from "./config/secrets.js";
-
-dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);

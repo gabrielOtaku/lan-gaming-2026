@@ -25,6 +25,7 @@ const CompetitionsPage = lazy(() => import("./pages/CompetitionsPage.jsx"));
 const InvitesVipPage = lazy(() => import("./pages/InvitesVipPage.jsx"));
 const CreditsPage = lazy(() => import("./pages/CreditsPage.jsx"));
 const PracticalInfoPage = lazy(() => import("./pages/PracticalInfoPage.jsx"));
+const MentionsLegalesPage = lazy(() => import("./pages/MentionsLegalesPage.jsx"));
 const FestivalFinalesProposal = lazy(() => import("./pages/FestivalFinalesProposal.jsx"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage.jsx"));
 
@@ -60,6 +61,7 @@ function AnimatedRoutes() {
         <Route path="/cagnotte" element={<CagnottePage />} />
         <Route path="/credits" element={<CreditsPage />} />
         <Route path="/infos-pratiques" element={<PracticalInfoPage />} />
+        <Route path="/mentions-legales" element={<MentionsLegalesPage />} />
         <Route path="/interne/festival-finales" element={<FestivalFinalesProposal />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

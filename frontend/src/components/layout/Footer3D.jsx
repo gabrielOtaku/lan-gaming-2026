@@ -305,12 +305,21 @@ export default function Footer3D() {
             <p className="font-mono text-zinc-700 text-xs tracking-widest">
               © 2026 CÉGEP DE SAINT-FÉLICIEN
             </p>
-            <a
-              href="/credits"
-              className="font-mono text-zinc-800 hover:text-ember-400 text-[10px] mt-1 tracking-widest transition-colors duration-300 inline-block"
-            >
-              CRÉDITS 3D
-            </a>
+            <div className="flex items-center justify-center md:justify-end gap-3 mt-1">
+              <a
+                href="/credits"
+                className="font-mono text-zinc-800 hover:text-ember-400 text-[10px] tracking-widest transition-colors duration-300"
+              >
+                CRÉDITS 3D
+              </a>
+              <span className="text-zinc-800 text-[10px]">·</span>
+              <a
+                href="/mentions-legales"
+                className="font-mono text-zinc-800 hover:text-ember-400 text-[10px] tracking-widest transition-colors duration-300"
+              >
+                MENTIONS LÉGALES
+              </a>
+            </div>
           </motion.div>
         </motion.div>
       </div>

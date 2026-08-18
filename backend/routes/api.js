@@ -635,7 +635,7 @@ const cagnotteState = loadJSON('cagnotte.json', {
   ticketOrSold:  0,
   ticketOrPot:   0,
   ticketOrPrice: 10,
-  goal:          5000,
+  goal:          100000,
   lastUpdated:   new Date().toISOString(),
   recentDonations: [],
 });

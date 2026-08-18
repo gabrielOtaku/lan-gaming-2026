@@ -541,7 +541,7 @@ export default function CagnottePage() {
     ticketOrSold: 0,
     ticketOrPot: 0,
     ticketOrPrice: 10,
-    goal: 50000,
+    goal: 100000,
     lastUpdated: null,
     recentDonations: [],
   });
@@ -767,13 +767,13 @@ export default function CagnottePage() {
                 className="font-display font-black text-amber-300 text-lg"
               />
               <span className="font-mono text-zinc-600 text-xs">
-                / {(data.goal || 50000).toLocaleString("fr-CA")}$
+                / {(data.goal || 100000).toLocaleString("fr-CA")}$
               </span>
             </div>
           </div>
           <FundingBar
             current={data.totalRaised}
-            goal={data.goal || 50000}
+            goal={data.goal || 100000}
             color="#FFD700"
           />
           <p className="font-mono text-zinc-600 text-[10px] tracking-widest text-center mt-4">

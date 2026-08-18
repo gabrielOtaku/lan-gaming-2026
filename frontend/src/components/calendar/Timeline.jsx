@@ -1,30 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
-import { Clock, MapPin, Zap, Sword, Trophy, Star, Settings, Tv } from 'lucide-react';
+import { Clock, MapPin, Zap, Sword, Trophy, Star, Settings, Tv, Loader2 } from 'lucide-react';
 import { scrollReveal, staggerContainer, fadeInUp, EASE_GAME } from '../../utils/animations.js';
-
-const EVENTS = [
-  // ── Vendredi 9 oct ───────────────────────────────────────────────────────────
-  { id: 1,  date: '2026-10-09', day: 'Vendredi', startTime: '18:00', endTime: '19:00', title: 'Arrivée et installation', description: 'Accueil des participants, vérification des billets, attribution des postes et branchements. DJ local ou playlist gaming pour mettre l\'ambiance dès l\'arrivée.', location: 'Arènes de jeu', category: 'setup', color: '#636E72' },
-  { id: 2,  date: '2026-10-09', day: 'Vendredi', startTime: '19:00', endTime: '19:30', title: 'Cérémonie d\'ouverture & Formation des équipes', description: 'Bienvenue au micro, présentation des règles, du planning et des prix. Ouverture des buffets. Début de la création d\'équipes pour les tournois via Discord dédié.', location: 'Salle Azimut', category: 'show', color: '#FFD700' },
-  { id: 3,  date: '2026-10-09', day: 'Vendredi', startTime: '19:30', endTime: '22:30', title: 'Qualifications — Phase 1', description: 'Lancement des premiers matchs de qualification pour tous les tournois simultanément. Stream A (LoL) et Stream B (CS2) sur Twitch en direct.', location: 'Toutes les arènes', category: 'tournament', color: '#C89B3C' },
-  { id: 4,  date: '2026-10-09', day: 'Vendredi', startTime: '22:30', endTime: '01:00', title: 'Soirée détente & Mini-jeux', description: 'Break des tournois majeurs. Tournoi de jeu de combat sur console (Super Smash Bros, Street Fighter) sur grand écran. Rocket League, Jackbox Games, jeux de cartes (Magic, Pokémon) et jeux de société.', location: 'Zone consoles', category: 'activity', color: '#E74C3C' },
-  // ── Samedi 10 oct ────────────────────────────────────────────────────────────
-  { id: 5,  date: '2026-10-10', day: 'Samedi', startTime: '10:00', endTime: '12:00', title: 'Tournois & Jeux libres', description: 'Poursuite des matchs de qualification des tournois principaux — LoL, CS2 et Rocket League. Gaming libre en parallèle sur tous les postes.', location: 'Toutes les arènes', category: 'tournament', color: '#C89B3C' },
-  { id: 6,  date: '2026-10-10', day: 'Samedi', startTime: '12:00', endTime: '13:00', title: 'Pause déjeuner', description: 'Repas servi sur place. Les jeux libres restent accessibles pendant la pause.', location: 'Zone buffet', category: 'break', color: '#27AE60' },
-  { id: 7,  date: '2026-10-10', day: 'Samedi', startTime: '13:00', endTime: '15:00', title: 'Conférence & Temps fort pour le public', description: 'Accueil d\'une entreprise ou d\'un invité spécial. Zone de jeux rétro (consoles, bornes d\'arcade) disponible en parallèle pour ceux qui préfèrent jouer.', location: 'Salle Azimut', category: 'show', color: '#4FC3F7' },
-  { id: 8,  date: '2026-10-10', day: 'Samedi', startTime: '15:00', endTime: '17:00', title: 'Deuxième vague de qualifications', description: 'Poursuite et fin des matchs de qualification. Grands huitièmes et quarts de finale de certains tournois peuvent commencer.', location: 'Toutes les arènes', category: 'tournament', color: '#C89B3C' },
-  { id: 9,  date: '2026-10-10', day: 'Samedi', startTime: '17:00', endTime: '18:30', title: 'Animations physiques & Divertissements', description: 'Option 1 : Airsoft / Initiation boxe ou sumo (encadré par un professionnel) / Tournoi de ping-pong. Option 2 : Jeux de société géants (Jenga, Twister) ou Speedrun challenge.', location: 'Zone activités', category: 'activity', color: '#FF6B35' },
-  { id: 10, date: '2026-10-10', day: 'Samedi', startTime: '18:30', endTime: '20:00', title: 'Pause repas', description: 'Repas du soir servi sur place. Musique d\'ambiance et jeux libres.', location: 'Zone buffet', category: 'break', color: '#27AE60' },
-  { id: 11, date: '2026-10-10', day: 'Samedi', startTime: '20:00', endTime: '22:00', title: 'Quarts et demi-finales — Scène principale', description: 'Les matchs les plus attendus joués sur la scène principale, diffusés en direct sur Twitch avec commentateurs.', location: 'Salle Azimut — Scène principale', category: 'final', color: '#FFD700' },
-  { id: 12, date: '2026-10-10', day: 'Samedi', startTime: '22:00', endTime: '00:00', title: 'Quiz géant & Soirée ambiance', description: 'Kahoot géant ouvert à tous! Animation musicale et jeux libres jusqu\'au bout de la nuit. La nuit appartient aux guerriers.', location: 'Salle Azimut', category: 'activity', color: '#9B59B6' },
-  // ── Dimanche 11 oct ──────────────────────────────────────────────────────────
-  { id: 13, date: '2026-10-11', day: 'Dimanche', startTime: '10:00', endTime: '12:00', title: 'Matchs pour la 3e place & Révisions', description: 'Petites finales et matchs de classement. Temps libre pour que les finalistes se préparent mentalement aux grandes finales de l\'après-midi.', location: 'Arènes de jeu', category: 'tournament', color: '#FF4655' },
-  { id: 14, date: '2026-10-11', day: 'Dimanche', startTime: '12:00', endTime: '13:00', title: 'Pause déjeuner', description: 'Dernier repas avant les grandes finales. Montée en adrénaline garantie.', location: 'Zone buffet', category: 'break', color: '#27AE60' },
-  { id: 15, date: '2026-10-11', day: 'Dimanche', startTime: '13:00', endTime: '16:00', title: 'Grandes Finales — Live Twitch Charité', description: 'Finales LoL, CS2 et Rocket League sur grand écran avec commentateurs, éclairages et ambiance de finale. Rotation des finales pour que tout le monde puisse suivre. 100% des dons Twitch reversés à la Fondation.', location: 'Salle Azimut — Scène principale', category: 'final', color: '#FFD700' },
-  { id: 16, date: '2026-10-11', day: 'Dimanche', startTime: '16:00', endTime: '17:00', title: 'Cérémonie de remise des prix', description: 'Remise des trophées et lots aux vainqueurs. Remerciements aux participants, bénévoles et sponsors. Photo de groupe officielle. Annonce du total reversé à la Fondation.', location: 'Salle Azimut', category: 'ceremony', color: '#FFD700' },
-  { id: 17, date: '2026-10-11', day: 'Dimanche', startTime: '17:00', endTime: '18:00', title: 'Démontage', description: 'Rangement et nettoyage des lieux. Merci à tous d\'avoir fait de LAN Gaming 2026 une histoire indélébile!', location: 'Toutes les salles', category: 'setup', color: '#636E72' },
-];
+import { getEvents } from '../../utils/api.js';
 
 const CATEGORY_CONFIG = {
   tournament: { label: 'Tournoi', icon: Sword, color: '#C89B3C' },
@@ -237,9 +215,25 @@ function FilterTabs({ active, onChange }) {
 // ── Main Export ───────────────────────────────────────────────────────────────
 export default function Timeline() {
   const [filter, setFilter] = useState('all');
+  const [events, setEvents] = useState([]);
+  const [status, setStatus] = useState('loading'); // 'loading' | 'ready' | 'error'
+
+  useEffect(() => {
+    let cancelled = false;
+    getEvents()
+      .then((res) => {
+        if (cancelled) return;
+        setEvents(res.data || []);
+        setStatus('ready');
+      })
+      .catch(() => {
+        if (!cancelled) setStatus('error');
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   const filteredEvents = (date) =>
-    EVENTS.filter((e) => e.date === date && (filter === 'all' || e.category === filter));
+    events.filter((e) => e.date === date && (filter === 'all' || e.category === filter));
 
   return (
     <section className="relative">
@@ -275,19 +269,36 @@ export default function Timeline() {
         </motion.p>
       </div>
 
-      <FilterTabs active={filter} onChange={setFilter} />
+      {status === 'loading' && (
+        <div className="flex items-center justify-center gap-3 py-20 font-mono text-zinc-600 text-xs tracking-widest uppercase">
+          <Loader2 size={14} className="animate-spin text-ember-500" />
+          Chargement du programme...
+        </div>
+      )}
 
-      {/* 3-column day layout */}
-      <div className="flex gap-6 md:gap-10 overflow-x-auto pb-6 -mx-6 px-6">
-        {DAYS.map((date) => (
-          <DayColumn
-            key={date}
-            date={date}
-            events={filteredEvents(date)}
-            isActive={false}
-          />
-        ))}
-      </div>
+      {status === 'error' && (
+        <p className="text-center font-mono text-red-400 text-xs tracking-widest uppercase py-20">
+          Impossible de charger le programme. Réessaie plus tard.
+        </p>
+      )}
+
+      {status === 'ready' && (
+        <>
+          <FilterTabs active={filter} onChange={setFilter} />
+
+          {/* 3-column day layout */}
+          <div className="flex gap-6 md:gap-10 overflow-x-auto pb-6 -mx-6 px-6">
+            {DAYS.map((date) => (
+              <DayColumn
+                key={date}
+                date={date}
+                events={filteredEvents(date)}
+                isActive={false}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </section>
   );
 }
