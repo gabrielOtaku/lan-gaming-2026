@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { pageTransition } from "../utils/animations.js";
 import HeroCanvas from "../components/home/HeroCanvas.jsx";
 import BioConcept from "../components/home/BioConcept.jsx";
-import LanGallery from "../components/home/LanGallery.jsx";
 import PartnerBanner from "../components/home/Sponsor.jsx";
 import FoundationBlock from "../components/home/FoundationBlock.jsx";
 
@@ -33,10 +32,6 @@ export default function HomePage() {
       <HeroCanvas />
 
       <BioConcept />
-
-      <SectionDivider label="Archives" />
-
-      <LanGallery />
 
       <SectionDivider label="Partenaires" />
 
