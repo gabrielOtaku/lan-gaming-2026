@@ -548,7 +548,7 @@ export default function AdminPage() {
             { icon: Calendar, label: 'Jours avant l\'event', value: daysToEvent, color: '#C89B3C' },
             { icon: Users,    label: 'Capacité totale',     value: '150+',      color: '#4FC3F7' },
             { icon: Mail,     label: 'Contact',             value: 'Actif',     color: '#22c55e' },
-            { icon: Zap,      label: 'Édition',             value: '10e',       color: '#FFD700' },
+            { icon: Zap,      label: 'Tournois',            value: '6',         color: '#FFD700' },
           ].map(({ icon: Icon, label, value, color }) => (
             <motion.div
               key={label}

@@ -281,7 +281,7 @@ export default function Footer3D() {
           <motion.div variants={fadeInUp} className="text-center md:text-left">
             <p className="font-display text-ember-400 text-sm tracking-widest">LAN Gaming 2026</p>
             <p className="font-body text-zinc-600 text-xs mt-1 tracking-wide">
-              Cégep de Saint-Félicien · 10e Édition · 9-11 Oct 2026
+              Cégep de Saint-Félicien · 9-11 Oct 2026
             </p>
           </motion.div>
 

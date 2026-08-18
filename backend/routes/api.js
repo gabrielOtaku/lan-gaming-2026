@@ -76,7 +76,7 @@ FONDATION:
 - Grande finale du dimanche streamée sur Twitch pour maximiser les dons
 
 INFORMATIONS SUPPLÉMENTAIRES:
-- LAN déjà à sa 10e édition — événement légendaire du Saguenay–Lac-Saint-Jean
+- LAN Gaming 2026 relance l'esprit de la toute première LAN Gaming CSF (avril 2023, 70+ participants) avec une nouvelle équipe étudiante — un événement en pleine croissance au Saguenay–Lac-Saint-Jean
 - Trois espaces: Salle Azimut (scène principale), arènes de jeu, zone consoles
 - 17 ans et plus pour les joueurs et compétiteurs
 

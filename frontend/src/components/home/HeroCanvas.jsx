@@ -698,7 +698,7 @@ export default function HeroCanvas() {
             {[
               { value: "47H", label: "DE GAMING" },
               { value: "150+", label: "PARTICIPANTS" },
-              { value: "10E", label: "ÉDITION" },
+              { value: "6", label: "TOURNOIS" },
             ].map(({ value, label }) => (
               <div key={label} className="text-center">
                 <p className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-ember-300 text-gold-glow">
