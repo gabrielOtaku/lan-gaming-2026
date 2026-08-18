@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Suspense, lazy } from "react";
 import Lenis from "@studio-freight/lenis";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, MotionConfig } from "framer-motion";
 
 import { AuthProvider } from "./context/AuthContext.jsx";
 import Navbar from "./components/layout/Navbar.jsx";
@@ -68,15 +68,22 @@ function AnimatedRoutes() {
   );
 }
 
+// matchMedia isn't available during SSR/build, and only needs reading once —
+// the OS-level setting rarely changes mid-session.
+const prefersReducedMotion =
+  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!prefersReducedMotion);
 
   useEffect(() => {
+    if (prefersReducedMotion) return;
     const timer = setTimeout(() => setIsLoading(false), 3200);
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
+    if (prefersReducedMotion) return; // skip the smooth-scroll takeover — native scroll only
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -102,29 +109,31 @@ export default function App() {
   }, []);
 
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <div className="noise-overlay scan-lines min-h-screen bg-obsidian-900 relative">
-          <CustomCursor />
-          <LiveCursors />
-          <AnimatePresence mode="wait">
-            {isLoading && (
-              <Loader key="loader" onComplete={() => setIsLoading(false)} />
-            )}
-          </AnimatePresence>
+    <MotionConfig reducedMotion="user">
+      <AuthProvider>
+        <BrowserRouter>
+          <div className="noise-overlay scan-lines min-h-screen bg-obsidian-900 relative">
+            <CustomCursor />
+            <LiveCursors />
+            <AnimatePresence mode="wait">
+              {isLoading && (
+                <Loader key="loader" onComplete={() => setIsLoading(false)} />
+              )}
+            </AnimatePresence>
 
-          {!isLoading && (
-            <>
-              <Navbar />
-              <main>
-                <AnimatedRoutes />
-              </main>
-              <Chatbot />
-              <Footer3D />
-            </>
-          )}
-        </div>
-      </BrowserRouter>
-    </AuthProvider>
+            {!isLoading && (
+              <>
+                <Navbar />
+                <main>
+                  <AnimatedRoutes />
+                </main>
+                <Chatbot />
+                <Footer3D />
+              </>
+            )}
+          </div>
+        </BrowserRouter>
+      </AuthProvider>
+    </MotionConfig>
   );
 }

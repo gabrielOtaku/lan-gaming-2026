@@ -36,16 +36,16 @@ DATES ET LIEU:
 - Contact: comiteetuinfo@cegepstfe.ca | Téléphone: 581 704-1221
 - Co-organisateurs: Gabriel Hervé et Jovan Knezevic
 
-HORAIRE:
-- Vendredi 9 oct 17h00: Bal d'ouverture à la Salle Azimut
-- Vendredi 9 oct 19h00: Installation des joueurs
-- Vendredi 9 oct 20h00: Début du gaming (grind)
-- Samedi 10 oct 10h00-22h00: Tournois principaux, conférences
-- Samedi 10 oct 13h00: Tournoi Magic: The Gathering
-- Samedi 10 oct 15h00: Conférence studio de développement
-- Samedi 10 oct 19h00: Zone consoles
-- Dimanche 11 oct 9h00: Demi-finales
-- Dimanche 11 oct 13h00: Grandes finales en direct sur Twitch (charité)
+HORAIRE (source unique: le calendrier détaillé de la page Calendrier — ne pas
+donner d'heures qui contredisent celui-ci):
+- Vendredi 9 oct 18h00: Arrivée et installation des joueurs
+- Vendredi 9 oct 19h00: Cérémonie d'ouverture à la Salle Azimut
+- Vendredi 9 oct 19h30: Début des qualifications (LoL, CS2, Rocket League)
+- Samedi 10 oct 10h00-17h00: Tournois et qualifications
+- Samedi 10 oct 13h00-15h00: Conférence et temps fort pour le public
+- Samedi 10 oct 20h00-22h00: Quarts et demi-finales sur la scène principale
+- Dimanche 11 oct 10h00-12h00: Matchs pour la 3e place
+- Dimanche 11 oct 13h00-16h00: Grandes finales en direct sur Twitch (charité)
 - Dimanche 11 oct 16h00: Cérémonie de remise des prix
 
 BILLETS:
@@ -115,7 +115,7 @@ const NEXUS_FAQ = [
   },
   {
     keywords: ['programme', 'schedule', 'vendredi', 'samedi', 'dimanche', 'calendrier', 'agenda'],
-    response: "Ven 9: 17h bal, 19h install, 20h GRIND. Sam 10: 10h LoL/CS2/RL groupes, 13h Magic:TG, 15h conférence studio, 19h Smash/Mario. Dim 11: 9h demi-finales, 13h finales Twitch, 16h cérémonie!",
+    response: "Ven 9: 18h arrivée, 19h cérémonie d'ouverture, 19h30 GRIND. Sam 10: 10h-17h tournois, 13h-15h conférence, 20h-22h quarts/demi-finales. Dim 11: 10h-12h matchs 3e place, 13h finales Twitch, 16h cérémonie!",
   },
   {
     keywords: ['âge', 'age', '17', 'mineur', 'jeune', 'requis', 'minimum'],

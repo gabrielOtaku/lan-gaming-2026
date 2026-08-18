@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /interne/
+
+Sitemap: https://lan2026.cegepstfe.ca/sitemap.xml

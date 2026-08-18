@@ -49,6 +49,41 @@
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>LAN Gaming 2026 — Cégep de Saint-Félicien</title>
+
+    <!-- Données structurées Event (schema.org) — dates/lieu confirmés uniquement.
+         Les tarifs de billetterie ne sont pas encore validés par le Cégep (voir
+         cahier des charges §11) : ne pas ajouter de bloc "offers" tant qu'ils
+         ne le sont pas. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "LAN Gaming 2026",
+        "description": "47h de gaming non-stop au Cégep de Saint-Félicien — tournois officiels LoL, CS2, Rocket League, Magic: The Gathering, Super Smash Bros et Mario Kart, du 9 au 11 octobre 2026.",
+        "startDate": "2026-10-09T18:00:00-04:00",
+        "endDate": "2026-10-11T18:00:00-04:00",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "location": {
+          "@type": "Place",
+          "name": "Cégep de Saint-Félicien",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "525, boul. Hamel",
+            "addressLocality": "Saint-Félicien",
+            "addressRegion": "QC",
+            "postalCode": "G8K 2R8",
+            "addressCountry": "CA"
+          }
+        },
+        "image": ["https://lan2026.cegepstfe.ca/og-image.jpg"],
+        "organizer": {
+          "@type": "Organization",
+          "name": "Comité étudiant informatique — Cégep de Saint-Félicien",
+          "url": "https://www.cstfelicien.qc.ca"
+        }
+      }
+    </script>
   </head>
   <body class="bg-obsidian-900 text-white overflow-x-hidden">
     <div id="root"></div>
