@@ -5,7 +5,9 @@ import { validateContact, validateTicketRequest, validateChat } from '../middlew
 import { sanitizeObject, sanitizeString } from '../utils/sanitize.js';
 import { requireAuth, requireAdmin } from '../middlewares/auth.js';
 import { loadJSON, saveJSON } from '../utils/persist.js';
-import { getCagnotteState, recordTicketOr, adminUpdateCagnotte } from '../utils/cagnotteStore.js';
+import {
+  getCagnotteState, getPublicCagnotteState, recordTicketOr, adminUpdateCagnotte, moderateDonationMessage,
+} from '../utils/cagnotteStore.js';
 
 // ── Nodemailer transporter ────────────────────────────────────────────────────
 const smtpConfigured = process.env.SMTP_USER && process.env.SMTP_PASS && process.env.SMTP_USER !== 'votre.email@gmail.com';
@@ -629,8 +631,28 @@ router.post('/chat', validateChat, async (req, res) => {
 });
 
 // ── GET /api/cagnotte ─────────────────────────────────────────────────────────
+// Vue publique : un message de donateur non approuvé n'est jamais envoyé au
+// navigateur (§9.4) — voir cagnotteStore.getPublicCagnotteState.
 router.get('/cagnotte', (_req, res) => {
-  res.status(200).json({ success: true, data: getCagnotteState() });
+  res.status(200).json({ success: true, data: getPublicCagnotteState() });
+});
+
+// ── GET /api/admin/cagnotte/donations (admin) ─────────────────────────────────
+// Vue complète (messages bruts + statut de modération) pour le panneau admin —
+// jamais exposée aux visiteurs, contrairement à GET /api/cagnotte.
+router.get('/admin/cagnotte/donations', requireAdmin, (_req, res) => {
+  res.status(200).json({ success: true, data: getCagnotteState().recentDonations });
+});
+
+// ── PATCH /api/admin/cagnotte/donations/:id/moderate (admin) ─────────────────
+router.patch('/admin/cagnotte/donations/:id/moderate', requireAdmin, (req, res) => {
+  const { action } = req.body || {};
+  if (!['approve', 'hide'].includes(action)) {
+    return res.status(400).json({ error: "action doit être 'approve' ou 'hide'." });
+  }
+  const donation = moderateDonationMessage(req.params.id, action);
+  if (!donation) return res.status(404).json({ error: 'Don introuvable.' });
+  res.status(200).json({ success: true, data: donation });
 });
 
 // ── POST /api/admin/cagnotte/update (admin) ───────────────────────────────────

@@ -46,4 +46,8 @@ export const adminUpdateCagnotte = (data) => api.post('/admin/cagnotte/update', 
 // Dons Stripe
 export const createDonationCheckout = (data) => api.post('/donations/checkout', data);
 
+// Modération des messages de don (admin)
+export const adminGetDonations = () => api.get('/admin/cagnotte/donations');
+export const adminModerateDonation = (id, action) => api.patch(`/admin/cagnotte/donations/${id}/moderate`, { action });
+
 export default api;

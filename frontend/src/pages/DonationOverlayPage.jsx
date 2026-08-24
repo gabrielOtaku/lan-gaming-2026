@@ -162,6 +162,12 @@ export default function DonationOverlayPage() {
                 <div style={{ fontFamily: "monospace", fontSize: 9, letterSpacing: "0.2em", color: "rgba(7,9,15,0.7)", textTransform: "uppercase" }}>
                   Nouveau don
                 </div>
+                {/* Le serveur ne renvoie un message que s'il a été approuvé — §9.4 */}
+                {currentAlert.message && (
+                  <div style={{ fontSize: 12, color: "rgba(7,9,15,0.85)", marginTop: 4, maxWidth: 260 }}>
+                    « {currentAlert.message} »
+                  </div>
+                )}
               </div>
             </motion.div>
           )}

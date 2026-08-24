@@ -341,7 +341,7 @@ export default function PartnerBanner() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <a
-                href="../../../assets/partenariat.pdf"
+                href="/partenariat.pdf"
                 download="Partenariat-LAN-Gaming-2026.pdf"
                 className="inline-flex items-center gap-2 font-mono text-xs text-ember-400 border border-ember-400/30 px-5 py-2.5 hover:border-ember-400 hover:text-ember-300 hover:bg-ember-400/5 transition-all duration-300"
               >
@@ -354,6 +354,12 @@ export default function PartnerBanner() {
                 comiteetuinfo@cegepstfe.ca →
               </a>
             </div>
+            <a
+              href="/partenaires"
+              className="inline-flex items-center gap-1.5 font-mono text-[10px] text-zinc-600 hover:text-ember-400 tracking-widest uppercase mt-5 transition-colors duration-300"
+            >
+              Voir tous nos partenaires →
+            </a>
           </div>
         </motion.div>
       </div>

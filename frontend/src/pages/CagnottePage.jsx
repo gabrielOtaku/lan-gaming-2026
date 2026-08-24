@@ -312,6 +312,7 @@ function DonationCard() {
   const [customAmount, setCustomAmount] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(true);
   const [displayName, setDisplayName] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const ref = useRef();
@@ -333,6 +334,7 @@ function DonationCard() {
         amount: cents,
         isAnonymous,
         displayName: isAnonymous ? "" : displayName,
+        message,
       });
       window.location.href = res.url;
     } catch (e) {
@@ -430,6 +432,16 @@ function DonationCard() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <textarea
+        placeholder="Un mot pour l'équipe ou la Fondation (optionnel, visible après validation par l'équipe)"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        maxLength={200}
+        rows={2}
+        className="w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-3 py-2.5 outline-none transition-colors font-body placeholder-zinc-700 resize-none mb-4"
+        style={{ clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))" }}
+      />
 
       {error && (
         <div className="flex items-center gap-2 text-red-400 font-mono text-[10px] bg-red-500/10 border border-red-500/20 px-3 py-2 mb-3">
@@ -665,27 +677,35 @@ function LiveFeed({ donations }) {
           transition={{ duration: 1.2, repeat: Infinity }}
         />
         <p className="font-mono text-zinc-500 text-[10px] tracking-[0.4em] uppercase">
-          Dons Twitch récents
+          Dons récents
         </p>
       </div>
-      <div className="space-y-2 max-h-40 overflow-y-auto">
+      <div className="space-y-2 max-h-52 overflow-y-auto">
         {donations.map((d, i) => (
           <motion.div
-            key={i}
+            key={d.id || i}
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="flex items-center justify-between py-1.5 border-b border-zinc-800/60"
+            className="py-1.5 border-b border-zinc-800/60"
           >
-            <div className="flex items-center gap-2">
-              <Heart size={11} className="text-red-400" />
-              <span className="font-body text-zinc-300 text-sm">
-                {d.username}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Heart size={11} className="text-red-400" />
+                <span className="font-body text-zinc-300 text-sm">
+                  {d.username}
+                </span>
+              </div>
+              <span className="font-mono text-ember-400 text-xs font-bold">
+                +{d.amount}$
               </span>
             </div>
-            <span className="font-mono text-ember-400 text-xs font-bold">
-              +{d.amount}$
-            </span>
+            {/* Le serveur ne renvoie un message que s'il a été approuvé — §9.4 */}
+            {d.message && (
+              <p className="font-body text-zinc-500 text-xs italic mt-1 pl-5 leading-snug">
+                « {d.message} »
+              </p>
+            )}
           </motion.div>
         ))}
       </div>

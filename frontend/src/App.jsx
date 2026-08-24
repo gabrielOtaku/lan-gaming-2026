@@ -21,6 +21,8 @@ const AdminPage = lazy(() => import("./pages/AdminPage.jsx"));
 const CagnottePage = lazy(() => import("./pages/CagnottePage.jsx"));
 const LivePage = lazy(() => import("./pages/LivePage.jsx"));
 const DonationOverlayPage = lazy(() => import("./pages/DonationOverlayPage.jsx"));
+const ExperiencePage = lazy(() => import("./pages/ExperiencePage.jsx"));
+const PartnersPage = lazy(() => import("./pages/PartnersPage.jsx"));
 const CompetitionsPage = lazy(() => import("./pages/CompetitionsPage.jsx"));
 const InvitesVipPage = lazy(() => import("./pages/InvitesVipPage.jsx"));
 const CreditsPage = lazy(() => import("./pages/CreditsPage.jsx"));
@@ -57,6 +59,8 @@ function AnimatedRoutes() {
         <Route path="/invites-vip" element={<InvitesVipPage />} />
         <Route path="/cagnotte" element={<CagnottePage />} />
         <Route path="/live" element={<LivePage />} />
+        <Route path="/experience" element={<ExperiencePage />} />
+        <Route path="/partenaires" element={<PartnersPage />} />
         <Route path="/credits" element={<CreditsPage />} />
         <Route path="/infos-pratiques" element={<PracticalInfoPage />} />
         <Route path="/mentions-legales" element={<MentionsLegalesPage />} />
