@@ -19,6 +19,8 @@ const TicketsPage = lazy(() => import("./pages/TicketsPage.jsx"));
 const ContactPage = lazy(() => import("./pages/ContactPage.jsx"));
 const AdminPage = lazy(() => import("./pages/AdminPage.jsx"));
 const CagnottePage = lazy(() => import("./pages/CagnottePage.jsx"));
+const LivePage = lazy(() => import("./pages/LivePage.jsx"));
+const DonationOverlayPage = lazy(() => import("./pages/DonationOverlayPage.jsx"));
 const CompetitionsPage = lazy(() => import("./pages/CompetitionsPage.jsx"));
 const InvitesVipPage = lazy(() => import("./pages/InvitesVipPage.jsx"));
 const CreditsPage = lazy(() => import("./pages/CreditsPage.jsx"));
@@ -54,6 +56,7 @@ function AnimatedRoutes() {
         <Route path="/competitions" element={<CompetitionsPage />} />
         <Route path="/invites-vip" element={<InvitesVipPage />} />
         <Route path="/cagnotte" element={<CagnottePage />} />
+        <Route path="/live" element={<LivePage />} />
         <Route path="/credits" element={<CreditsPage />} />
         <Route path="/infos-pratiques" element={<PracticalInfoPage />} />
         <Route path="/mentions-legales" element={<MentionsLegalesPage />} />
@@ -70,7 +73,32 @@ function AnimatedRoutes() {
 const prefersReducedMotion =
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// L'URL /overlay/donations n'est jamais atteinte par navigation interne — elle
+// est collée telle quelle dans une Browser Source OBS/Streamlabs. Elle ne doit
+// donc porter aucun des habillages du site public (navbar, curseur, loader,
+// fond opaque) : on court-circuite tout ça avant même de monter le Router.
+// window.location.pathname est stable pour toute la durée de vie de cette
+// instance d'App (rien ne navigue vers/depuis cette page en SPA), donc les
+// hooks plus bas restent appelés de façon cohérente à chaque rendu.
+function isOverlayPath() {
+  return typeof window !== "undefined" && window.location.pathname.startsWith("/overlay");
+}
+
 export default function App() {
+  // Rendu directement, sans BrowserRouter : cette page n'a ni lien interne ni
+  // besoin de routing, et Routes/Route exigent un Router déjà monté.
+  if (isOverlayPath()) {
+    return (
+      <Suspense fallback={null}>
+        <DonationOverlayPage />
+      </Suspense>
+    );
+  }
+
+  return <MainApp />;
+}
+
+function MainApp() {
   const [isLoading, setIsLoading] = useState(!prefersReducedMotion);
 
   useEffect(() => {

@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /interne/
+Disallow: /overlay/
 
 Sitemap: https://lan2026.cegepstfe.ca/sitemap.xml
