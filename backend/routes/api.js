@@ -645,6 +645,38 @@ router.get('/cagnotte', (_req, res) => {
   res.status(200).json({ success: true, data: cagnotteState });
 });
 
+// ── POST /api/admin/cagnotte/update (admin) ───────────────────────────────────
+// Seul moyen de faire avancer twitchTotal et goal — sans ça la cagnotte Twitch
+// reste figée, il n'y a ni webhook Stripe ni webhook Twitch dans ce projet.
+router.post('/admin/cagnotte/update', requireAdmin, (req, res) => {
+  const { twitchTotal, goal, ticketOrPrice } = req.body || {};
+
+  if (twitchTotal !== undefined) {
+    if (typeof twitchTotal !== 'number' || twitchTotal < 0) {
+      return res.status(400).json({ error: 'twitchTotal doit être un nombre positif.' });
+    }
+    cagnotteState.twitchTotal = twitchTotal;
+  }
+  if (goal !== undefined) {
+    if (typeof goal !== 'number' || goal <= 0) {
+      return res.status(400).json({ error: 'goal doit être un nombre positif.' });
+    }
+    cagnotteState.goal = goal;
+  }
+  if (ticketOrPrice !== undefined) {
+    if (typeof ticketOrPrice !== 'number' || ticketOrPrice <= 0) {
+      return res.status(400).json({ error: 'ticketOrPrice doit être un nombre positif.' });
+    }
+    cagnotteState.ticketOrPrice = ticketOrPrice;
+  }
+
+  cagnotteState.totalRaised = cagnotteState.twitchTotal + cagnotteState.ticketOrTotal;
+  cagnotteState.lastUpdated = new Date().toISOString();
+  saveJSON('cagnotte.json', cagnotteState);
+
+  res.status(200).json({ success: true, data: cagnotteState });
+});
+
 // ── POST /api/cagnotte/ticket-or ──────────────────────────────────────────────
 router.post('/cagnotte/ticket-or', async (req, res) => {
   const { name, email, quantity } = req.body || {};

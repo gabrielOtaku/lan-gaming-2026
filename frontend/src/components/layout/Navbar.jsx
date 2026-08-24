@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll } from 'framer-motion';
-import { Menu, X, Sword, Zap, Ticket, Mail, Shield, LogOut, AlertCircle, ShoppingBag, Heart, Trophy, Crown, Info } from 'lucide-react';
+import { Menu, X, Sword, Zap, Ticket, Mail, Shield, LogOut, AlertCircle, Heart, Trophy, Crown, Info } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
@@ -12,7 +12,6 @@ const NAV_LINKS = [
   { to: '/billetterie', label: 'Billetterie', icon: Ticket, code: 'TICKET' },
   { to: '/competitions', label: 'Compétitions', icon: Trophy, code: 'COMP' },
   { to: '/invites-vip', label: 'Invités VIP', icon: Crown, code: 'VIP' },
-  { to: '/boutique', label: 'Boutique', icon: ShoppingBag, code: 'SHOP' },
   { to: '/cagnotte', label: 'Cagnotte', icon: Heart, code: 'DON' },
   { to: '/infos-pratiques', label: 'Infos pratiques', icon: Info, code: 'INFO' },
   { to: '/contact', label: 'Contact', icon: Mail, code: 'CONTACT' },

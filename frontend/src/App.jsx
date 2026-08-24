@@ -1,5 +1,4 @@
 import React, { useState, useEffect, Suspense, lazy } from "react";
-import Lenis from "@studio-freight/lenis";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, MotionConfig } from "framer-motion";
 
@@ -19,7 +18,6 @@ const CalendarPage = lazy(() => import("./pages/CalendarPage.jsx"));
 const TicketsPage = lazy(() => import("./pages/TicketsPage.jsx"));
 const ContactPage = lazy(() => import("./pages/ContactPage.jsx"));
 const AdminPage = lazy(() => import("./pages/AdminPage.jsx"));
-const BoutiquePage = lazy(() => import("./pages/BoutiquePage.jsx"));
 const CagnottePage = lazy(() => import("./pages/CagnottePage.jsx"));
 const CompetitionsPage = lazy(() => import("./pages/CompetitionsPage.jsx"));
 const InvitesVipPage = lazy(() => import("./pages/InvitesVipPage.jsx"));
@@ -41,9 +39,7 @@ function AnimatedRoutes() {
   const location = useLocation();
 
   useEffect(() => {
-    if (window.__lenis) {
-      window.__lenis.scrollTo(0, { immediate: true });
-    }
+    window.scrollTo(0, 0);
   }, [location.pathname]);
 
   return (
@@ -57,7 +53,6 @@ function AnimatedRoutes() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/competitions" element={<CompetitionsPage />} />
         <Route path="/invites-vip" element={<InvitesVipPage />} />
-        <Route path="/boutique" element={<BoutiquePage />} />
         <Route path="/cagnotte" element={<CagnottePage />} />
         <Route path="/credits" element={<CreditsPage />} />
         <Route path="/infos-pratiques" element={<PracticalInfoPage />} />
@@ -82,32 +77,6 @@ export default function App() {
     if (prefersReducedMotion) return;
     const timer = setTimeout(() => setIsLoading(false), 3200);
     return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (prefersReducedMotion) return; // skip the smooth-scroll takeover — native scroll only
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 0.85,
-      touchMultiplier: 2,
-    });
-
-    let rafId;
-    function raf(time) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
-    window.__lenis = lenis;
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-      window.__lenis = null;
-    };
   }, []);
 
   return (

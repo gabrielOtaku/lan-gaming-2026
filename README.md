@@ -165,7 +165,6 @@ npm run start:backend # Démarre le backend
 | Three.js | Scènes 3D (shards, orbs, particles, stars) |
 | @react-three/drei | Stars, Float, MeshDistortMaterial, Text |
 | Tailwind CSS 3 | Utility-first styling + custom tokens |
-| Lenis | Smooth scrolling |
 | Axios | Client HTTP |
 | Vite 5 | Bundler avec code splitting |
 

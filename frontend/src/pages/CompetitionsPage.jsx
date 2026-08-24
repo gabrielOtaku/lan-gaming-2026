@@ -363,7 +363,6 @@ function BracketCanvas({ rounds, color, isAdmin, onEditMatch }) {
       {/* Viewport */}
       <div
         ref={containerRef}
-        data-lenis-prevent
         style={{
           position: 'relative', height: 700, overflow: 'hidden',
           cursor: 'grab', userSelect: 'none',

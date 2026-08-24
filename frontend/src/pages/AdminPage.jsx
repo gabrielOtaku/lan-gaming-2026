@@ -3,7 +3,7 @@ import { Navigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield, Users, Mail, Calendar, LogOut, ExternalLink, Settings, Zap,
-  Ticket, Trophy, RefreshCw, ChevronDown, CheckCircle, AlertCircle, Swords,
+  Ticket, Trophy, RefreshCw, ChevronDown, CheckCircle, AlertCircle, Swords, Heart,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { fadeInUp, staggerContainer, pageTransition } from '../utils/animations.js';
@@ -11,6 +11,7 @@ import {
   getTicketsStatus, adminAdjustTickets,
   getTournaments, getTournament, getCompetitors,
   generateBracket, updateMatchScore, resetTournament,
+  getCagnotte, adminUpdateCagnotte,
 } from '../utils/api.js';
 
 const GAME_META = {
@@ -147,6 +148,139 @@ function TicketManager() {
                   </button>
                   <button
                     onClick={() => setEditType(null)}
+                    className="font-mono text-zinc-600 hover:text-zinc-400 text-xs px-1 transition-colors"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {err && (
+        <div className="flex items-center gap-2 text-red-400 font-mono text-[10px] bg-red-500/10 border border-red-500/20 px-3 py-2 mt-2">
+          <AlertCircle size={11} /> {err}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Cagnotte Manager Section ──────────────────────────────────────────────────
+// C'est le seul moyen de faire avancer twitchTotal — il n'y a ni webhook Stripe
+// ni webhook Twitch dans ce projet, donc quelqu'un doit entrer le montant ici
+// pendant l'événement.
+function CagnotteManager() {
+  const [data, setData] = useState(null);
+  const [field, setField] = useState(null); // 'twitchTotal' | 'goal' | 'ticketOrPrice'
+  const [val, setVal] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState(null);
+
+  const load = useCallback(() => {
+    getCagnotte().then(r => setData(r.data)).catch(() => {});
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const startEdit = (key, current) => {
+    setField(key);
+    setVal(String(current ?? ''));
+    setErr(null);
+  };
+
+  const handleSave = async () => {
+    const n = Number(val);
+    if (isNaN(n) || n < 0) return setErr('Valeur invalide.');
+    setSaving(true);
+    setErr(null);
+    try {
+      await adminUpdateCagnotte({ [field]: n });
+      setField(null);
+      load();
+    } catch (e) {
+      setErr(e.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (!data) return (
+    <div className="flex items-center gap-2 font-mono text-zinc-600 text-xs">
+      <RefreshCw size={12} className="animate-spin" /> Chargement...
+    </div>
+  );
+
+  const rows = [
+    { key: 'twitchTotal', label: 'Dons Twitch', value: data.twitchTotal, color: '#9B59B6' },
+    { key: 'goal', label: 'Objectif Fondation', value: data.goal, color: '#FFD700' },
+    { key: 'ticketOrPrice', label: 'Prix Ticket d\'Or', value: data.ticketOrPrice, color: '#C89B3C' },
+  ];
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <p className="font-mono text-ember-500 text-xs tracking-widest uppercase">Cagnotte Fondation</p>
+        <button onClick={load} className="text-zinc-600 hover:text-ember-400 transition-colors">
+          <RefreshCw size={12} />
+        </button>
+      </div>
+
+      <div className="border border-amber-500/20 bg-obsidian-900/40 px-3 py-2 mb-3 flex items-center justify-between">
+        <span className="font-mono text-zinc-600 text-[9px] tracking-widest uppercase">Total affiché</span>
+        <span className="font-display font-black text-amber-300 text-lg">
+          {(data.totalRaised || 0).toLocaleString('fr-CA')}$
+        </span>
+      </div>
+
+      <div className="space-y-3">
+        {rows.map(({ key, label, value, color }) => {
+          const isEditing = field === key;
+          return (
+            <div
+              key={key}
+              className="border border-zinc-800 bg-obsidian-800/60 p-3"
+              style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))' }}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-4 rounded-full" style={{ background: color }} />
+                  <span className="font-display text-white text-sm font-bold">{label}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-xs" style={{ color }}>
+                    {Number(value ?? 0).toLocaleString('fr-CA')}$
+                  </span>
+                  <button
+                    onClick={() => startEdit(key, value)}
+                    className="font-mono text-zinc-600 hover:text-ember-400 text-[9px] tracking-widest uppercase transition-colors"
+                  >
+                    Modifier
+                  </button>
+                </div>
+              </div>
+
+              {isEditing && (
+                <div className="mt-2 flex items-center gap-2">
+                  <input
+                    type="number"
+                    min="0"
+                    value={val}
+                    onChange={e => setVal(e.target.value)}
+                    className="flex-1 bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-2 py-1.5 outline-none font-mono"
+                    style={{ clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}
+                  />
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="px-3 py-1.5 bg-ember-400 text-obsidian-900 font-display font-bold text-[10px] tracking-widest uppercase clip-diagonal disabled:opacity-50"
+                  >
+                    {saving ? '...' : 'OK'}
+                  </button>
+                  <button
+                    onClick={() => setField(null)}
                     className="font-mono text-zinc-600 hover:text-zinc-400 text-xs px-1 transition-colors"
                   >
                     ✕
@@ -564,7 +698,7 @@ export default function AdminPage() {
           ))}
         </motion.div>
 
-        {/* Main grid: ticket manager + tournament manager */}
+        {/* Main grid: ticket manager + cagnotte manager + tournament manager */}
         <div className="grid md:grid-cols-2 gap-8 mb-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -584,8 +718,23 @@ export default function AdminPage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: 0.05 }}
             className="border border-zinc-800 bg-obsidian-800/40 p-5"
+            style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}
+          >
+            <div className="flex items-center gap-2 mb-4">
+              <Heart size={14} className="text-ember-400" />
+              <span className="font-mono text-ember-500 text-xs tracking-widest uppercase">Dons</span>
+            </div>
+            <CagnotteManager />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="border border-zinc-800 bg-obsidian-800/40 p-5 md:col-span-2"
             style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}
           >
             <div className="flex items-center gap-2 mb-4">

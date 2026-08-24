@@ -39,4 +39,8 @@ export const updateMatchScore = (matchId, data) => api.put(`/tournaments/match/$
 export const resetTournament = (game) => api.delete(`/tournaments/${game}/reset`);
 export const getCompetitors = () => api.get('/admin/competitors');
 
+// Cagnotte
+export const getCagnotte = () => api.get('/cagnotte');
+export const adminUpdateCagnotte = (data) => api.post('/admin/cagnotte/update', data);
+
 export default api;
