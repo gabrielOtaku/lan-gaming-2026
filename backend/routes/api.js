@@ -5,6 +5,7 @@ import { validateContact, validateTicketRequest, validateChat } from '../middlew
 import { sanitizeObject, sanitizeString } from '../utils/sanitize.js';
 import { requireAuth, requireAdmin } from '../middlewares/auth.js';
 import { loadJSON, saveJSON } from '../utils/persist.js';
+import { getCagnotteState, recordTicketOr, adminUpdateCagnotte } from '../utils/cagnotteStore.js';
 
 // ── Nodemailer transporter ────────────────────────────────────────────────────
 const smtpConfigured = process.env.SMTP_USER && process.env.SMTP_PASS && process.env.SMTP_USER !== 'votre.email@gmail.com';
@@ -627,54 +628,31 @@ router.post('/chat', validateChat, async (req, res) => {
   }
 });
 
-// ── Cagnotte state (persisted to disk) ───────────────────────────────────────
-const cagnotteState = loadJSON('cagnotte.json', {
-  totalRaised:   0,
-  twitchTotal:   0,
-  ticketOrTotal: 0,
-  ticketOrSold:  0,
-  ticketOrPot:   0,
-  ticketOrPrice: 10,
-  goal:          100000,
-  lastUpdated:   new Date().toISOString(),
-  recentDonations: [],
-});
-
 // ── GET /api/cagnotte ─────────────────────────────────────────────────────────
 router.get('/cagnotte', (_req, res) => {
-  res.status(200).json({ success: true, data: cagnotteState });
+  res.status(200).json({ success: true, data: getCagnotteState() });
 });
 
 // ── POST /api/admin/cagnotte/update (admin) ───────────────────────────────────
-// Seul moyen de faire avancer twitchTotal et goal — sans ça la cagnotte Twitch
-// reste figée, il n'y a ni webhook Stripe ni webhook Twitch dans ce projet.
+// Seul moyen de faire avancer twitchTotal (dons reçus directement sur le
+// panneau natif Twitch, hors de portée d'un webhook) et d'ajuster goal /
+// ticketOrPrice. Les dons en ligne (donationsTotal), eux, n'avancent que via
+// le webhook Stripe signé — voir routes/donations.js.
 router.post('/admin/cagnotte/update', requireAdmin, (req, res) => {
   const { twitchTotal, goal, ticketOrPrice } = req.body || {};
 
-  if (twitchTotal !== undefined) {
-    if (typeof twitchTotal !== 'number' || twitchTotal < 0) {
-      return res.status(400).json({ error: 'twitchTotal doit être un nombre positif.' });
-    }
-    cagnotteState.twitchTotal = twitchTotal;
+  if (twitchTotal !== undefined && (typeof twitchTotal !== 'number' || twitchTotal < 0)) {
+    return res.status(400).json({ error: 'twitchTotal doit être un nombre positif.' });
   }
-  if (goal !== undefined) {
-    if (typeof goal !== 'number' || goal <= 0) {
-      return res.status(400).json({ error: 'goal doit être un nombre positif.' });
-    }
-    cagnotteState.goal = goal;
+  if (goal !== undefined && (typeof goal !== 'number' || goal <= 0)) {
+    return res.status(400).json({ error: 'goal doit être un nombre positif.' });
   }
-  if (ticketOrPrice !== undefined) {
-    if (typeof ticketOrPrice !== 'number' || ticketOrPrice <= 0) {
-      return res.status(400).json({ error: 'ticketOrPrice doit être un nombre positif.' });
-    }
-    cagnotteState.ticketOrPrice = ticketOrPrice;
+  if (ticketOrPrice !== undefined && (typeof ticketOrPrice !== 'number' || ticketOrPrice <= 0)) {
+    return res.status(400).json({ error: 'ticketOrPrice doit être un nombre positif.' });
   }
 
-  cagnotteState.totalRaised = cagnotteState.twitchTotal + cagnotteState.ticketOrTotal;
-  cagnotteState.lastUpdated = new Date().toISOString();
-  saveJSON('cagnotte.json', cagnotteState);
-
-  res.status(200).json({ success: true, data: cagnotteState });
+  adminUpdateCagnotte({ twitchTotal, goal, ticketOrPrice });
+  res.status(200).json({ success: true, data: getCagnotteState() });
 });
 
 // ── POST /api/cagnotte/ticket-or ──────────────────────────────────────────────
@@ -686,14 +664,9 @@ router.post('/cagnotte/ticket-or', async (req, res) => {
   const sanitizedName = sanitizeString(String(name).slice(0, 80));
   const sanitizedEmail = sanitizeString(String(email).slice(0, 120));
   const qty = Math.max(1, Math.min(10, parseInt(quantity, 10)));
-  const total = qty * cagnotteState.ticketOrPrice;
+  const total = qty * getCagnotteState().ticketOrPrice;
 
-  cagnotteState.ticketOrSold += qty;
-  cagnotteState.ticketOrPot += total;
-  cagnotteState.ticketOrTotal += total;
-  cagnotteState.totalRaised = cagnotteState.twitchTotal + cagnotteState.ticketOrTotal;
-  cagnotteState.lastUpdated = new Date().toISOString();
-  saveJSON('cagnotte.json', cagnotteState);
+  recordTicketOr({ qty, total });
 
   if (mailer) {
     try {

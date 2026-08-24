@@ -1,0 +1,55 @@
+import { loadJSON, saveJSON } from './persist.js';
+
+// Source unique de la cagnotte — chargée une fois au démarrage du process et
+// partagée en mémoire par tous les modules qui l'importent (donations Stripe,
+// Ticket d'Or, admin). Persistée sur disque à chaque écriture.
+const state = loadJSON('cagnotte.json', {
+  totalRaised: 0,
+  donationsTotal: 0, // dons Stripe confirmés par webhook — jamais incrémenté ailleurs
+  donorCount: 0,
+  twitchTotal: 0,     // dons reçus directement via le panneau natif Twitch — saisi manuellement en admin, hors de portée d'un webhook
+  ticketOrTotal: 0,
+  ticketOrSold: 0,
+  ticketOrPot: 0,
+  ticketOrPrice: 10,
+  goal: 100000,
+  lastUpdated: new Date().toISOString(),
+  recentDonations: [],
+});
+
+function persist() {
+  state.totalRaised = state.donationsTotal + state.twitchTotal + state.ticketOrTotal;
+  state.lastUpdated = new Date().toISOString();
+  saveJSON('cagnotte.json', state);
+}
+
+export function getCagnotteState() {
+  return state;
+}
+
+export function recordTicketOr({ qty, total }) {
+  state.ticketOrSold += qty;
+  state.ticketOrPot += total;
+  state.ticketOrTotal += total;
+  persist();
+}
+
+// Appelé uniquement depuis le webhook Stripe une fois le paiement confirmé
+// côté serveur — jamais depuis une route déclenchée par le navigateur (§8.5).
+export function recordStripeDonation({ amountCents, displayName, message }) {
+  const amount = Math.round(amountCents / 100);
+  state.donationsTotal += amount;
+  state.donorCount += 1;
+  state.recentDonations = [
+    { username: displayName || 'Anonyme', amount, message: message || null, at: new Date().toISOString() },
+    ...state.recentDonations,
+  ].slice(0, 20);
+  persist();
+}
+
+export function adminUpdateCagnotte({ twitchTotal, goal, ticketOrPrice }) {
+  if (twitchTotal !== undefined) state.twitchTotal = twitchTotal;
+  if (goal !== undefined) state.goal = goal;
+  if (ticketOrPrice !== undefined) state.ticketOrPrice = ticketOrPrice;
+  persist();
+}

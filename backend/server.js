@@ -16,6 +16,7 @@ import passport from "passport";
 import { Server as SocketIO } from "socket.io";
 import apiRoutes from "./routes/api.js";
 import authRoutes from "./routes/auth.js";
+import { donationsRouter, stripeWebhookRouter } from "./routes/donations.js";
 import { SESSION_SECRET } from "./config/secrets.js";
 
 const app = express();
@@ -93,6 +94,12 @@ app.use(passport.session());
 // ── Cookie Parser ─────────────────────────────────────────────────────────────
 app.use(cookieParser());
 
+// ── Webhook Stripe ─────────────────────────────────────────────────────────────
+// Doit être monté AVANT express.json() : Stripe signe le corps brut de la
+// requête, et un body déjà parsé/re-sérialisé ne correspond plus à cette
+// signature. Le reste des routes /api continue de recevoir du JSON normalement.
+app.use("/api", stripeWebhookRouter);
+
 // ── Body Parsing ──────────────────────────────────────────────────────────────
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: false, limit: "10kb" }));
@@ -161,6 +168,7 @@ io.on('connection', (socket) => {
 // ── Routes ─────────────────────────────────────────────────────────────────────
 app.use("/api/auth", authRoutes);
 app.use("/api", apiRoutes);
+app.use("/api", donationsRouter);
 
 // ── Health Check ───────────────────────────────────────────────────────────────
 app.get("/health", (_req, res) => {

@@ -43,4 +43,7 @@ export const getCompetitors = () => api.get('/admin/competitors');
 export const getCagnotte = () => api.get('/cagnotte');
 export const adminUpdateCagnotte = (data) => api.post('/admin/cagnotte/update', data);
 
+// Dons Stripe
+export const createDonationCheckout = (data) => api.post('/donations/checkout', data);
+
 export default api;
