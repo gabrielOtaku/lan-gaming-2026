@@ -3,7 +3,7 @@ import { Navigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield, Users, Mail, Calendar, LogOut, ExternalLink, Settings, Zap,
-  Ticket, Trophy, RefreshCw, ChevronDown, CheckCircle, AlertCircle, Swords, Heart, EyeOff, MessageSquare,
+  Ticket, Trophy, RefreshCw, ChevronDown, CheckCircle, AlertCircle, Swords, Heart,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { fadeInUp, staggerContainer, pageTransition } from '../utils/animations.js';
@@ -12,7 +12,6 @@ import {
   getTournaments, getTournament, getCompetitors,
   generateBracket, updateMatchScore, resetTournament,
   getCagnotte, adminUpdateCagnotte,
-  adminGetDonations, adminModerateDonation,
 } from '../utils/api.js';
 
 const GAME_META = {
@@ -25,6 +24,8 @@ const GAME_META = {
 };
 
 const QUICK_LINKS = [
+  { label: 'Supabase Dashboard (dons en ligne)', href: 'https://supabase.com/dashboard/project/ewpuczmzbmhdwdueahww', icon: ExternalLink, color: '#3ECF8E', external: true },
+  { label: 'Stripe Dashboard', href: 'https://dashboard.stripe.com', icon: ExternalLink, color: '#635BFF', external: true },
   { label: 'Dossier de partenariat (PDF)', href: '/partenariat.pdf', icon: ExternalLink, color: '#C89B3C', external: false },
   { label: 'Site Fondation du Cégep', href: 'https://fondationcstfelicien.qc.ca', icon: ExternalLink, color: '#FF4655', external: true },
   { label: 'Site du Cégep', href: 'https://www.cstfelicien.qc.ca', icon: ExternalLink, color: '#4FC3F7', external: true },
@@ -175,7 +176,7 @@ function TicketManager() {
 // pendant l'événement.
 function CagnotteManager() {
   const [data, setData] = useState(null);
-  const [field, setField] = useState(null); // 'twitchTotal' | 'goal' | 'ticketOrPrice'
+  const [field, setField] = useState(null); // 'twitchTotal' | 'ticketOrPrice'
   const [val, setVal] = useState('');
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState(null);
@@ -216,25 +217,21 @@ function CagnotteManager() {
 
   const rows = [
     { key: 'twitchTotal', label: 'Dons Twitch', value: data.twitchTotal, color: '#9B59B6' },
-    { key: 'goal', label: 'Objectif Fondation', value: data.goal, color: '#FFD700' },
     { key: 'ticketOrPrice', label: 'Prix Ticket d\'Or', value: data.ticketOrPrice, color: '#C89B3C' },
   ];
 
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <p className="font-mono text-ember-500 text-xs tracking-widest uppercase">Cagnotte Fondation</p>
+        <p className="font-mono text-ember-500 text-xs tracking-widest uppercase">Ticket d'Or / Twitch</p>
         <button onClick={load} className="text-zinc-600 hover:text-ember-400 transition-colors">
           <RefreshCw size={12} />
         </button>
       </div>
 
-      <div className="border border-amber-500/20 bg-obsidian-900/40 px-3 py-2 mb-3 flex items-center justify-between">
-        <span className="font-mono text-zinc-600 text-[9px] tracking-widest uppercase">Total affiché</span>
-        <span className="font-display font-black text-amber-300 text-lg">
-          {(data.totalRaised || 0).toLocaleString('fr-CA')}$
-        </span>
-      </div>
+      <p className="font-mono text-zinc-700 text-[9px] tracking-widest mb-3">
+        Le don en ligne (Stripe) et l'objectif de la cagnotte vivent dans Supabase — voir le tableau de bord Supabase pour les modifier.
+      </p>
 
       <div className="space-y-3">
         {rows.map(({ key, label, value, color }) => {
@@ -292,107 +289,6 @@ function CagnotteManager() {
           );
         })}
       </div>
-
-      {err && (
-        <div className="flex items-center gap-2 text-red-400 font-mono text-[10px] bg-red-500/10 border border-red-500/20 px-3 py-2 mt-2">
-          <AlertCircle size={11} /> {err}
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ── Donation Message Moderation ───────────────────────────────────────────────
-// Les messages de donateurs n'apparaissent nulle part sur le site public tant
-// qu'ils ne sont pas approuvés ici (§9.4, §11.2 : "masquer un message sans
-// toucher au don"). GET /api/cagnotte ne renvoie jamais un message non validé —
-// cette liste vient d'un endpoint admin distinct qui voit tout.
-function DonationModeration() {
-  const [donations, setDonations] = useState(null);
-  const [busyId, setBusyId] = useState(null);
-  const [err, setErr] = useState(null);
-
-  const load = useCallback(() => {
-    adminGetDonations().then((r) => setDonations(r.data || [])).catch((e) => setErr(e.message));
-  }, []);
-
-  useEffect(() => { load(); }, [load]);
-
-  const act = async (id, action) => {
-    setBusyId(id);
-    setErr(null);
-    try {
-      await adminModerateDonation(id, action);
-      load();
-    } catch (e) {
-      setErr(e.message);
-    } finally {
-      setBusyId(null);
-    }
-  };
-
-  if (!donations) return (
-    <div className="flex items-center gap-2 font-mono text-zinc-600 text-xs">
-      <RefreshCw size={12} className="animate-spin" /> Chargement...
-    </div>
-  );
-
-  const withMessage = donations.filter((d) => d.message);
-
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
-        <p className="font-mono text-ember-500 text-xs tracking-widest uppercase">
-          Modération des messages ({withMessage.length})
-        </p>
-        <button onClick={load} className="text-zinc-600 hover:text-ember-400 transition-colors">
-          <RefreshCw size={12} />
-        </button>
-      </div>
-
-      {withMessage.length === 0 ? (
-        <p className="font-mono text-zinc-700 text-xs">Aucun message de donateur pour l'instant.</p>
-      ) : (
-        <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
-          {withMessage.map((d) => (
-            <div
-              key={d.id}
-              className="border border-zinc-800 bg-obsidian-800/60 p-3"
-              style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))' }}
-            >
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="font-display text-white text-sm font-bold">{d.username} · {d.amount}$</span>
-                {d.messageApproved ? (
-                  <span className="font-mono text-[9px] tracking-widest uppercase text-green-500 flex items-center gap-1">
-                    <CheckCircle size={10} /> Public
-                  </span>
-                ) : (
-                  <span className="font-mono text-[9px] tracking-widest uppercase text-amber-500">En attente</span>
-                )}
-              </div>
-              <p className="font-body text-zinc-400 text-sm italic mb-2.5">« {d.message} »</p>
-              <div className="flex items-center gap-2">
-                {!d.messageApproved && (
-                  <button
-                    onClick={() => act(d.id, 'approve')}
-                    disabled={busyId === d.id}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-ember-400 text-obsidian-900 font-display font-bold text-[10px] tracking-widest uppercase clip-diagonal disabled:opacity-50"
-                  >
-                    <CheckCircle size={10} /> Approuver
-                  </button>
-                )}
-                <button
-                  onClick={() => act(d.id, 'hide')}
-                  disabled={busyId === d.id}
-                  className="flex items-center gap-1.5 px-3 py-1.5 border border-red-500/40 text-red-400 hover:bg-red-500/10 font-mono text-[10px] tracking-widest uppercase transition-colors disabled:opacity-50"
-                >
-                  <EyeOff size={10} /> Masquer
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
 
       {err && (
         <div className="flex items-center gap-2 text-red-400 font-mono text-[10px] bg-red-500/10 border border-red-500/20 px-3 py-2 mt-2">
@@ -835,21 +731,6 @@ export default function AdminPage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.08 }}
-            className="border border-zinc-800 bg-obsidian-800/40 p-5 md:col-span-2"
-            style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <MessageSquare size={14} className="text-ember-400" />
-              <span className="font-mono text-ember-500 text-xs tracking-widest uppercase">Modération</span>
-            </div>
-            <DonationModeration />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
             transition={{ delay: 0.1 }}
             className="border border-zinc-800 bg-obsidian-800/40 p-5 md:col-span-2"
             style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}
@@ -907,8 +788,6 @@ MICROSOFT_CLIENT_SECRET=...
 JWT_SECRET=votre-secret-jwt
 ADMIN_EMAIL=gabrielherve94@gmail.com
 ADMIN_PASSWORD=VotreMotDePasse
-STRIPE_SECRET_KEY=sk_live_...     # sans ça, /cagnotte affiche "dons indisponibles"
-STRIPE_WEBHOOK_SECRET=whsec_...   # signing secret de l'endpoint /api/donations/webhook
 SMTP_USER=votre.email@gmail.com
 SMTP_PASS=xxxx-xxxx-xxxx-xxxx    # App password Gmail
 SMTP_TO=comiteetuinfo@cegepstfe.ca`}</pre>

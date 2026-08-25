@@ -15,8 +15,3 @@ function requireSecret(name, devFallback) {
 export const JWT_SECRET = requireSecret('JWT_SECRET', 'dev-only-jwt-secret-do-not-use-in-prod');
 export const SESSION_SECRET = process.env.SESSION_SECRET || JWT_SECRET;
 export const ADMIN_PASSWORD = requireSecret('ADMIN_PASSWORD', 'dev-only-admin-password');
-
-// Optionnels : le don en ligne se désactive proprement (503) si absents,
-// plutôt que d'empêcher tout le site de démarrer — voir routes/donations.js.
-export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || null;
-export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || null;

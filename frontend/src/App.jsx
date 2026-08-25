@@ -20,7 +20,8 @@ const ContactPage = lazy(() => import("./pages/ContactPage.jsx"));
 const AdminPage = lazy(() => import("./pages/AdminPage.jsx"));
 const CagnottePage = lazy(() => import("./pages/CagnottePage.jsx"));
 const LivePage = lazy(() => import("./pages/LivePage.jsx"));
-const DonationOverlayPage = lazy(() => import("./pages/DonationOverlayPage.jsx"));
+const DonationGoalOverlay = lazy(() => import("./pages/overlays/DonationGoalOverlay.jsx"));
+const DonationAlertOverlay = lazy(() => import("./pages/overlays/DonationAlertOverlay.jsx"));
 const ExperiencePage = lazy(() => import("./pages/ExperiencePage.jsx"));
 const PartnersPage = lazy(() => import("./pages/PartnersPage.jsx"));
 const CompetitionsPage = lazy(() => import("./pages/CompetitionsPage.jsx"));
@@ -89,12 +90,13 @@ function isOverlayPath() {
 }
 
 export default function App() {
-  // Rendu directement, sans BrowserRouter : cette page n'a ni lien interne ni
-  // besoin de routing, et Routes/Route exigent un Router déjà monté.
+  // Rendu directement, sans BrowserRouter : ces pages n'ont ni lien interne
+  // ni besoin de routing, et Routes/Route exigent un Router déjà monté.
   if (isOverlayPath()) {
+    const isGoalOverlay = window.location.pathname === "/overlay/donation-goal";
     return (
       <Suspense fallback={null}>
-        <DonationOverlayPage />
+        {isGoalOverlay ? <DonationGoalOverlay /> : <DonationAlertOverlay />}
       </Suspense>
     );
   }

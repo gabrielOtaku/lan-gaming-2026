@@ -39,15 +39,9 @@ export const updateMatchScore = (matchId, data) => api.put(`/tournaments/match/$
 export const resetTournament = (game) => api.delete(`/tournaments/${game}/reset`);
 export const getCompetitors = () => api.get('/admin/competitors');
 
-// Cagnotte
+// Cagnotte — Ticket d'Or + dons Twitch natifs uniquement. Le don en ligne
+// (Stripe) est lu directement depuis Supabase, voir hooks/useDonationCampaign.js.
 export const getCagnotte = () => api.get('/cagnotte');
 export const adminUpdateCagnotte = (data) => api.post('/admin/cagnotte/update', data);
-
-// Dons Stripe
-export const createDonationCheckout = (data) => api.post('/donations/checkout', data);
-
-// Modération des messages de don (admin)
-export const adminGetDonations = () => api.get('/admin/cagnotte/donations');
-export const adminModerateDonation = (id, action) => api.patch(`/admin/cagnotte/donations/${id}/moderate`, { action });
 
 export default api;

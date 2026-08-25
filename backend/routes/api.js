@@ -6,7 +6,7 @@ import { sanitizeObject, sanitizeString } from '../utils/sanitize.js';
 import { requireAuth, requireAdmin } from '../middlewares/auth.js';
 import { loadJSON, saveJSON } from '../utils/persist.js';
 import {
-  getCagnotteState, getPublicCagnotteState, recordTicketOr, adminUpdateCagnotte, moderateDonationMessage,
+  getCagnotteState, recordTicketOr, adminUpdateCagnotte,
 } from '../utils/cagnotteStore.js';
 
 // ── Nodemailer transporter ────────────────────────────────────────────────────
@@ -631,49 +631,26 @@ router.post('/chat', validateChat, async (req, res) => {
 });
 
 // ── GET /api/cagnotte ─────────────────────────────────────────────────────────
-// Vue publique : un message de donateur non approuvé n'est jamais envoyé au
-// navigateur (§9.4) — voir cagnotteStore.getPublicCagnotteState.
+// Ticket d'Or + dons Twitch natifs uniquement — le don en ligne (Stripe) vit
+// entièrement dans Supabase, lu directement par le front via useDonationCampaign().
 router.get('/cagnotte', (_req, res) => {
-  res.status(200).json({ success: true, data: getPublicCagnotteState() });
-});
-
-// ── GET /api/admin/cagnotte/donations (admin) ─────────────────────────────────
-// Vue complète (messages bruts + statut de modération) pour le panneau admin —
-// jamais exposée aux visiteurs, contrairement à GET /api/cagnotte.
-router.get('/admin/cagnotte/donations', requireAdmin, (_req, res) => {
-  res.status(200).json({ success: true, data: getCagnotteState().recentDonations });
-});
-
-// ── PATCH /api/admin/cagnotte/donations/:id/moderate (admin) ─────────────────
-router.patch('/admin/cagnotte/donations/:id/moderate', requireAdmin, (req, res) => {
-  const { action } = req.body || {};
-  if (!['approve', 'hide'].includes(action)) {
-    return res.status(400).json({ error: "action doit être 'approve' ou 'hide'." });
-  }
-  const donation = moderateDonationMessage(req.params.id, action);
-  if (!donation) return res.status(404).json({ error: 'Don introuvable.' });
-  res.status(200).json({ success: true, data: donation });
+  res.status(200).json({ success: true, data: getCagnotteState() });
 });
 
 // ── POST /api/admin/cagnotte/update (admin) ───────────────────────────────────
 // Seul moyen de faire avancer twitchTotal (dons reçus directement sur le
-// panneau natif Twitch, hors de portée d'un webhook) et d'ajuster goal /
-// ticketOrPrice. Les dons en ligne (donationsTotal), eux, n'avancent que via
-// le webhook Stripe signé — voir routes/donations.js.
+// panneau natif Twitch, hors de portée d'un webhook) et d'ajuster ticketOrPrice.
 router.post('/admin/cagnotte/update', requireAdmin, (req, res) => {
-  const { twitchTotal, goal, ticketOrPrice } = req.body || {};
+  const { twitchTotal, ticketOrPrice } = req.body || {};
 
   if (twitchTotal !== undefined && (typeof twitchTotal !== 'number' || twitchTotal < 0)) {
     return res.status(400).json({ error: 'twitchTotal doit être un nombre positif.' });
-  }
-  if (goal !== undefined && (typeof goal !== 'number' || goal <= 0)) {
-    return res.status(400).json({ error: 'goal doit être un nombre positif.' });
   }
   if (ticketOrPrice !== undefined && (typeof ticketOrPrice !== 'number' || ticketOrPrice <= 0)) {
     return res.status(400).json({ error: 'ticketOrPrice doit être un nombre positif.' });
   }
 
-  adminUpdateCagnotte({ twitchTotal, goal, ticketOrPrice });
+  adminUpdateCagnotte({ twitchTotal, ticketOrPrice });
   res.status(200).json({ success: true, data: getCagnotteState() });
 });
 

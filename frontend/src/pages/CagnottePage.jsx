@@ -13,7 +13,6 @@ import {
   ChevronRight,
   RefreshCw,
   AlertCircle,
-  CreditCard,
   CheckCircle2,
   X,
 } from "lucide-react";
@@ -24,7 +23,8 @@ import {
   scrollReveal,
   EASE_GAME,
 } from "../utils/animations.js";
-import { createDonationCheckout } from "../utils/api.js";
+import { useDonationCampaign } from "../hooks/useDonationCampaign.js";
+import DonateButton from "../components/donations/DonateButton.jsx";
 
 // ── Animated Counter ──────────────────────────────────────────────────────────
 function AnimatedCounter({
@@ -301,174 +301,6 @@ function TicketOrCard({ data, onPurchase }) {
   );
 }
 
-// ── Donation Card (Stripe Checkout) ───────────────────────────────────────────
-// Parcours don du cahier (§8.1-8.4) : montant rapide ou libre, aucun compte
-// requis, le navigateur envoie une intention et c'est le serveur qui crée la
-// session Stripe et fixe le montant réel.
-const QUICK_AMOUNTS = [5, 10, 20, 50];
-
-function DonationCard() {
-  const [amount, setAmount] = useState(20);
-  const [customAmount, setCustomAmount] = useState("");
-  const [isAnonymous, setIsAnonymous] = useState(true);
-  const [displayName, setDisplayName] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const ref = useRef();
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-
-  const selectedAmount = customAmount ? Number(customAmount) : amount;
-  const isCustom = customAmount !== "";
-
-  const handleDonate = async () => {
-    const cents = Math.round(selectedAmount * 100);
-    if (!Number.isFinite(cents) || cents < 500 || cents > 500000) {
-      setError("Choisis un montant entre 5$ et 5 000$.");
-      return;
-    }
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await createDonationCheckout({
-        amount: cents,
-        isAnonymous,
-        displayName: isAnonymous ? "" : displayName,
-        message,
-      });
-      window.location.href = res.url;
-    } catch (e) {
-      setError(e.message);
-      setLoading(false);
-    }
-  };
-
-  return (
-    <motion.div
-      ref={ref}
-      variants={scrollReveal}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
-      className="relative overflow-hidden border border-ember-400/30 bg-obsidian-800/80 p-6 md:p-8"
-      style={{
-        clipPath:
-          "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))",
-        boxShadow: "0 0 40px rgba(200,155,60,0.1), inset 0 0 40px rgba(200,155,60,0.03)",
-      }}
-    >
-      <div className="flex items-center gap-2 mb-1">
-        <CreditCard size={18} className="text-ember-400" />
-        <span className="font-mono text-ember-500 text-[10px] tracking-[0.5em] uppercase">
-          Don sécurisé
-        </span>
-      </div>
-      <h2 className="font-display text-2xl md:text-3xl font-black text-white leading-tight mb-1">
-        Faire un don direct
-      </h2>
-      <p className="font-body text-zinc-500 text-sm mb-6">
-        Paiement par carte via Stripe. Aucun compte requis, tu reviens sur ce
-        site après le paiement.
-      </p>
-
-      <div className="grid grid-cols-4 gap-2 mb-3">
-        {QUICK_AMOUNTS.map((a) => (
-          <button
-            key={a}
-            type="button"
-            onClick={() => {
-              setAmount(a);
-              setCustomAmount("");
-            }}
-            className={`py-3 font-display font-bold text-sm transition-all border ${
-              !isCustom && amount === a
-                ? "bg-ember-400 text-obsidian-900 border-ember-400"
-                : "bg-obsidian-900 text-zinc-300 border-zinc-800 hover:border-ember-400/50"
-            }`}
-          >
-            {a}$
-          </button>
-        ))}
-      </div>
-
-      <input
-        type="number"
-        min="1"
-        placeholder="Autre montant ($)"
-        value={customAmount}
-        onChange={(e) => setCustomAmount(e.target.value)}
-        className="w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-3 py-2.5 outline-none transition-colors font-body placeholder-zinc-700 mb-4"
-        style={{ clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))" }}
-      />
-
-      <label className="flex items-center gap-2 mb-3 cursor-pointer select-none">
-        <input
-          type="checkbox"
-          checked={!isAnonymous}
-          onChange={(e) => setIsAnonymous(!e.target.checked)}
-          className="accent-ember-400"
-        />
-        <span className="font-mono text-zinc-500 text-[11px] tracking-wide">
-          Afficher mon prénom sur l'overlay (sinon anonyme)
-        </span>
-      </label>
-
-      <AnimatePresence>
-        {!isAnonymous && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden mb-3"
-          >
-            <input
-              type="text"
-              placeholder="Prénom (optionnel)"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              maxLength={60}
-              className="w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-3 py-2.5 outline-none transition-colors font-body placeholder-zinc-700"
-              style={{ clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))" }}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <textarea
-        placeholder="Un mot pour l'équipe ou la Fondation (optionnel, visible après validation par l'équipe)"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        maxLength={200}
-        rows={2}
-        className="w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-3 py-2.5 outline-none transition-colors font-body placeholder-zinc-700 resize-none mb-4"
-        style={{ clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))" }}
-      />
-
-      {error && (
-        <div className="flex items-center gap-2 text-red-400 font-mono text-[10px] bg-red-500/10 border border-red-500/20 px-3 py-2 mb-3">
-          <AlertCircle size={11} /> {error}
-        </div>
-      )}
-
-      <motion.button
-        onClick={handleDonate}
-        disabled={loading || !selectedAmount || selectedAmount <= 0}
-        className="w-full py-4 font-display font-black text-base tracking-widest uppercase text-obsidian-900 disabled:opacity-50 transition-opacity"
-        style={{
-          background: "linear-gradient(135deg, #C89B3C, #FFD700, #C89B3C)",
-          clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
-        }}
-        whileHover={{ scale: loading ? 1 : 1.01 }}
-        whileTap={{ scale: loading ? 1 : 0.98 }}
-      >
-        {loading ? "Redirection vers Stripe..." : `Donner ${selectedAmount || 0}$ →`}
-      </motion.button>
-      <p className="font-mono text-zinc-700 text-[9px] tracking-widest text-center mt-3">
-        Paiement traité par Stripe · 100% reversé à la Fondation
-      </p>
-    </motion.div>
-  );
-}
-
 // ── Purchase Modal ────────────────────────────────────────────────────────────
 function PurchaseModal({ onClose, ticketPrice }) {
   const [name, setName] = useState("");
@@ -659,82 +491,32 @@ function PurchaseModal({ onClose, ticketPrice }) {
   );
 }
 
-// ── Live Donation Feed ────────────────────────────────────────────────────────
-function LiveFeed({ donations }) {
-  if (!donations?.length) return null;
-  return (
-    <div
-      className="border border-ember-400/10 bg-obsidian-800/60 p-5"
-      style={{
-        clipPath:
-          "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
-      }}
-    >
-      <div className="flex items-center gap-2 mb-4">
-        <motion.div
-          className="w-1.5 h-1.5 rounded-full bg-red-500"
-          animate={{ opacity: [1, 0, 1] }}
-          transition={{ duration: 1.2, repeat: Infinity }}
-        />
-        <p className="font-mono text-zinc-500 text-[10px] tracking-[0.4em] uppercase">
-          Dons récents
-        </p>
-      </div>
-      <div className="space-y-2 max-h-52 overflow-y-auto">
-        {donations.map((d, i) => (
-          <motion.div
-            key={d.id || i}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.05 }}
-            className="py-1.5 border-b border-zinc-800/60"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Heart size={11} className="text-red-400" />
-                <span className="font-body text-zinc-300 text-sm">
-                  {d.username}
-                </span>
-              </div>
-              <span className="font-mono text-ember-400 text-xs font-bold">
-                +{d.amount}$
-              </span>
-            </div>
-            {/* Le serveur ne renvoie un message que s'il a été approuvé — §9.4 */}
-            {d.message && (
-              <p className="font-body text-zinc-500 text-xs italic mt-1 pl-5 leading-snug">
-                « {d.message} »
-              </p>
-            )}
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function CagnottePage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const donStatus = searchParams.get("don"); // 'succes' | 'annule' | null — jamais utilisé pour incrémenter quoi que ce soit (§8.5)
+  const donStatus = searchParams.get("don"); // 'succes' | null — jamais utilisé pour incrémenter quoi que ce soit (§8.5 cahier / règle non négociable du guide Supabase)
 
+  // Dons en ligne (Stripe Payment Link) : Supabase est la seule source de
+  // vérité, temps réel via Realtime — jamais recalculé ici.
+  const { campaign, nextMilestone, error: campaignError } = useDonationCampaign();
+
+  // Ticket d'Or + dons Twitch natifs (saisie manuelle admin) restent sur
+  // l'ancien store Express/JSON — canaux distincts, non couverts par le guide.
   const [data, setData] = useState({
-    totalRaised: 0,
-    donationsTotal: 0,
-    donorCount: 0,
     twitchTotal: 0,
     ticketOrTotal: 0,
     ticketOrSold: 0,
     ticketOrPot: 0,
     ticketOrPrice: 10,
-    goal: 100000,
-    lastUpdated: null,
-    recentDonations: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [purchaseOpen, setPurchaseOpen] = useState(false);
   const [lastRefresh, setLastRefresh] = useState(new Date());
+
+  const raisedOnline = (campaign?.raised_cents || 0) / 100;
+  const goal = (campaign?.goal_cents || 10000000) / 100;
+  const totalRaised = raisedOnline + (data.twitchTotal || 0) + (data.ticketOrTotal || 0);
 
   const dismissDonStatus = () => {
     searchParams.delete("don");
@@ -749,9 +531,7 @@ export default function CagnottePage() {
       setData(json.data || json);
       setError(null);
     } catch (err) {
-      setError("Impossible de charger les données en temps réel.");
-      // Keep showing mock data so page is useful even without backend
-      setData((prev) => ({ ...prev, totalRaised: 0 }));
+      setError("Impossible de charger le Ticket d'Or / dons Twitch en temps réel.");
     } finally {
       setLoading(false);
       setLastRefresh(new Date());
@@ -767,7 +547,7 @@ export default function CagnottePage() {
   const statsCards = [
     {
       label: "Total fondation",
-      value: data.totalRaised,
+      value: totalRaised,
       suffix: "$",
       color: "#C89B3C",
       icon: TrendingUp,
@@ -775,7 +555,7 @@ export default function CagnottePage() {
     },
     {
       label: "Dons en ligne",
-      value: data.donationsTotal,
+      value: raisedOnline,
       suffix: "$",
       color: "#9B59B6",
       icon: Zap,
@@ -901,20 +681,13 @@ export default function CagnottePage() {
               </button>
             </motion.div>
           )}
-          {donStatus === "annule" && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="flex items-center justify-between gap-2 bg-zinc-500/10 border border-zinc-500/25 text-zinc-400 font-mono text-xs px-4 py-3 mb-6"
-            >
-              <span>Paiement annulé — aucun montant n'a été débité.</span>
-              <button onClick={dismissDonStatus} className="text-zinc-500 hover:text-zinc-300 transition-colors">
-                <X size={14} />
-              </button>
-            </motion.div>
-          )}
         </AnimatePresence>
+
+        {campaignError && (
+          <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 text-amber-400 font-mono text-xs px-4 py-3 mb-6">
+            <AlertCircle size={13} /> Cagnotte en ligne indisponible : {campaignError}
+          </div>
+        )}
 
         {/* Error banner */}
         <AnimatePresence>
@@ -985,30 +758,54 @@ export default function CagnottePage() {
             </p>
             <div className="flex items-center gap-2">
               <AnimatedCounter
-                value={data.totalRaised}
+                value={totalRaised}
                 suffix="$"
                 className="font-display font-black text-amber-300 text-lg"
               />
               <span className="font-mono text-zinc-600 text-xs">
-                / {(data.goal || 100000).toLocaleString("fr-CA")}$
+                / {goal.toLocaleString("fr-CA")}$
               </span>
             </div>
           </div>
-          <FundingBar
-            current={data.totalRaised}
-            goal={data.goal || 100000}
-            color="#FFD700"
-          />
+          <FundingBar current={totalRaised} goal={goal} color="#FFD700" />
           <p className="font-mono text-zinc-600 text-[10px] tracking-widest text-center mt-4">
             Objectif atteint via dons en ligne + dons Twitch + ventes Tickets
             d'Or · Grande Finale en direct 11 oct. 2026
           </p>
         </motion.div>
 
-        {/* Don direct — Stripe, la fonction phare */}
-        <div className="mb-10">
-          <DonationCard />
-        </div>
+        {/* Don direct — Stripe Payment Link + Supabase, la fonction phare */}
+        <motion.div
+          variants={scrollReveal}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="border border-ember-400/30 bg-obsidian-800/80 p-6 md:p-8 mb-10 text-center"
+          style={{
+            clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))",
+            boxShadow: "0 0 40px rgba(200,155,60,0.1), inset 0 0 40px rgba(200,155,60,0.03)",
+          }}
+        >
+          <p className="font-mono text-ember-500 text-[10px] tracking-[0.5em] uppercase mb-2">
+            Don sécurisé
+          </p>
+          <h2 className="font-display text-2xl md:text-3xl font-black text-white leading-tight mb-2">
+            Faire un don direct
+          </h2>
+          <p className="font-body text-zinc-500 text-sm mb-6 max-w-md mx-auto">
+            Paiement par carte hébergé par Stripe — choisis ton montant,
+            affiche ton prénom ou reste anonyme, directement sur leur page
+            sécurisée.
+          </p>
+          <div className="max-w-sm mx-auto">
+            <DonateButton />
+          </div>
+          {nextMilestone && (
+            <p className="font-mono text-zinc-600 text-[10px] tracking-widest mt-4">
+              Prochain palier : {(nextMilestone.amount_cents / 100).toLocaleString("fr-CA")}$ — {nextMilestone.title}
+            </p>
+          )}
+        </motion.div>
 
         {/* Two-column layout */}
         <div className="grid md:grid-cols-2 gap-6 items-start">
@@ -1079,11 +876,6 @@ export default function CagnottePage() {
                 </a>
               </div>
             </motion.div>
-
-            {/* Live donations */}
-            {data.recentDonations?.length > 0 && (
-              <LiveFeed donations={data.recentDonations} />
-            )}
 
             {/* Foundation info */}
             <motion.div
