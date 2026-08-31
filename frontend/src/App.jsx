@@ -5,6 +5,7 @@ import { AnimatePresence, MotionConfig } from "framer-motion";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import Navbar from "./components/layout/Navbar.jsx";
 import Footer from "./components/layout/Footer.jsx";
+import Loader from "./components/layout/Loader.jsx";
 import CustomCursor from "./components/layout/CustomCursor.jsx";
 import Chatbot from "./components/layout/Chatbot.jsx";
 
@@ -97,22 +98,46 @@ export default function App() {
   return <MainApp />;
 }
 
-// Le loader plein écran et le radar de curseurs multijoueurs ont été retirés
-// pour la V1 publique (cahier §2) : le contenu principal doit s'afficher
-// immédiatement, sans écran d'attente ni distraction superflue.
+// matchMedia isn't available during SSR/build, and only needs reading once —
+// the OS-level setting rarely changes mid-session.
+const prefersReducedMotion =
+  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Le radar de curseurs multijoueurs (LiveCursors) reste retiré de la V1
+// publique. Le loader plein écran, lui, est conservé à la demande — seuls
+// les assets 3D fournis (Esquie, Maelle, agent CS2, voitures Rocket League)
+// ont été retirés des autres pages.
 function MainApp() {
+  const [isLoading, setIsLoading] = useState(!prefersReducedMotion);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    const timer = setTimeout(() => setIsLoading(false), 3200);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <MotionConfig reducedMotion="user">
       <AuthProvider>
         <BrowserRouter>
           <div className="noise-overlay scan-lines min-h-screen bg-obsidian-900 relative">
             <CustomCursor />
-            <Navbar />
-            <main>
-              <AnimatedRoutes />
-            </main>
-            <Chatbot />
-            <Footer />
+            <AnimatePresence mode="wait">
+              {isLoading && (
+                <Loader key="loader" onComplete={() => setIsLoading(false)} />
+              )}
+            </AnimatePresence>
+
+            {!isLoading && (
+              <>
+                <Navbar />
+                <main>
+                  <AnimatedRoutes />
+                </main>
+                <Chatbot />
+                <Footer />
+              </>
+            )}
           </div>
         </BrowserRouter>
       </AuthProvider>

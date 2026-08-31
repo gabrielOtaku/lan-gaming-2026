@@ -1,13 +1,9 @@
-import React, { useRef, Suspense } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Bounds } from '@react-three/drei';
 import {
-  Crown, Sparkles, ChevronRight, Star, Clock,
+  Crown, Sparkles, ChevronRight, Star, Clock, Lock,
 } from 'lucide-react';
 import { pageTransition, scrollReveal } from '../utils/animations.js';
-import WebGLErrorBoundary from '../components/layout/WebGLErrorBoundary.jsx';
-import { SasCs2Model, RifleModel } from '../components/three/GameAssets.jsx';
 
 // ── Programmation en développement ──────────────────────────────────────────
 // Aucun artiste, créateur, studio ou entreprise discrète n'a encore confirmé
@@ -42,32 +38,34 @@ function ProgrammingInProgress() {
   );
 }
 
-// ── Scène 3D — l'agent SAS CS2 dévoile son rifle ─────────────────────────────
-function SasCs2ShowcaseScene() {
-  const agentRef = useRef();
-  const rifleRef = useRef();
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime;
-    if (agentRef.current) {
-      agentRef.current.position.y = Math.sin(t * 0.6) * 0.05;
-      agentRef.current.rotation.y = -0.25 + Math.sin(t * 0.3) * 0.08;
-    }
-    if (rifleRef.current) {
-      rifleRef.current.position.y = 0.15 + Math.sin(t * 0.8 + 1) * 0.06;
-      rifleRef.current.rotation.y = t * 0.5;
-    }
-  });
-
+// ── Carte verrouillée — teaser CSS/Framer, aucun asset 3D ────────────────────
+function LockedRevealCard() {
   return (
-    <group>
-      <group ref={agentRef} position={[-0.55, -0.3, 0]}>
-        <SasCs2Model />
-      </group>
-      <group ref={rifleRef} position={[0.55, 0.35, 0.3]}>
-        <RifleModel rotation={[0, 0, Math.PI / 2]} />
-      </group>
-    </group>
+    <div className="relative w-full sm:w-64 h-64 sm:h-72 mx-auto flex-shrink-0 border border-ember-400/25 bg-obsidian-900/60 overflow-hidden"
+      style={{ clipPath: 'polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px))' }}
+    >
+      <div className="absolute inset-0 bg-ember-glow opacity-30" />
+      {/* Scan line */}
+      <motion.div
+        className="absolute left-0 right-0 h-10 bg-gradient-to-b from-transparent via-ember-400/25 to-transparent"
+        animate={{ top: ['-15%', '110%'] }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+      />
+      {/* Corner brackets */}
+      {['top-3 left-3 border-t border-l', 'top-3 right-3 border-t border-r', 'bottom-3 left-3 border-b border-l', 'bottom-3 right-3 border-b border-r'].map((c) => (
+        <div key={c} className={`absolute w-5 h-5 ${c} border-ember-400/50`} />
+      ))}
+      <div className="relative z-10 h-full flex flex-col items-center justify-center gap-3">
+        <motion.div
+          animate={{ boxShadow: ['0 0 10px rgba(200,155,60,0.3)', '0 0 30px rgba(255,215,0,0.5)', '0 0 10px rgba(200,155,60,0.3)'] }}
+          transition={{ duration: 2.2, repeat: Infinity }}
+          className="w-16 h-16 clip-hex bg-obsidian-800 border border-ember-400/40 flex items-center justify-center"
+        >
+          <Lock size={22} className="text-ember-300" />
+        </motion.div>
+        <p className="font-mono text-ember-500 text-[10px] tracking-[0.3em] uppercase">Verrouillé</p>
+      </div>
+    </div>
   );
 }
 
@@ -90,24 +88,12 @@ function UltraCharacterTeaser() {
           New Ultra <span className="text-ember-300 text-ember-glow">Characters</span> In Coming !
         </h3>
         <p className="font-body text-zinc-500 text-sm mt-4 max-w-md">
-          De nouveaux agents ultra rares rejoignent bientôt la collection LAN 2026 — première image en exclusivité pour nos invités VIP.
+          De nouveaux agents ultra rares rejoignent bientôt la collection LAN 2026 — révélation exclusive à venir pour nos invités VIP.
         </p>
       </div>
 
-      <div className="order-1 sm:order-2 w-full sm:w-64 h-64 sm:h-72 mx-auto flex-shrink-0">
-        <WebGLErrorBoundary fallback={<div className="w-full h-full" />}>
-          <Canvas camera={{ fov: 38 }} dpr={[1, 1.5]} gl={{ alpha: true }}>
-            <ambientLight intensity={1.1} />
-            <pointLight position={[2, 2, 2]} intensity={3.2} color="#C89B3C" />
-            <pointLight position={[-2, 0, 1]} intensity={1.4} color="#4FC3F7" />
-            <pointLight position={[0, 1, 2]} intensity={1.6} color="#FFFFFF" />
-            <Suspense fallback={null}>
-              <Bounds fit clip observe margin={1.8}>
-                <SasCs2ShowcaseScene />
-              </Bounds>
-            </Suspense>
-          </Canvas>
-        </WebGLErrorBoundary>
+      <div className="order-1 sm:order-2">
+        <LockedRevealCard />
       </div>
     </motion.div>
   );

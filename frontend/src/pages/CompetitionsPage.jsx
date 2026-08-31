@@ -1,12 +1,7 @@
-import React, { useRef, Suspense } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Bounds } from '@react-three/drei';
-import * as THREE from 'three';
 import { Swords, Users, Gamepad2, Sparkles, ChevronRight } from 'lucide-react';
 import { pageTransition, fadeInUp, staggerContainer, scrollReveal } from '../utils/animations.js';
-import WebGLErrorBoundary from '../components/layout/WebGLErrorBoundary.jsx';
-import { DominusModel, OctaneModel } from '../components/three/GameAssets.jsx';
 
 // ── Vitrine V1 ────────────────────────────────────────────────────────────────
 // Cahier de finalisation V1 §5 : seuls les 3 tournois officiels sont exposés
@@ -51,64 +46,19 @@ const ANIMATIONS = [
   'Autres activités confirmées',
 ];
 
-// ── Scène 3D — Dominus contre Octane, duel dans l'arène ──────────────────────
-function ArenaBattleScene() {
-  const dominusRef = useRef();
-  const octaneRef = useRef();
-  const sparkRef = useRef();
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime;
-    if (dominusRef.current) {
-      dominusRef.current.position.y = -0.15 + Math.sin(t * 1.1) * 0.05;
-      dominusRef.current.rotation.z = Math.sin(t * 0.8) * 0.04;
-      dominusRef.current.rotation.x = Math.sin(t * 1.3) * 0.02;
-    }
-    if (octaneRef.current) {
-      octaneRef.current.position.y = -0.15 + Math.sin(t * 1.1 + Math.PI) * 0.05;
-      octaneRef.current.rotation.z = Math.sin(t * 0.8 + Math.PI) * 0.04;
-      octaneRef.current.rotation.x = Math.sin(t * 1.3 + Math.PI) * 0.02;
-    }
-    if (sparkRef.current) {
-      const pulse = 0.6 + Math.sin(t * 4) * 0.4;
-      sparkRef.current.scale.setScalar(0.5 + pulse * 0.3);
-      sparkRef.current.material.opacity = 0.35 + pulse * 0.4;
-    }
-  });
-
+// ── Fond de hero — glow CSS, aucun asset 3D ──────────────────────────────────
+function CompetitionsHeroGlow() {
   return (
-    <group>
-      <group ref={dominusRef} position={[-1.1, -0.15, 0]} rotation={[0, Math.PI / 2 + 0.3, 0]}>
-        <DominusModel />
-      </group>
-      <group ref={octaneRef} position={[1.1, -0.15, 0]} rotation={[0, -Math.PI / 2 - 0.3, 0]}>
-        <OctaneModel />
-      </group>
-      <mesh ref={sparkRef} position={[0, -0.1, 0]}>
-        <sphereGeometry args={[0.18, 12, 12]} />
-        <meshBasicMaterial color="#FFD700" transparent opacity={0.6} blending={THREE.AdditiveBlending} depthWrite={false} />
-      </mesh>
-    </group>
-  );
-}
-
-function CompetitionsHero3D() {
-  return (
-    <div className="absolute inset-0 pointer-events-none">
-      <WebGLErrorBoundary>
-        <Canvas camera={{ fov: 45 }} dpr={[1, 1.5]} gl={{ alpha: true }}>
-          <ambientLight intensity={1.3} />
-          <pointLight position={[3, 2, 3]} intensity={3.4} color="#C89B3C" />
-          <pointLight position={[-3, 1, 2]} intensity={2.4} color="#FF4655" />
-          <pointLight position={[0, 2, -1]} intensity={1.6} color="#4FC3F7" />
-          <pointLight position={[0, 1.5, 3]} intensity={1.8} color="#FFFFFF" />
-          <Suspense fallback={null}>
-            <Bounds fit clip observe margin={1.2}>
-              <ArenaBattleScene />
-            </Bounds>
-          </Suspense>
-        </Canvas>
-      </WebGLErrorBoundary>
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #030508 0%, #07090F 60%, #0D1117 100%)' }} />
+      <motion.div
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full opacity-30"
+        animate={{ opacity: [0.18, 0.32, 0.18] }}
+        transition={{ duration: 5, repeat: Infinity }}
+        style={{ background: 'radial-gradient(ellipse, rgba(200,155,60,0.5) 0%, transparent 70%)' }}
+      />
+      <div className="absolute top-1/2 left-1/4 w-40 h-40 rounded-full opacity-20" style={{ background: 'radial-gradient(circle, rgba(255,70,85,0.6) 0%, transparent 70%)' }} />
+      <div className="absolute top-1/3 right-1/4 w-32 h-32 rounded-full opacity-20" style={{ background: 'radial-gradient(circle, rgba(79,195,247,0.6) 0%, transparent 70%)' }} />
     </div>
   );
 }
@@ -169,9 +119,9 @@ export default function CompetitionsPage() {
         <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(200,155,60,0.4),transparent)' }} />
       </div>
 
-      {/* Hero 3D — Dominus vs Octane */}
+      {/* Hero */}
       <div className="relative h-72 md:h-96 flex items-end overflow-hidden mb-14">
-        <CompetitionsHero3D />
+        <CompetitionsHeroGlow />
         <div className="absolute inset-0 bg-gradient-to-b from-obsidian-900/40 via-transparent to-obsidian-900" />
         <div className="relative z-10 w-full max-w-6xl mx-auto px-6 pb-8">
           <motion.p

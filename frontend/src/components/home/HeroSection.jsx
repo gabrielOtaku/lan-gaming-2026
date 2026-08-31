@@ -1,83 +1,250 @@
-import React, { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
+import React, { useRef, useMemo, Suspense, useState, useEffect } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Stars, Float, MeshDistortMaterial } from "@react-three/drei";
+import { EffectComposer, Bloom, ChromaticAberration } from "@react-three/postprocessing";
+import { BlendFunction } from "postprocessing";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import * as THREE from "three";
+import WebGLErrorBoundary from "../layout/WebGLErrorBoundary.jsx";
 import { staggerContainer, fadeInUp } from "../../utils/animations.js";
 import { Zap, Shield, ChevronDown } from "lucide-react";
 
-// ── Hero HTML/CSS/Framer léger ────────────────────────────────────────────────
-// Remplace l'ancien HeroCanvas (React Three Fiber : starfield, ember core,
-// mascotte Esquie, post-processing Bloom/ChromaticAberration) — cahier §2/§11 :
-// conserver l'identité gaming forte via typographie, glow et micro-interactions
-// CSS/Framer plutôt qu'une scène 3D lourde, pour un affichage immédiat.
+// ── Fond 3D procédural — aucun asset fourni (pas d'Esquie ni autre .glb) ─────
+// Grille holographique, noyau d'ember, champ de particules et éclats de rune :
+// tout est généré (géométries primitives Three.js), rien n'est chargé depuis
+// public/models/.
 
-// ── Fond ambiant — glows radiaux + grille CSS, suit légèrement la souris ─────
-function AmbientBackground() {
-  const mx = useMotionValue(0.5);
-  const my = useMotionValue(0.5);
-  const springX = useSpring(mx, { stiffness: 40, damping: 20 });
-  const springY = useSpring(my, { stiffness: 40, damping: 20 });
-  const glowX = useTransform(springX, [0, 1], ["30%", "70%"]);
-  const glowY = useTransform(springY, [0, 1], ["30%", "70%"]);
+const heroScrollProg = { current: 0 };
 
-  useEffect(() => {
-    const onMove = (e) => {
-      mx.set(e.clientX / window.innerWidth);
-      my.set(e.clientY / window.innerHeight);
-    };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [mx, my]);
+// ── 3D Background Grid ────────────────────────────────────────────────────────
+function HoloGrid() {
+  const gridRef = useRef();
+  useFrame((state) => {
+    if (gridRef.current) {
+      gridRef.current.position.z = (state.clock.elapsedTime * 0.5) % 3;
+      gridRef.current.material.opacity =
+        0.08 + Math.sin(state.clock.elapsedTime * 0.5) * 0.02;
+    }
+  });
+
+  const gridGeometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const vertices = [];
+    const size = 20;
+    const step = 1.5;
+    for (let i = -size; i <= size; i += step) {
+      vertices.push(-size, i, 0, size, i, 0);
+      vertices.push(i, -size, 0, i, size, 0);
+    }
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+    return geo;
+  }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <div
-        className="absolute inset-0"
-        style={{ background: "linear-gradient(180deg, #030508 0%, #07090F 55%, #0D1117 100%)" }}
-      />
-      {/* Glow principal — suit doucement le curseur (aucun WebGL) */}
-      <motion.div
-        className="absolute w-[70vw] h-[70vw] max-w-[900px] max-h-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-25"
-        style={{
-          left: glowX,
-          top: glowY,
-          background: "radial-gradient(circle, rgba(200,155,60,0.5) 0%, transparent 65%)",
-        }}
-      />
-      {/* Grille holographique statique */}
-      <div
-        className="absolute inset-0 opacity-[0.05]"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(0deg, transparent, transparent 54px, rgba(200,155,60,0.9) 54px, rgba(200,155,60,0.9) 55px), repeating-linear-gradient(90deg, transparent, transparent 54px, rgba(200,155,60,0.9) 54px, rgba(200,155,60,0.9) 55px)",
-          maskImage: "radial-gradient(ellipse at 50% 35%, black 10%, transparent 70%)",
-          WebkitMaskImage: "radial-gradient(ellipse at 50% 35%, black 10%, transparent 70%)",
-        }}
-      />
-      {/* Traînées d'étincelles montantes — pur CSS */}
-      {EMBERS.map((e, i) => (
-        <motion.span
-          key={i}
-          className="absolute rounded-full bg-ember-300"
-          style={{ left: e.left, bottom: "-10px", width: e.size, height: e.size, boxShadow: "0 0 6px rgba(255,215,0,0.8)" }}
-          animate={{ y: [0, -600], opacity: [0, 0.8, 0] }}
-          transition={{ duration: e.duration, repeat: Infinity, delay: e.delay, ease: "easeOut" }}
-        />
-      ))}
-      {/* Vignette + fondu bas de section */}
-      <div className="absolute inset-0 bg-blood-vignette" />
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-obsidian-900 to-transparent" />
-    </div>
+    <lineSegments ref={gridRef} geometry={gridGeometry} rotation={[Math.PI / 2, 0, 0]} position={[0, -5, -5]}>
+      <lineBasicMaterial color="#C89B3C" transparent opacity={0.08} />
+    </lineSegments>
   );
 }
 
-const EMBERS = Array.from({ length: 14 }, (_, i) => ({
-  left: `${4 + i * 7}%`,
-  size: 2 + (i % 3),
-  duration: 6 + (i % 5),
-  delay: i * 0.6,
-}));
+// ── Floating Rune Shards ──────────────────────────────────────────────────────
+function RuneShard({ position, scale, color, speed }) {
+  const meshRef = useRef();
+  useFrame((state) => {
+    if (!meshRef.current) return;
+    const t = state.clock.elapsedTime * speed;
+    meshRef.current.rotation.x = Math.sin(t * 0.7) * 0.5;
+    meshRef.current.rotation.y = t * 0.4;
+    meshRef.current.rotation.z = Math.cos(t * 0.5) * 0.3;
+    meshRef.current.position.y = position[1] + Math.sin(t * 0.8) * 0.3;
+  });
 
-// ── Futuristic HUD Timer (pur CSS/Framer, conservé tel quel) ─────────────────
+  return (
+    <mesh ref={meshRef} position={position} scale={scale}>
+      <octahedronGeometry args={[1, 0]} />
+      <meshStandardMaterial
+        color={color}
+        emissive={color}
+        emissiveIntensity={0.4}
+        roughness={0.1}
+        metalness={0.9}
+        transparent
+        opacity={0.7}
+        wireframe
+      />
+    </mesh>
+  );
+}
+
+// ── Central Ember Core ────────────────────────────────────────────────────────
+function EmberCore() {
+  const coreRef = useRef();
+  const outerRef = useRef();
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (coreRef.current) {
+      coreRef.current.rotation.y = t * 0.2;
+      coreRef.current.rotation.z = Math.sin(t * 0.5) * 0.1;
+    }
+    if (outerRef.current) {
+      outerRef.current.rotation.x = t * -0.15;
+      outerRef.current.rotation.y = t * 0.25;
+    }
+  });
+
+  return (
+    <group position={[0, 0, -2]}>
+      <mesh ref={outerRef} scale={3}>
+        <sphereGeometry args={[1, 64, 64]} />
+        <MeshDistortMaterial
+          color="#030508"
+          emissive="#C89B3C"
+          emissiveIntensity={0.08}
+          distort={0.3}
+          speed={1.5}
+          roughness={0.8}
+          transparent
+          opacity={0.3}
+        />
+      </mesh>
+      <Float speed={2} rotationIntensity={0.5}>
+        <mesh ref={coreRef} scale={0.6}>
+          <icosahedronGeometry args={[1, 2]} />
+          <meshStandardMaterial
+            color="#FFD700"
+            emissive="#C89B3C"
+            emissiveIntensity={0.8}
+            metalness={1}
+            roughness={0}
+            wireframe
+          />
+        </mesh>
+      </Float>
+    </group>
+  );
+}
+
+// ── Mouse-responsive + scroll-driven camera ────────────────────────────────────
+function CameraRig() {
+  const { camera, mouse } = useThree();
+  useFrame(() => {
+    const p = heroScrollProg.current;
+    const targetX = mouse.x * 1.5 * (1 - p * 0.6);
+    const targetY = mouse.y * 0.8 * (1 - p * 0.7) - p * 2.2;
+    const targetZ = 7 - p * 4.5;
+    camera.position.x += (targetX - camera.position.x) * 0.03;
+    camera.position.y += (targetY - camera.position.y) * 0.03;
+    camera.position.z += (targetZ - camera.position.z) * 0.06;
+    camera.lookAt(0, p * 0.6, 0);
+  });
+  return null;
+}
+
+// ── Ember particle field ───────────────────────────────────────────────────────
+function EmberField() {
+  const count = 200;
+  const ref = useRef();
+
+  const { positions, colors } = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    const col = new Float32Array(count * 3);
+    const goldColor = new THREE.Color("#C89B3C");
+    const dimColor = new THREE.Color("#4a3000");
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 20;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 10;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 10;
+      const t = Math.random();
+      col[i * 3] = THREE.MathUtils.lerp(dimColor.r, goldColor.r, t);
+      col[i * 3 + 1] = THREE.MathUtils.lerp(dimColor.g, goldColor.g, t);
+      col[i * 3 + 2] = THREE.MathUtils.lerp(dimColor.b, goldColor.b, t);
+    }
+    return { positions: pos, colors: col };
+  }, []);
+
+  const velocities = useMemo(
+    () => Array.from({ length: count }, () => ({ vy: 0.003 + Math.random() * 0.008, vx: (Math.random() - 0.5) * 0.003 })),
+    [],
+  );
+
+  useFrame(() => {
+    if (!ref.current) return;
+    const posArr = ref.current.geometry.attributes.position.array;
+    for (let i = 0; i < count; i++) {
+      posArr[i * 3] += velocities[i].vx;
+      posArr[i * 3 + 1] += velocities[i].vy;
+      if (posArr[i * 3 + 1] > 5) posArr[i * 3 + 1] = -5;
+    }
+    ref.current.geometry.attributes.position.needsUpdate = true;
+  });
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-color" args={[colors, 3]} />
+      </bufferGeometry>
+      <pointsMaterial size={0.04} vertexColors sizeAttenuation transparent opacity={0.7} />
+    </points>
+  );
+}
+
+// ── Canvas 3D — assemble le fond du Hero ─────────────────────────────────────
+function HeroCanvasBG() {
+  const shards = useMemo(
+    () => [
+      { position: [-4, 2, -3], scale: 0.3, color: "#C89B3C", speed: 0.8 },
+      { position: [4.5, -1, -2], scale: 0.2, color: "#FFD700", speed: 1.1 },
+      { position: [-3, -2, -1], scale: 0.15, color: "#FF4655", speed: 0.6 },
+      { position: [3, 2.5, -4], scale: 0.25, color: "#4FC3F7", speed: 0.9 },
+      { position: [6, 0, -3], scale: 0.18, color: "#C89B3C", speed: 1.3 },
+      { position: [-6, 1, -2], scale: 0.22, color: "#7C3AED", speed: 0.7 },
+    ],
+    [],
+  );
+
+  return (
+    <WebGLErrorBoundary
+      fallback={
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #030508 0%, #07090F 60%, #0D1117 100%)" }} />
+      }
+    >
+      <Canvas
+        camera={{ position: [0, 0, 7], fov: 65 }}
+        gl={{ antialias: true, alpha: false }}
+        dpr={[1, 1.5]}
+        style={{ background: "linear-gradient(180deg, #030508 0%, #07090F 60%, #0D1117 100%)" }}
+      >
+        <ambientLight intensity={0.1} />
+        <pointLight position={[0, 0, 3]} intensity={2} color="#C89B3C" />
+        <pointLight position={[-5, 3, 0]} intensity={0.5} color="#FF4655" />
+        <pointLight position={[5, -3, 0]} intensity={0.5} color="#4FC3F7" />
+
+        <Suspense fallback={null}>
+          <CameraRig />
+          <HoloGrid />
+          <EmberCore />
+          <EmberField />
+          <Stars radius={80} depth={30} count={2000} factor={3} saturation={0.1} fade speed={0.5} />
+          {shards.map((s, i) => (
+            <RuneShard key={i} {...s} />
+          ))}
+        </Suspense>
+
+        <EffectComposer>
+          <Bloom luminanceThreshold={0.25} luminanceSmoothing={0.9} intensity={1.5} radius={0.75} mipmapBlur />
+          <ChromaticAberration blendFunction={BlendFunction.NORMAL} offset={[0.002, 0.002]} radialModulation modulationOffset={0.45} />
+        </EffectComposer>
+      </Canvas>
+    </WebGLErrorBoundary>
+  );
+}
+
+// ── Futuristic HUD Timer ──────────────────────────────────────────────────────
 function TimerDigit({ value, label, code }) {
   const padded = String(value).padStart(2, "0");
   const [prev, setPrev] = useState(padded);
@@ -250,11 +417,37 @@ function FuturisticTimer() {
 
 // ── Main Hero ─────────────────────────────────────────────────────────────────
 export default function HeroSection() {
-  return (
-    <section className="relative w-full min-h-screen overflow-hidden">
-      <AmbientBackground />
+  const sectionRef = useRef();
 
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-24 pb-28 sm:pb-32">
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 2,
+        onUpdate: (self) => { heroScrollProg.current = self.progress; },
+      });
+    });
+    return () => { ctx.revert(); heroScrollProg.current = 0; };
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="relative w-full h-screen overflow-hidden">
+      {/* 3D Background Canvas */}
+      <div className="absolute inset-0">
+        <HeroCanvasBG />
+      </div>
+
+      {/* Vignette overlay */}
+      <div className="absolute inset-0 bg-blood-vignette pointer-events-none" />
+
+      {/* Bottom fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-obsidian-900 to-transparent pointer-events-none z-0" />
+
+      {/* Hero content */}
+      <div className="relative z-10 min-h-full flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-20 pb-28 sm:pb-32">
         <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="max-w-5xl w-full">
           {/* Badge */}
           <motion.div

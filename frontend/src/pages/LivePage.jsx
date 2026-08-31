@@ -9,6 +9,7 @@ import {
   Clock,
   MapPin,
   RefreshCw,
+  Bell,
 } from "lucide-react";
 import {
   pageTransition,
@@ -86,7 +87,11 @@ export default function LivePage() {
 
   const { state, segment } = computeStreamStatus(events, now);
   const meta = STATUS_META[state];
-  const pct = cagnotte ? Math.min(100, (cagnotte.totalRaised / (cagnotte.goal || 100000)) * 100) : 0;
+  // Cagnotte "native" (Ticket d'Or + dons Twitch) — le total incluant les dons
+  // en ligne (Supabase/Stripe) vit sur /cagnotte, pas répété ici.
+  const cagnotteTotal = cagnotte ? (cagnotte.twitchTotal || 0) + (cagnotte.ticketOrTotal || 0) : 0;
+  const cagnotteGoal = 100000;
+  const pct = cagnotte ? Math.min(100, (cagnotteTotal / cagnotteGoal) * 100) : 0;
 
   return (
     <motion.div
@@ -114,6 +119,26 @@ export default function LivePage() {
           <motion.h1 variants={fadeInUp} className="font-display text-5xl sm:text-6xl font-black uppercase text-white leading-none mb-4">
             Live
           </motion.h1>
+        </motion.div>
+
+        {/* Overlay "bientôt en ligne" — la diffusion démarre avec l'événement */}
+        <motion.div
+          variants={scrollReveal}
+          initial="hidden"
+          animate="visible"
+          className="border border-amber-400/25 bg-amber-400/5 p-5 md:p-6 mb-6 text-center relative overflow-hidden"
+          style={{ clipPath: "polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px))" }}
+        >
+          <div className="absolute inset-0 bg-ember-glow opacity-20 pointer-events-none" />
+          <div className="relative z-10">
+            <Bell size={20} className="text-amber-400 mx-auto mb-2" />
+            <p className="font-display text-white font-bold text-sm md:text-base mb-1">
+              Le live démarre bientôt
+            </p>
+            <p className="font-body text-zinc-400 text-xs md:text-sm max-w-md mx-auto leading-relaxed">
+              La diffusion Twitch sera active les 9, 10 et 11 octobre 2026, au rythme des compétitions et de la Grande finale du dimanche.
+            </p>
+          </div>
         </motion.div>
 
         {/* Status card */}
@@ -195,9 +220,9 @@ export default function LivePage() {
             <>
               <div className="flex items-baseline justify-between mb-2">
                 <span className="font-display font-black text-2xl text-amber-300">
-                  {cagnotte.totalRaised.toLocaleString("fr-CA")}$
+                  {cagnotteTotal.toLocaleString("fr-CA")}$
                 </span>
-                <span className="font-mono text-zinc-600 text-xs">/ {(cagnotte.goal || 100000).toLocaleString("fr-CA")}$</span>
+                <span className="font-mono text-zinc-600 text-xs">/ {cagnotteGoal.toLocaleString("fr-CA")}$</span>
               </div>
               <div className="h-2 bg-obsidian-700 overflow-hidden mb-4" style={{ clipPath: "polygon(3px 0%, 100% 0%, calc(100% - 3px) 100%, 0% 100%)" }}>
                 <div className="h-full" style={{ width: `${pct}%`, background: "linear-gradient(90deg, #C89B3C, #FFD700)" }} />

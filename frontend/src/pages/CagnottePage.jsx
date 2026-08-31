@@ -798,7 +798,7 @@ export default function CagnottePage() {
             sécurisée.
           </p>
           <div className="max-w-sm mx-auto">
-            <DonateButton />
+            <DonateButton comingSoon />
           </div>
           {nextMilestone && (
             <p className="font-mono text-zinc-600 text-[10px] tracking-widest mt-4">

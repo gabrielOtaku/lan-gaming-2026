@@ -1,14 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Bounds } from '@react-three/drei';
-import * as THREE from 'three';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Heart, Star, ArrowRight, X, ChevronLeft, ChevronRight, ImageIcon, Gamepad2 } from 'lucide-react';
 import { scrollReveal, scrollRevealLeft, scrollRevealRight, EASE_GAME } from '../../utils/animations.js';
-import WebGLErrorBoundary from '../layout/WebGLErrorBoundary.jsx';
-import { EsquieModel, FoundationBrick } from '../three/GameAssets.jsx';
 
 import fondationLogo from '../../assets/Fondation/Logo_fondationwebp.webp';
 import dgImg from '../../assets/Fondation/DG.jpg';
@@ -223,80 +216,42 @@ function Lightbox({ photos, activeIndex, onClose, onPrev, onNext }) {
   );
 }
 
-// ── Esquie "offering" scene — whole body leans in as the section scrolls into
-// view, revealing the Foundation brick. Esquie has no skeleton, so this is a
-// whole-body tilt/lean rather than articulated hands (see EsquieMascot notes).
-const offerProg = { current: 0 };
-
-function EsquieOffering() {
-  const groupRef = useRef();
-  const brickRef = useRef();
-  const brickMatRef = useRef();
-
-  useFrame((state) => {
-    const p = offerProg.current;
-    const t = state.clock.elapsedTime;
-
-    if (groupRef.current) {
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(0, 0.22, p) + Math.sin(t * 0.7) * 0.02;
-      groupRef.current.position.y = THREE.MathUtils.lerp(0, -0.12, p) + Math.sin(t * 0.9) * 0.04;
-      groupRef.current.rotation.y = -0.15 + Math.sin(t * 0.4) * 0.06;
-    }
-    if (brickRef.current) {
-      const s = THREE.MathUtils.smoothstep(p, 0.45, 1) * 0.85;
-      brickRef.current.scale.setScalar(s || 0.0001);
-      brickRef.current.position.y = -0.75 + Math.sin(t * 1.1) * 0.04;
-      brickRef.current.rotation.y = Math.sin(t * 0.35) * 0.15;
-    }
-  });
-
+// ── Logo de la Fondation — mis en avant, sans scène 3D ───────────────────────
+function FoundationLogoBadge() {
   return (
-    <>
-      <group ref={groupRef} position={[0, 0, 0]}>
-        <EsquieModel />
-      </group>
-      <group ref={brickRef} position={[0, -0.15, 0.9]} scale={0.0001}>
-        <FoundationBrick logoTexture={fondationLogo} />
-      </group>
-    </>
-  );
-}
-
-function FoundationHeroScene() {
-  const wrapRef = useRef();
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    const ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: wrapRef.current,
-        start: 'top bottom',
-        end: 'top 30%',
-        scrub: 1.2,
-        onUpdate: (self) => { offerProg.current = self.progress; },
-      });
-    });
-    return () => {
-      ctx.revert();
-      offerProg.current = 0;
-    };
-  }, []);
-
-  return (
-    <div ref={wrapRef} className="w-40 h-40 sm:w-52 sm:h-52 mx-auto mb-2">
-      <WebGLErrorBoundary fallback={<div className="w-full h-full" />}>
-        <Canvas camera={{ fov: 42 }} dpr={[1, 1.5]} gl={{ alpha: true }}>
-          <ambientLight intensity={0.5} />
-          <pointLight position={[2, 2, 2]} intensity={2.4} color="#FFD700" />
-          <pointLight position={[-2, -1, 1]} intensity={0.7} color="#8B0000" />
-          <React.Suspense fallback={null}>
-            <Bounds fit clip margin={1.7}>
-              <EsquieOffering />
-            </Bounds>
-          </React.Suspense>
-        </Canvas>
-      </WebGLErrorBoundary>
-    </div>
+    <motion.div
+      className="relative w-52 h-52 sm:w-64 sm:h-64 mx-auto mb-6"
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7, ease: EASE_GAME }}
+    >
+      {/* Glow pulsé derrière le logo */}
+      <motion.div
+        className="absolute inset-0 rounded-full"
+        animate={{
+          boxShadow: [
+            '0 0 30px rgba(255,215,0,0.15), 0 0 60px rgba(139,0,0,0.1)',
+            '0 0 60px rgba(255,215,0,0.35), 0 0 100px rgba(139,0,0,0.2)',
+            '0 0 30px rgba(255,215,0,0.15), 0 0 60px rgba(139,0,0,0.1)',
+          ],
+        }}
+        transition={{ duration: 3.5, repeat: Infinity }}
+      />
+      {/* Anneau rotatif */}
+      <motion.div
+        className="absolute inset-3 rounded-full border border-ember-400/25"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+      />
+      <div className="absolute inset-6 rounded-full bg-obsidian-800 border border-red-900/30 flex items-center justify-center overflow-hidden">
+        <img
+          src={fondationLogo}
+          alt="Fondation du Cégep de Saint-Félicien"
+          className="w-[78%] h-[78%] object-contain"
+        />
+      </div>
+    </motion.div>
   );
 }
 
@@ -452,10 +407,7 @@ export default function FoundationBlock() {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <FoundationHeroScene />
-          <p className="font-mono text-zinc-700 text-[9px] tracking-widest uppercase mb-3">
-            Esquie vous présente la Fondation
-          </p>
+          <FoundationLogoBadge />
           <p className="font-mono text-red-400/60 text-xs tracking-[0.5em] uppercase mb-4">
             [ Partenaire caritatif officiel ]
           </p>
