@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { pageTransition } from "../utils/animations.js";
-import HeroCanvas from "../components/home/HeroCanvas.jsx";
+import HeroSection from "../components/home/HeroSection.jsx";
 import BioConcept from "../components/home/BioConcept.jsx";
 import ExperienceTeaser from "../components/home/ExperienceTeaser.jsx";
 import PartnerBanner from "../components/home/Sponsor.jsx";
@@ -30,7 +30,7 @@ export default function HomePage() {
       animate="animate"
       exit="exit"
     >
-      <HeroCanvas />
+      <HeroSection />
 
       <BioConcept />
 

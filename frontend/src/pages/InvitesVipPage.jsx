@@ -9,12 +9,13 @@ import { pageTransition, scrollReveal } from '../utils/animations.js';
 import WebGLErrorBoundary from '../components/layout/WebGLErrorBoundary.jsx';
 import { SasCs2Model, RifleModel } from '../components/three/GameAssets.jsx';
 
-import ubisoftLogo from '../assets/VIP/ubisoft.png';
-
 // ── Programmation en développement ──────────────────────────────────────────
-// Aucun artiste, créateur ou studio n'a encore confirmé sa présence par écrit
-// (règle de communication du cahier des charges — §8). Ne pas afficher de nom,
-// photo ou bio ici tant qu'une confirmation écrite n'a pas été obtenue.
+// Aucun artiste, créateur, studio ou entreprise discrète n'a encore confirmé
+// sa présence publiquement par écrit (cahier de finalisation V1 §4 : aucune
+// mention publique tant que l'annonce et les conditions ne sont pas
+// sécurisées — notamment le logo Ubisoft, à ne pas afficher tant que leur
+// souhait de discrétion demeure). Ne pas afficher de nom, logo ou bio ici
+// tant qu'une confirmation écrite ET publique n'a pas été obtenue.
 function ProgrammingInProgress() {
   return (
     <motion.div
@@ -150,7 +151,7 @@ export default function InvitesVipPage() {
           >
             <div className="h-px w-12 bg-ember-400 flex-shrink-0" />
             <p className="font-body text-zinc-500 text-sm">
-              Des démarches sont en cours auprès de créateurs et d'artistes québécois. Ubisoft Saguenay est fier partenaire de l'événement.
+              Des démarches sont en cours auprès de créateurs et d'artistes québécois.
             </p>
           </motion.div>
 
@@ -161,30 +162,6 @@ export default function InvitesVipPage() {
       {/* Programmation en développement */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <ProgrammingInProgress />
-      </div>
-
-      {/* Partenariat Ubisoft Saguenay */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-24">
-        <motion.div
-          variants={scrollReveal} initial="hidden" whileInView="visible" viewport={{ once: true }}
-          className="text-center"
-        >
-          <div className="inline-flex items-center justify-center gap-4 mb-5">
-            <div className="bg-ember-100 px-5 py-3" style={{ clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))' }}>
-              <img src={ubisoftLogo} alt="Ubisoft" className="h-9 w-auto object-contain" />
-            </div>
-          </div>
-          <p className="font-mono text-ember-500 text-xs tracking-[0.5em] uppercase mb-3 flex items-center justify-center gap-2">
-            <Sparkles size={13} /> [ Partenaire majeur ]
-          </p>
-          <h2 className="font-display text-3xl md:text-5xl font-black text-white uppercase leading-tight">
-            Partenariat <span className="text-ember-300 text-ember-glow">Ubisoft Saguenay</span>
-          </h2>
-          <p className="font-body text-zinc-500 text-sm mt-4 max-w-2xl mx-auto leading-relaxed">
-            Ubisoft Saguenay nous accompagne comme partenaire majeur de LAN Gaming 2026. Les
-            détails de leur présence sur place seront annoncés à mesure qu'ils seront confirmés.
-          </p>
-        </motion.div>
       </div>
 
       {/* CTA */}

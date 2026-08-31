@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   scrollReveal,
@@ -6,149 +6,77 @@ import {
   fadeInUp,
   EASE_GAME,
 } from "../../utils/animations.js";
+import { getPartners } from "../../utils/api.js";
 
-// ── Partenaires confirmés — données réelles ───────────────────────────────────
-const PARTNERS = [
-  {
-    id: 1,
-    name: "Cégep de Saint-Félicien",
-    domain: null,
-    tier: "principal",
-    color: "#FFD700",
-    initial: "CSF",
-    url: "https://www.cstfelicien.qc.ca",
-  },
-  {
-    id: 2,
-    name: "Metro",
-    domain: "metro.ca",
-    tier: "diamant",
-    color: "#E31837",
-    initial: "MET",
-    url: "https://www.metro.ca",
-  },
-  {
-    id: 3,
-    name: "Centre Hi-Fi",
-    domain: null,
-    tier: "diamant",
-    color: "#0057A8",
-    initial: "CHF",
-    url: "#",
-  },
-  {
-    id: 4,
-    name: "Mazda",
-    domain: "mazda.ca",
-    tier: "or",
-    color: "#B22222",
-    initial: "MZD",
-    url: "https://www.mazda.ca",
-  },
-  {
-    id: 5,
-    name: "e-distribution",
-    domain: null,
-    tier: "or",
-    color: "#2ECC71",
-    initial: "eDist",
-    url: "#",
-  },
-];
+// ── Source unique de vérité ────────────────────────────────────────────────
+// Cette bannière consommait auparavant sa propre liste codée en dur avec des
+// logos récupérés via Clearbit (service externe). Elle lit maintenant
+// GET /api/partners — la même source que /partenaires (cahier §6) — et
+// affiche des badges à initiales plutôt que de dépendre d'un service de
+// récupération de logo externe.
 
-const TIER_CONFIG = {
-  principal: {
-    size: "w-24 h-24",
-    imgSize: "w-16 h-16",
-    border: "border-ember-300",
-    label: "Organisateur officiel",
-  },
-  diamant: {
-    size: "w-18 h-18",
-    imgSize: "w-12 h-12",
-    border: "border-sky-400/50",
-    label: "Diamant",
-  },
-  or: {
-    size: "w-16 h-16",
-    imgSize: "w-10 h-10",
-    border: "border-yellow-500/50",
-    label: "Or",
-  },
-  argent: {
-    size: "w-14 h-14",
-    imgSize: "w-9 h-9",
-    border: "border-zinc-400/40",
-    label: "Argent",
-  },
-  bronze: {
-    size: "w-12 h-12",
-    imgSize: "w-8 h-8",
-    border: "border-amber-700/40",
-    label: "Bronze",
-  },
+const TIER_COLORS = {
+  principal: "#FFD700",
+  charitable: "#FF6B6B",
+  diamant: "#4FC3F7",
+  or: "#C89B3C",
+  argent: "#A0A0A0",
+  bronze: "#B87333",
 };
 
-// ── Logo component with clearbit + fallback ────────────────────────────────────
+const TIER_LABEL = {
+  charitable: "Partenaire caritatif",
+  diamant: "Diamant",
+  or: "Or",
+  argent: "Argent",
+  bronze: "Bronze",
+};
+
+function initials(name) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
+}
+
+// ── Badge partenaire — initiales, aucune dépendance externe ──────────────────
 function PartnerLogo({ partner }) {
-  const [imgError, setImgError] = useState(false);
-  const config = TIER_CONFIG[partner.tier] || TIER_CONFIG.bronze;
-  const logoSrc =
-    partner.domain && !imgError
-      ? `https://logo.clearbit.com/${partner.domain}`
-      : null;
+  const color = TIER_COLORS[partner.tier] || TIER_COLORS.or;
 
   return (
     <motion.a
-      href={partner.url}
-      target="_blank"
+      href={partner.url && partner.url !== "#" ? partner.url : undefined}
+      target={partner.url && partner.url !== "#" ? "_blank" : undefined}
       rel="noopener noreferrer"
       className="flex flex-col items-center gap-3 group flex-shrink-0 px-5"
       whileHover={{ scale: 1.08, y: -4 }}
       transition={{ duration: 0.25, ease: EASE_GAME }}
     >
       <motion.div
-        className={`${config.size} rounded-sm border ${config.border} flex items-center justify-center bg-obsidian-800 relative overflow-hidden cursor-none`}
-        style={{ borderColor: `${partner.color}25` }}
+        className="w-16 h-16 rounded-sm border flex items-center justify-center bg-obsidian-800 relative overflow-hidden cursor-none"
+        style={{ borderColor: `${color}25` }}
         whileHover={{
-          borderColor: partner.color,
-          boxShadow: `0 0 25px ${partner.color}40, 0 0 50px ${partner.color}15`,
+          borderColor: color,
+          boxShadow: `0 0 25px ${color}40, 0 0 50px ${color}15`,
         }}
         transition={{ duration: 0.3 }}
       >
-        {/* Inner gradient glow on hover */}
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-          style={{
-            background: `radial-gradient(circle, ${partner.color}18 0%, transparent 70%)`,
-          }}
+          style={{ background: `radial-gradient(circle, ${color}18 0%, transparent 70%)` }}
         />
-
-        {/* Logo image or fallback */}
-        {logoSrc ? (
-          <img
-            src={logoSrc}
-            alt={partner.name}
-            className={`${config.imgSize} object-contain relative z-10 filter grayscale group-hover:grayscale-0 transition-all duration-500`}
-            onError={() => setImgError(true)}
-            loading="lazy"
-          />
-        ) : (
-          <span
-            className="relative z-10 font-display font-black text-sm tracking-widest"
-            style={{ color: partner.color }}
-          >
-            {partner.initial}
-          </span>
-        )}
-
-        {/* Scan line */}
+        <span className="relative z-10 font-display font-black text-sm tracking-widest" style={{ color }}>
+          {initials(partner.name)}
+        </span>
         <motion.div
           className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100"
           animate={{ backgroundPositionY: ["0%", "200%"] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
           style={{
-            background: `linear-gradient(to bottom, transparent 30%, ${partner.color}10 50%, transparent 70%)`,
+            background: `linear-gradient(to bottom, transparent 30%, ${color}10 50%, transparent 70%)`,
             backgroundSize: "100% 200%",
           }}
         />
@@ -187,32 +115,32 @@ function InfinitePartnerTicker({ partners }) {
 function TierBadge({ label, color }) {
   return (
     <div className="flex items-center gap-3 mb-6">
-      <div
-        className="h-px flex-1"
-        style={{
-          background: `linear-gradient(to right, ${color}50, transparent)`,
-        }}
-      />
-      <span
-        className="font-mono text-xs tracking-widest uppercase"
-        style={{ color: `${color}80` }}
-      >
+      <div className="h-px flex-1" style={{ background: `linear-gradient(to right, ${color}50, transparent)` }} />
+      <span className="font-mono text-xs tracking-widest uppercase" style={{ color: `${color}80` }}>
         [{label}]
       </span>
-      <div
-        className="h-px flex-1"
-        style={{
-          background: `linear-gradient(to left, ${color}50, transparent)`,
-        }}
-      />
+      <div className="h-px flex-1" style={{ background: `linear-gradient(to left, ${color}50, transparent)` }} />
     </div>
   );
 }
 
 // ── Main Export ───────────────────────────────────────────────────────────────
 export default function PartnerBanner() {
-  const principalPartner = PARTNERS.find((p) => p.tier === "principal");
-  const otherPartners = PARTNERS.filter((p) => p.tier !== "principal");
+  const [partners, setPartners] = useState(null);
+
+  useEffect(() => {
+    getPartners()
+      .then((r) => setPartners(r.data || []))
+      .catch(() => setPartners([]));
+  }, []);
+
+  if (!partners) return null;
+
+  const principalPartner = partners.find((p) => p.tier === "principal");
+  const otherPartners = partners.filter((p) => p.tier !== "principal");
+  // Chaque tier présent dans la réponse obtient sa propre section groupée,
+  // dans l'ordre où le backend les renvoie (Fondation d'abord, cf. cahier §6).
+  const tiersInOrder = [...new Set(otherPartners.map((p) => p.tier))];
 
   return (
     <section className="relative py-20 overflow-hidden">
@@ -290,18 +218,13 @@ export default function PartnerBanner() {
                   transition={{ duration: 3, repeat: Infinity }}
                   whileHover={{ scale: 1.05 }}
                 >
-                  {/* Rotating ring inside */}
                   <motion.div
                     className="absolute inset-2 rounded-full border border-ember-400/20"
                     animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 12,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
+                    transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
                   />
                   <span className="font-display font-black text-3xl text-ember-300 relative z-10 tracking-widest text-gold-glow">
-                    CSF
+                    {initials(principalPartner.name)}
                   </span>
                 </motion.div>
                 <div className="text-center">
@@ -317,11 +240,16 @@ export default function PartnerBanner() {
           </motion.div>
         )}
 
-        {/* Partners ticker */}
-        <div>
-          <TierBadge label="Partenaires confirmés" color="#C89B3C" />
-          <InfinitePartnerTicker partners={otherPartners} />
-        </div>
+        {/* Partners ticker — un bloc par tier, dans l'ordre reçu du backend */}
+        {tiersInOrder.map((tier) => (
+          <div key={tier} className="mb-4">
+            <TierBadge
+              label={TIER_LABEL[tier] || "Partenaires confirmés"}
+              color={TIER_COLORS[tier] || "#C89B3C"}
+            />
+            <InfinitePartnerTicker partners={otherPartners.filter((p) => p.tier === tier)} />
+          </div>
+        ))}
 
         {/* Become a partner CTA */}
         <motion.div

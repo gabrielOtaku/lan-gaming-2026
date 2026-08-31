@@ -19,6 +19,7 @@ import {
   ChevronDown,
   Timer,
   AlertTriangle,
+  Bell,
 } from "lucide-react";
 import { getTicketsStatus } from "../utils/api.js";
 
@@ -106,7 +107,7 @@ function TicketBackground() {
 }
 
 // ── Hero section ──────────────────────────────────────────────────────────────
-function TicketsHero() {
+function TicketsHero({ salesEnabled }) {
   return (
     <div className="relative h-72 md:h-96 flex items-end overflow-hidden">
       <TicketBackground />
@@ -126,15 +127,31 @@ function TicketsHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.7 }}
         >
-          Réserve ta{" "}
-          <span
-            style={{
-              WebkitTextFillColor: "transparent",
-              WebkitTextStroke: "2px #C89B3C",
-            }}
-          >
-            Place
-          </span>
+          {salesEnabled ? (
+            <>
+              Réserve ta{" "}
+              <span
+                style={{
+                  WebkitTextFillColor: "transparent",
+                  WebkitTextStroke: "2px #C89B3C",
+                }}
+              >
+                Place
+              </span>
+            </>
+          ) : (
+            <>
+              La billetterie{" "}
+              <span
+                style={{
+                  WebkitTextFillColor: "transparent",
+                  WebkitTextStroke: "2px #C89B3C",
+                }}
+              >
+                arrive
+              </span>
+            </>
+          )}
         </motion.h1>
         <motion.div
           className="flex items-center gap-4 mt-4"
@@ -144,8 +161,9 @@ function TicketsHero() {
         >
           <div className="h-px w-12 bg-ember-400" />
           <p className="font-body text-zinc-500 text-sm">
-            Billets disponibles en quantité limitée — Ne manque pas l'événement
-            gaming de l'année
+            {salesEnabled
+              ? "Billets disponibles en quantité limitée — Ne manque pas l'événement gaming de l'année"
+              : "Les inscriptions au Cégep en LAN 2026 seront disponibles prochainement — reste à l'affût"}
           </p>
         </motion.div>
       </div>
@@ -154,11 +172,12 @@ function TicketsHero() {
 }
 
 // ── Event info quick bar ──────────────────────────────────────────────────────
-function EventInfoBar() {
+function EventInfoBar({ showCapacity }) {
   const infos = [
     { icon: Clock, label: "Dates", value: "9 – 11 Octobre 2026" },
     { icon: MapPin, label: "Lieu", value: "Cégep de Saint-Félicien" },
-    { icon: Users, label: "Capacité", value: "150+ participants" },
+    // Le nombre de places n'est publié qu'après validation électrique (cahier §3).
+    { icon: Users, label: "Capacité", value: showCapacity ? "150+ participants" : "À venir" },
     { icon: Zap, label: "Format", value: "47h non-stop" },
   ];
 
@@ -351,6 +370,9 @@ function SeatsBar({ inventory, salesClosed }) {
 }
 
 // ── FAQ accordion ─────────────────────────────────────────────────────────────
+// salesOnly: true — ces réponses citent des prix, des places ou une politique
+// de remboursement encore non validés. Masquées tant que ticket_sales_enabled
+// est désactivé (cahier §3) pour ne pas publier d'information prématurée.
 const FAQ_ITEMS = [
   {
     q: "Quand et où se déroule l'événement ?",
@@ -359,10 +381,12 @@ const FAQ_ITEMS = [
   {
     q: "Quelle est la différence entre Joueur et Compétiteur ?",
     a: "Le billet Joueur (30$) donne un poste LAN fixe et accès à toutes les arènes pendant 47h. Le Compétiteur (45$) inclut tout ça plus l'inscription officielle aux tournois (LoL, CS2, Rocket League, Magic:TG, Smash Bros, Mario Kart) et rend éligible aux cash prizes.",
+    salesOnly: true,
   },
   {
     q: "Les visiteurs peuvent-ils assister sans jouer ?",
     a: "Absolument ! Le billet Visiteur (15$) donne accès libre à l'ensemble de l'événement, à la zone spectateurs, aux consoles et aux kiosques partenaires.",
+    salesOnly: true,
   },
   {
     q: "Faut-il apporter son propre équipement ?",
@@ -375,6 +399,7 @@ const FAQ_ITEMS = [
   {
     q: "La billetterie est-elle remboursable ?",
     a: "Les billets sont remboursables jusqu'à 7 jours avant l'événement (2 octobre 2026). Passé ce délai, les billets sont non-remboursables mais transférables. Contactez-nous à comiteetuinfo@cegepstfe.ca ou au 581 704-1221 pour toute demande.",
+    salesOnly: true,
   },
 ];
 
@@ -472,6 +497,42 @@ function TrustSection() {
   );
 }
 
+// ── Coming Soon notice ─────────────────────────────────────────────────────────
+// Texte et contenu exacts du cahier §3 — tant que ticket_sales_enabled est
+// désactivé côté admin, la billetterie reste vitrine, jamais transactionnelle.
+function ComingSoonNotice() {
+  return (
+    <motion.div
+      variants={scrollReveal}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      className="border border-ember-400/20 bg-glass p-8 md:p-14 text-center relative overflow-hidden"
+      style={{ clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))' }}
+    >
+      <div className="absolute inset-0 bg-ember-glow opacity-30 pointer-events-none" />
+      <div className="relative z-10">
+        <Bell size={26} className="text-ember-400 mx-auto mb-4" />
+        <p className="font-mono text-ember-500 text-xs tracking-[0.5em] uppercase mb-3">
+          La billetterie ouvre bientôt
+        </p>
+        <p className="font-body text-zinc-400 text-sm max-w-lg mx-auto leading-relaxed mb-6">
+          Les inscriptions au Cégep en LAN 2026 seront disponibles prochainement.
+        </p>
+        <p className="font-display text-white font-bold text-lg mb-1">
+          9 – 11 octobre 2026 <span className="text-zinc-600">•</span> Cégep de Saint-Félicien
+        </p>
+        <p className="font-body text-ember-300 text-sm tracking-wide mb-6">
+          League of Legends <span className="text-zinc-700">•</span> Counter-Strike 2 <span className="text-zinc-700">•</span> Rocket League
+        </p>
+        <p className="font-body text-zinc-500 text-xs max-w-md mx-auto leading-relaxed">
+          Les modalités, tarifs et places disponibles seront annoncés lors de l'ouverture officielle. Restez à l'affût.
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function TicketsPage() {
   const [ticketStatus, setTicketStatus] = useState(null);
@@ -488,7 +549,10 @@ export default function TicketsPage() {
     return () => clearInterval(id);
   }, []);
 
+  const salesEnabled = ticketStatus?.ticketSalesEnabled ?? false;
+  const showCapacity = ticketStatus?.showCapacity ?? false;
   const salesClosed = ticketStatus?.salesClosed ?? false;
+  const visibleFaq = FAQ_ITEMS.filter((item) => salesEnabled || !item.salesOnly);
 
   return (
     <motion.div
@@ -498,59 +562,65 @@ export default function TicketsPage() {
       exit="exit"
       className="min-h-screen"
     >
-      <TicketsHero />
-      <EventInfoBar />
+      <TicketsHero salesEnabled={salesEnabled} />
+      <EventInfoBar showCapacity={salesEnabled && showCapacity} />
 
       <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
-        {/* Countdown + seats */}
-        <div className="mb-10 space-y-4">
-          {ticketStatus && (
-            <CountdownDeadline
-              deadline={ticketStatus.deadline}
-              salesClosed={salesClosed}
-            />
-          )}
-          {!salesClosed && (
-            <SeatsBar
-              inventory={ticketStatus?.inventory}
-              salesClosed={salesClosed}
-            />
-          )}
-        </div>
+        {!salesEnabled ? (
+          <ComingSoonNotice />
+        ) : (
+          <>
+            {/* Countdown + seats */}
+            <div className="mb-10 space-y-4">
+              {ticketStatus && (
+                <CountdownDeadline
+                  deadline={ticketStatus.deadline}
+                  salesClosed={salesClosed}
+                />
+              )}
+              {!salesClosed && (
+                <SeatsBar
+                  inventory={ticketStatus?.inventory}
+                  salesClosed={salesClosed}
+                />
+              )}
+            </div>
 
-        {/* Section title */}
-        <div className="text-center mb-12">
-          <motion.p
-            className="font-mono text-ember-500 text-xs tracking-[0.5em] uppercase mb-4"
-            variants={scrollReveal}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            [ Choisir mon billet ]
-          </motion.p>
-          <motion.h2
-            className="font-display text-3xl md:text-5xl font-black text-white uppercase tracking-tight"
-            variants={scrollReveal}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            Sélectionne ton{" "}
-            <span className="text-ember-300 text-ember-glow">Expérience</span>
-          </motion.h2>
-        </div>
+            {/* Section title */}
+            <div className="text-center mb-12">
+              <motion.p
+                className="font-mono text-ember-500 text-xs tracking-[0.5em] uppercase mb-4"
+                variants={scrollReveal}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+              >
+                [ Choisir mon billet ]
+              </motion.p>
+              <motion.h2
+                className="font-display text-3xl md:text-5xl font-black text-white uppercase tracking-tight"
+                variants={scrollReveal}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+              >
+                Sélectionne ton{" "}
+                <span className="text-ember-300 text-ember-glow">Expérience</span>
+              </motion.h2>
+            </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-        >
-          <TicketModal
-            inventory={ticketStatus?.inventory}
-            salesClosed={salesClosed}
-          />
-        </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+            >
+              <TicketModal
+                inventory={ticketStatus?.inventory}
+                salesClosed={salesClosed}
+              />
+            </motion.div>
+          </>
+        )}
 
         <TrustSection />
 
@@ -571,14 +641,14 @@ export default function TicketsPage() {
             </h2>
           </motion.div>
           <div className="max-w-3xl mx-auto border border-zinc-800 bg-glass p-4 md:p-8">
-            {FAQ_ITEMS.map((item, i) => (
+            {visibleFaq.map((item, i) => (
               <FaqItem key={i} item={item} index={i} />
             ))}
           </div>
         </div>
 
         {/* Final CTA */}
-        {!salesClosed && (
+        {salesEnabled && !salesClosed && (
           <motion.div
             className="text-center mt-20 py-16 border border-ember-400/10 relative overflow-hidden"
             initial={{ opacity: 0 }}

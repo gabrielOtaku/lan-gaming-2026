@@ -902,12 +902,12 @@ export default function CagnottePage() {
               </p>
               <div className="flex flex-col gap-2">
                 <a
-                  href="https://www.fondation.cstfelicien.qc.ca"
+                  href="https://cegepstfe.ca/fondation/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 font-mono text-[10px] text-ember-500 hover:text-ember-300 transition-colors"
                 >
-                  <ExternalLink size={10} /> fondation.cstfelicien.qc.ca
+                  <ExternalLink size={10} /> cegepstfe.ca/fondation
                 </a>
                 <a
                   href="https://www.cstfelicien.qc.ca"

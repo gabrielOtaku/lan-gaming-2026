@@ -26,9 +26,15 @@ export const getPartners = () => api.get('/partners');
 export const submitContact = (data) => api.post('/contact', data);
 export const getTicketRedirect = (data) => api.post('/ticket-redirect', data);
 
-// Ticket inventory
+// Ticket inventory — la version publique masque capacité/inventaire tant que
+// show_capacity est désactivé (cahier §3) ; l'admin voit toujours tout.
 export const getTicketsStatus = () => api.get('/tickets/status');
+export const adminGetTicketsStatus = () => api.get('/admin/tickets/status');
 export const adminAdjustTickets = (data) => api.post('/admin/tickets/adjust', data);
+
+// Feature flags de la V1 publique (billetterie Coming Soon, etc. — cahier §3/§8)
+export const getSiteSettings = () => api.get('/site-settings');
+export const adminUpdateSiteSettings = (data) => api.post('/admin/site-settings', data);
 
 // Tournaments
 export const getTournaments = () => api.get('/tournaments');

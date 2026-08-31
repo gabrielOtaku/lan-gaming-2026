@@ -8,6 +8,7 @@ import { loadJSON, saveJSON } from '../utils/persist.js';
 import {
   getCagnotteState, recordTicketOr, adminUpdateCagnotte,
 } from '../utils/cagnotteStore.js';
+import { getSiteSettings, updateSiteSettings } from '../utils/siteSettingsStore.js';
 
 // ── Nodemailer transporter ────────────────────────────────────────────────────
 const smtpConfigured = process.env.SMTP_USER && process.env.SMTP_PASS && process.env.SMTP_USER !== 'votre.email@gmail.com';
@@ -159,8 +160,7 @@ const ticketInventory = loadJSON('tickets.json', {
   competiteur: { capacity: 30, sold: 0 },
 });
 
-// ── GET /api/tickets/status ───────────────────────────────────────────────────
-router.get('/tickets/status', (_req, res) => {
+function computeTicketData() {
   const now = new Date();
   const deadlinePassed = now >= TICKET_DEADLINE;
   const inv = ticketInventory;
@@ -172,20 +172,35 @@ router.get('/tickets/status', (_req, res) => {
   const allSoldOut = Object.values(remaining).every(r => r <= 0);
   const salesClosed = deadlinePassed || allSoldOut;
 
-  res.json({
-    success: true,
-    data: {
-      deadline: TICKET_DEADLINE.toISOString(),
-      deadlinePassed,
-      allSoldOut,
-      salesClosed,
-      inventory: {
-        visiteur:    { ...inv.visiteur,    remaining: remaining.visiteur },
-        joueur:      { ...inv.joueur,      remaining: remaining.joueur },
-        competiteur: { ...inv.competiteur, remaining: remaining.competiteur },
-      },
+  return {
+    deadline: TICKET_DEADLINE.toISOString(),
+    deadlinePassed,
+    allSoldOut,
+    salesClosed,
+    inventory: {
+      visiteur:    { ...inv.visiteur,    remaining: remaining.visiteur },
+      joueur:      { ...inv.joueur,      remaining: remaining.joueur },
+      competiteur: { ...inv.competiteur, remaining: remaining.competiteur },
     },
-  });
+  };
+}
+
+// ── GET /api/tickets/status (public) ─────────────────────────────────────────
+// Tant que ticket_sales_enabled/show_capacity sont désactivés (cahier §3), on
+// ne publie ni capacité, ni places restantes, ni date de fermeture des ventes —
+// uniquement les deux flags, pour que le front sache afficher le mode "Coming
+// Soon". Le détail complet reste disponible côté admin via /admin/tickets/status.
+router.get('/tickets/status', (_req, res) => {
+  const { ticketSalesEnabled, showCapacity } = getSiteSettings();
+  const data = { ticketSalesEnabled, showCapacity };
+  if (showCapacity) Object.assign(data, computeTicketData());
+  res.json({ success: true, data });
+});
+
+// ── GET /api/admin/tickets/status (admin) ─────────────────────────────────────
+// Vue complète pour la gestion d'inventaire, indépendante des flags publics.
+router.get('/admin/tickets/status', requireAdmin, (_req, res) => {
+  res.json({ success: true, data: { ...getSiteSettings(), ...computeTicketData() } });
 });
 
 // ── POST /api/admin/tickets/adjust (admin) ────────────────────────────────────
@@ -198,6 +213,23 @@ router.post('/admin/tickets/adjust', requireAdmin, (req, res) => {
   ticketInventory[type].sold = Math.min(ticketInventory[type].capacity, Math.max(0, sold));
   saveJSON('tickets.json', ticketInventory);
   res.json({ success: true, inventory: ticketInventory });
+});
+
+// ── GET /api/site-settings (public) ───────────────────────────────────────────
+router.get('/site-settings', (_req, res) => {
+  res.json({ success: true, data: getSiteSettings() });
+});
+
+// ── POST /api/admin/site-settings (admin) ─────────────────────────────────────
+router.post('/admin/site-settings', requireAdmin, (req, res) => {
+  const { ticketSalesEnabled, showCapacity } = req.body || {};
+  if (ticketSalesEnabled !== undefined && typeof ticketSalesEnabled !== 'boolean') {
+    return res.status(400).json({ error: 'ticketSalesEnabled doit être un booléen.' });
+  }
+  if (showCapacity !== undefined && typeof showCapacity !== 'boolean') {
+    return res.status(400).json({ error: 'showCapacity doit être un booléen.' });
+  }
+  res.json({ success: true, data: updateSiteSettings({ ticketSalesEnabled, showCapacity }) });
 });
 
 // ── Tournament State ──────────────────────────────────────────────────────────

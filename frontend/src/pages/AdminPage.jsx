@@ -8,7 +8,7 @@ import {
 import { useAuth } from '../context/AuthContext.jsx';
 import { fadeInUp, staggerContainer, pageTransition } from '../utils/animations.js';
 import {
-  getTicketsStatus, adminAdjustTickets,
+  adminGetTicketsStatus, adminAdjustTickets, adminUpdateSiteSettings,
   getTournaments, getTournament, getCompetitors,
   generateBracket, updateMatchScore, resetTournament,
   getCagnotte, adminUpdateCagnotte,
@@ -27,12 +27,38 @@ const QUICK_LINKS = [
   { label: 'Supabase Dashboard (dons en ligne)', href: 'https://supabase.com/dashboard/project/ewpuczmzbmhdwdueahww', icon: ExternalLink, color: '#3ECF8E', external: true },
   { label: 'Stripe Dashboard', href: 'https://dashboard.stripe.com', icon: ExternalLink, color: '#635BFF', external: true },
   { label: 'Dossier de partenariat (PDF)', href: '/partenariat.pdf', icon: ExternalLink, color: '#C89B3C', external: false },
-  { label: 'Site Fondation du Cégep', href: 'https://fondationcstfelicien.qc.ca', icon: ExternalLink, color: '#FF4655', external: true },
+  { label: 'Site Fondation du Cégep', href: 'https://cegepstfe.ca/fondation/', icon: ExternalLink, color: '#FF4655', external: true },
   { label: 'Site du Cégep', href: 'https://www.cstfelicien.qc.ca', icon: ExternalLink, color: '#4FC3F7', external: true },
+  { label: 'Chaîne YouTube du Cégep', href: 'https://www.youtube.com/@C%C3%A9gepdeSt-F%C3%A9licien', icon: ExternalLink, color: '#FF0000', external: true },
   { label: 'Google Cloud Console (OAuth)', href: 'https://console.cloud.google.com', icon: Settings, color: '#4285F4', external: true },
   { label: 'Azure Portal (Microsoft OAuth)', href: 'https://portal.azure.com', icon: Settings, color: '#7FBA00', external: true },
   { label: 'Page Compétitions (publique)', href: '/competitions', icon: Trophy, color: '#FFD700', external: false },
 ];
+
+// ── Feature flag toggle (billetterie Coming Soon — cahier §3) ────────────────
+function FlagToggle({ label, hint, checked, onChange, disabled }) {
+  return (
+    <button
+      onClick={() => !disabled && onChange(!checked)}
+      disabled={disabled}
+      className="flex items-center justify-between w-full gap-3 px-3 py-2.5 border border-zinc-800 bg-obsidian-800/60 hover:border-ember-400/30 transition-colors disabled:opacity-50 text-left"
+    >
+      <div>
+        <p className="font-body text-zinc-300 text-xs font-semibold">{label}</p>
+        {hint && <p className="font-mono text-zinc-700 text-[9px] mt-0.5">{hint}</p>}
+      </div>
+      <span
+        className="relative flex-shrink-0 w-9 h-5 rounded-full transition-colors"
+        style={{ background: checked ? '#C89B3C' : '#27272a' }}
+      >
+        <span
+          className="absolute top-0.5 w-4 h-4 rounded-full bg-obsidian-900 transition-all"
+          style={{ left: checked ? '18px' : '2px' }}
+        />
+      </span>
+    </button>
+  );
+}
 
 // ── Ticket Manager Section ────────────────────────────────────────────────────
 function TicketManager() {
@@ -40,10 +66,11 @@ function TicketManager() {
   const [editType, setEditType] = useState(null);
   const [editVal, setEditVal] = useState('');
   const [saving, setSaving] = useState(false);
+  const [flagBusy, setFlagBusy] = useState(false);
   const [err, setErr] = useState(null);
 
   const load = useCallback(() => {
-    getTicketsStatus().then(r => setStatus(r.data)).catch(() => {});
+    adminGetTicketsStatus().then(r => setStatus(r.data)).catch(() => {});
   }, []);
 
   useEffect(() => { load(); }, [load]);
@@ -64,6 +91,19 @@ function TicketManager() {
     }
   };
 
+  const handleFlag = async (key, value) => {
+    setFlagBusy(true);
+    setErr(null);
+    try {
+      await adminUpdateSiteSettings({ [key]: value });
+      load();
+    } catch (e) {
+      setErr(e.message);
+    } finally {
+      setFlagBusy(false);
+    }
+  };
+
   if (!status) return (
     <div className="flex items-center gap-2 font-mono text-zinc-600 text-xs">
       <RefreshCw size={12} className="animate-spin" /> Chargement...
@@ -76,17 +116,36 @@ function TicketManager() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <p className="font-mono text-ember-500 text-xs tracking-widest uppercase">Inventaire des billets</p>
-        <div className="flex items-center gap-2">
-          {status.salesClosed && (
-            <span className="font-mono text-red-400 text-[9px] tracking-widest uppercase border border-red-500/30 px-2 py-0.5">
-              Ventes fermées
-            </span>
-          )}
-          <button onClick={load} className="text-zinc-600 hover:text-ember-400 transition-colors">
-            <RefreshCw size={12} />
-          </button>
-        </div>
+        <p className="font-mono text-ember-500 text-xs tracking-widest uppercase">Billetterie publique</p>
+        {status.salesClosed && status.ticketSalesEnabled && (
+          <span className="font-mono text-red-400 text-[9px] tracking-widest uppercase border border-red-500/30 px-2 py-0.5">
+            Ventes fermées
+          </span>
+        )}
+      </div>
+
+      <div className="space-y-2 mb-5">
+        <FlagToggle
+          label="Vente de billets activée"
+          hint={status.ticketSalesEnabled ? 'La page publique affiche les billets et le bouton d\'achat.' : 'La page publique affiche « Coming Soon » — aucune vente possible.'}
+          checked={status.ticketSalesEnabled}
+          onChange={(v) => handleFlag('ticketSalesEnabled', v)}
+          disabled={flagBusy}
+        />
+        <FlagToggle
+          label="Afficher la capacité"
+          hint="Publie le nombre de places (150+) et les compteurs par catégorie."
+          checked={status.showCapacity}
+          onChange={(v) => handleFlag('showCapacity', v)}
+          disabled={flagBusy}
+        />
+      </div>
+
+      <div className="flex items-center justify-between mb-3">
+        <p className="font-mono text-zinc-600 text-[10px] tracking-widest uppercase">Inventaire (usage interne)</p>
+        <button onClick={load} className="text-zinc-600 hover:text-ember-400 transition-colors">
+          <RefreshCw size={12} />
+        </button>
       </div>
 
       <div className="space-y-3">

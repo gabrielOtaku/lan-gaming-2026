@@ -509,7 +509,7 @@ export default function FoundationBlock() {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center lg:items-start gap-3">
               <motion.a
-                href="https://www.fondation.cstfelicien.qc.ca"
+                href="https://cegepstfe.ca/fondation/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 group"
