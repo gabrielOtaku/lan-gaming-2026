@@ -297,8 +297,9 @@ export default function ContactPage() {
               <div className="text-ember-500 mb-2 tracking-widest">// STATUT DU SYSTÈME</div>
               {[
                 { key: 'événement', val: 'CONFIRMÉ', color: '#22c55e' },
-                { key: 'billetterie', val: 'OUVERTE', color: '#22c55e' },
-                { key: 'tournois', val: 'INSCRIPTIONS_OUVERTES', color: '#22c55e' },
+                { key: 'billetterie', val: 'BIENTÔT_DISPONIBLE', color: '#eab308' },
+                { key: 'tournois', val: 'PROGRAMMATION_EN_COURS', color: '#eab308' },
+                { key: 'dons', val: 'BIENTÔT_OUVERTS', color: '#eab308' },
                 { key: 'support', val: 'ACTIF', color: '#22c55e' },
               ].map(({ key, val, color }, i) => (
                 <motion.div

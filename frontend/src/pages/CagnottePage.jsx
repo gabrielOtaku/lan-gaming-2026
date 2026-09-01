@@ -280,8 +280,10 @@ function TicketOrCard({ data, onPurchase, comingSoon = false }) {
               aria-hidden="true"
               className="w-full py-4 font-display font-black text-base tracking-widest uppercase text-obsidian-900/50 flex items-center justify-center gap-2 select-none"
               style={{
-                background: "linear-gradient(135deg, #C89B3C, #FFD700, #C89B3C)",
-                clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
+                background:
+                  "linear-gradient(135deg, #C89B3C, #FFD700, #C89B3C)",
+                clipPath:
+                  "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
                 filter: "grayscale(0.6)",
                 opacity: 0.55,
               }}
@@ -526,7 +528,11 @@ export default function CagnottePage() {
 
   // Dons en ligne (Stripe Payment Link) : Supabase est la seule source de
   // vérité, temps réel via Realtime — jamais recalculé ici.
-  const { campaign, nextMilestone, error: campaignError } = useDonationCampaign();
+  const {
+    campaign,
+    nextMilestone,
+    error: campaignError,
+  } = useDonationCampaign();
 
   // Ticket d'Or + dons Twitch natifs (saisie manuelle admin) restent sur
   // l'ancien store Express/JSON — canaux distincts, non couverts par le guide.
@@ -544,7 +550,8 @@ export default function CagnottePage() {
 
   const raisedOnline = (campaign?.raised_cents || 0) / 100;
   const goal = (campaign?.goal_cents || 10000000) / 100;
-  const totalRaised = raisedOnline + (data.twitchTotal || 0) + (data.ticketOrTotal || 0);
+  const totalRaised =
+    raisedOnline + (data.twitchTotal || 0) + (data.ticketOrTotal || 0);
 
   const dismissDonStatus = () => {
     searchParams.delete("don");
@@ -559,7 +566,9 @@ export default function CagnottePage() {
       setData(json.data || json);
       setError(null);
     } catch (err) {
-      setError("Impossible de charger le Ticket d'Or / dons Twitch en temps réel.");
+      setError(
+        "Impossible de charger le Ticket d'Or / dons Twitch en temps réel.",
+      );
     } finally {
       setLoading(false);
       setLastRefresh(new Date());
@@ -664,9 +673,9 @@ export default function CagnottePage() {
             variants={fadeInUp}
             className="font-body text-zinc-500 max-w-lg mx-auto text-sm leading-relaxed"
           >
-            Chaque don en ligne, don Twitch et Ticket d'Or vendu est
-            entièrement reversé à la Fondation du Cégep de Saint-Félicien pour
-            soutenir les bourses étudiantes.
+            Chaque don en ligne, don Twitch et Ticket d'Or vendu est entièrement
+            reversé à la Fondation du Cégep de Saint-Félicien pour soutenir les
+            bourses étudiantes.
           </motion.p>
 
           {/* Refresh indicator */}
@@ -702,9 +711,13 @@ export default function CagnottePage() {
               className="flex items-center justify-between gap-2 bg-green-500/10 border border-green-500/25 text-green-400 font-mono text-xs px-4 py-3 mb-6"
             >
               <span className="flex items-center gap-2">
-                <CheckCircle2 size={13} /> Merci pour ton don ! Il apparaîtra dans la cagnotte dès sa confirmation par Stripe.
+                <CheckCircle2 size={13} /> Merci pour ton don ! Il apparaîtra
+                dans la cagnotte dès sa confirmation par Stripe.
               </span>
-              <button onClick={dismissDonStatus} className="text-green-500/60 hover:text-green-300 transition-colors">
+              <button
+                onClick={dismissDonStatus}
+                className="text-green-500/60 hover:text-green-300 transition-colors"
+              >
                 <X size={14} />
               </button>
             </motion.div>
@@ -713,7 +726,8 @@ export default function CagnottePage() {
 
         {campaignError && (
           <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 text-amber-400 font-mono text-xs px-4 py-3 mb-6">
-            <AlertCircle size={13} /> Cagnotte en ligne indisponible : {campaignError}
+            <AlertCircle size={13} /> Cagnotte en ligne indisponible :{" "}
+            {campaignError}
           </div>
         )}
 
@@ -810,8 +824,10 @@ export default function CagnottePage() {
           viewport={{ once: true }}
           className="border border-ember-400/30 bg-obsidian-800/80 p-6 md:p-8 mb-10 text-center"
           style={{
-            clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))",
-            boxShadow: "0 0 40px rgba(200,155,60,0.1), inset 0 0 40px rgba(200,155,60,0.03)",
+            clipPath:
+              "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))",
+            boxShadow:
+              "0 0 40px rgba(200,155,60,0.1), inset 0 0 40px rgba(200,155,60,0.03)",
           }}
         >
           <p className="font-mono text-ember-500 text-[10px] tracking-[0.5em] uppercase mb-2">
@@ -821,16 +837,17 @@ export default function CagnottePage() {
             Faire un don direct
           </h2>
           <p className="font-body text-zinc-500 text-sm mb-6 max-w-md mx-auto">
-            Paiement par carte hébergé par Stripe — choisis ton montant,
-            affiche ton prénom ou reste anonyme, directement sur leur page
-            sécurisée.
+            Paiement par carte hébergé par Stripe — choisis ton montant, affiche
+            ton prénom ou reste anonyme, directement sur leur page sécurisée.
           </p>
           <div className="max-w-sm mx-auto">
             <DonateButton comingSoon />
           </div>
           {nextMilestone && (
             <p className="font-mono text-zinc-600 text-[10px] tracking-widest mt-4">
-              Prochain palier : {(nextMilestone.amount_cents / 100).toLocaleString("fr-CA")}$ — {nextMilestone.title}
+              Prochain palier :{" "}
+              {(nextMilestone.amount_cents / 100).toLocaleString("fr-CA")}$ —{" "}
+              {nextMilestone.title}
             </p>
           )}
         </motion.div>
@@ -838,7 +855,11 @@ export default function CagnottePage() {
         {/* Two-column layout */}
         <div className="grid md:grid-cols-2 gap-6 items-start">
           {/* Left: Ticket d'Or */}
-          <TicketOrCard data={data} onPurchase={() => setPurchaseOpen(true)} comingSoon />
+          <TicketOrCard
+            data={data}
+            onPurchase={() => setPurchaseOpen(true)}
+            comingSoon
+          />
 
           {/* Right: Twitch + live feed */}
           <div className="space-y-5">
@@ -920,7 +941,7 @@ export default function CagnottePage() {
               <div className="flex items-center gap-2 mb-3">
                 <Heart size={14} className="text-ember-400" />
                 <p className="font-display text-ember-300 font-bold text-sm">
-                  Fondation du Cégep CSF
+                  Fondation du Cégep de Saint-Félicien
                 </p>
               </div>
               <p className="font-body text-zinc-500 text-sm leading-relaxed mb-4">
@@ -936,14 +957,6 @@ export default function CagnottePage() {
                   className="flex items-center gap-2 font-mono text-[10px] text-ember-500 hover:text-ember-300 transition-colors"
                 >
                   <ExternalLink size={10} /> cegepstfe.ca/fondation
-                </a>
-                <a
-                  href="https://www.cstfelicien.qc.ca"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 font-mono text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors"
-                >
-                  <ExternalLink size={10} /> cstfelicien.qc.ca
                 </a>
               </div>
             </motion.div>
