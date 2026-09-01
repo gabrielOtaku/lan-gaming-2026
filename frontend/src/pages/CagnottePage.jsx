@@ -15,6 +15,7 @@ import {
   AlertCircle,
   CheckCircle2,
   X,
+  Lock,
 } from "lucide-react";
 import {
   pageTransition,
@@ -101,7 +102,9 @@ function FundingBar({ current, goal, color = "#C89B3C" }) {
 }
 
 // ── Ticket d'Or Card ──────────────────────────────────────────────────────────
-function TicketOrCard({ data, onPurchase }) {
+// comingSoon : l'achat n'est pas encore ouvert — le bouton reste visible pour
+// la vitrine mais devient inerte, recouvert d'un overlay "Bientôt disponible".
+function TicketOrCard({ data, onPurchase, comingSoon = false }) {
   const ref = useRef();
   const inView = useInView(ref, { once: true, margin: "-40px" });
 
@@ -271,28 +274,53 @@ function TicketOrCard({ data, onPurchase }) {
         </div>
 
         {/* CTA */}
-        <motion.button
-          onClick={onPurchase}
-          className="w-full py-4 font-display font-black text-base tracking-widest uppercase text-obsidian-900 relative overflow-hidden"
-          style={{
-            background: "linear-gradient(135deg, #C89B3C, #FFD700, #C89B3C)",
-            clipPath:
-              "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
-          }}
-          whileHover={{ scale: 1.01, filter: "brightness(1.1)" }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-            animate={{ x: ["-100%", "200%"] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          />
-          <span className="relative z-10 flex items-center justify-center gap-2">
-            <Star size={16} className="fill-current" />
-            Acheter un Ticket d'Or — {data.ticketOrPrice || 10}$
-            <Star size={16} className="fill-current" />
-          </span>
-        </motion.button>
+        {comingSoon ? (
+          <div className="relative">
+            <div
+              aria-hidden="true"
+              className="w-full py-4 font-display font-black text-base tracking-widest uppercase text-obsidian-900/50 flex items-center justify-center gap-2 select-none"
+              style={{
+                background: "linear-gradient(135deg, #C89B3C, #FFD700, #C89B3C)",
+                clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
+                filter: "grayscale(0.6)",
+                opacity: 0.55,
+              }}
+            >
+              <Star size={16} className="fill-current" />
+              Acheter un Ticket d'Or — {data.ticketOrPrice || 10}$
+              <Star size={16} className="fill-current" />
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center gap-2 bg-obsidian-900/75 backdrop-blur-[1px] cursor-not-allowed">
+              <Lock size={13} className="text-amber-300" />
+              <span className="font-mono text-amber-200 text-[11px] tracking-widest uppercase">
+                Bientôt disponible
+              </span>
+            </div>
+          </div>
+        ) : (
+          <motion.button
+            onClick={onPurchase}
+            className="w-full py-4 font-display font-black text-base tracking-widest uppercase text-obsidian-900 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, #C89B3C, #FFD700, #C89B3C)",
+              clipPath:
+                "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
+            }}
+            whileHover={{ scale: 1.01, filter: "brightness(1.1)" }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+              animate={{ x: ["-100%", "200%"] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            />
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              <Star size={16} className="fill-current" />
+              Acheter un Ticket d'Or — {data.ticketOrPrice || 10}$
+              <Star size={16} className="fill-current" />
+            </span>
+          </motion.button>
+        )}
         <p className="font-mono text-zinc-700 text-[9px] tracking-widest text-center mt-3">
           Tirage en direct · Grande Finale Dimanche 11 oct. 2026 à 13h00
         </p>
@@ -810,7 +838,7 @@ export default function CagnottePage() {
         {/* Two-column layout */}
         <div className="grid md:grid-cols-2 gap-6 items-start">
           {/* Left: Ticket d'Or */}
-          <TicketOrCard data={data} onPurchase={() => setPurchaseOpen(true)} />
+          <TicketOrCard data={data} onPurchase={() => setPurchaseOpen(true)} comingSoon />
 
           {/* Right: Twitch + live feed */}
           <div className="space-y-5">

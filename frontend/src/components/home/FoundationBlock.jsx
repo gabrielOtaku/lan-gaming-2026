@@ -458,7 +458,7 @@ export default function FoundationBlock() {
               </ul>
             </div>
 
-            {/* CTAs */}
+            {/* CTA — uniquement la Fondation ; le renvoi vers le site du Cégep a été retiré */}
             <div className="flex flex-col sm:flex-row items-center lg:items-start gap-3">
               <motion.a
                 href="https://cegepstfe.ca/fondation/"
@@ -471,19 +471,6 @@ export default function FoundationBlock() {
                   Découvrir la Fondation
                 </span>
                 <ArrowRight size={14} className="text-red-400 group-hover:text-red-300 transition-colors" />
-              </motion.a>
-              <span className="text-zinc-700 hidden sm:block">·</span>
-              <motion.a
-                href="https://www.cstfelicien.qc.ca"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 group"
-                whileHover={{ x: 5 }}
-              >
-                <span className="font-body text-zinc-500 text-sm tracking-wide group-hover:text-zinc-300 transition-colors">
-                  Site du Cégep
-                </span>
-                <ArrowRight size={14} className="text-zinc-600 group-hover:text-zinc-400 transition-colors" />
               </motion.a>
             </div>
           </motion.div>

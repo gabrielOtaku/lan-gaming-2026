@@ -42,9 +42,13 @@ function initials(name) {
     .toUpperCase();
 }
 
-// ── Badge partenaire — initiales, aucune dépendance externe ──────────────────
+// ── Badge partenaire — logo auto-hébergé si dispo, sinon initiales ──────────
+// Aucune dépendance externe (Clearbit, etc.) : les logos servis ici vivent
+// dans frontend/public/logos/, jamais récupérés depuis un service tiers.
 function PartnerLogo({ partner }) {
   const color = TIER_COLORS[partner.tier] || TIER_COLORS.or;
+  const [imgError, setImgError] = useState(false);
+  const hasLogo = partner.logo && !imgError;
 
   return (
     <motion.a
@@ -68,9 +72,19 @@ function PartnerLogo({ partner }) {
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400"
           style={{ background: `radial-gradient(circle, ${color}18 0%, transparent 70%)` }}
         />
-        <span className="relative z-10 font-display font-black text-sm tracking-widest" style={{ color }}>
-          {initials(partner.name)}
-        </span>
+        {hasLogo ? (
+          <img
+            src={partner.logo}
+            alt={partner.name}
+            onError={() => setImgError(true)}
+            className="relative z-10 w-[70%] h-[70%] object-contain"
+            loading="lazy"
+          />
+        ) : (
+          <span className="relative z-10 font-display font-black text-sm tracking-widest" style={{ color }}>
+            {initials(partner.name)}
+          </span>
+        )}
         <motion.div
           className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100"
           animate={{ backgroundPositionY: ["0%", "200%"] }}
@@ -127,6 +141,7 @@ function TierBadge({ label, color }) {
 // ── Main Export ───────────────────────────────────────────────────────────────
 export default function PartnerBanner() {
   const [partners, setPartners] = useState(null);
+  const [principalLogoError, setPrincipalLogoError] = useState(false);
 
   useEffect(() => {
     getPartners()
@@ -137,9 +152,13 @@ export default function PartnerBanner() {
   if (!partners) return null;
 
   const principalPartner = partners.find((p) => p.tier === "principal");
-  const otherPartners = partners.filter((p) => p.tier !== "principal");
+  // La Fondation a déjà son propre bloc dédié plus bas sur cette page
+  // (logo, mission, galerie) — l'afficher aussi dans la bannière créerait un
+  // doublon, donc son tier "charitable" est exclu ici (elle reste sur
+  // /partenaires, qui n'a pas ce bloc dédié).
+  const otherPartners = partners.filter((p) => p.tier !== "principal" && p.tier !== "charitable");
   // Chaque tier présent dans la réponse obtient sa propre section groupée,
-  // dans l'ordre où le backend les renvoie (Fondation d'abord, cf. cahier §6).
+  // dans l'ordre où le backend les renvoie.
   const tiersInOrder = [...new Set(otherPartners.map((p) => p.tier))];
 
   return (
@@ -223,9 +242,18 @@ export default function PartnerBanner() {
                     animate={{ rotate: 360 }}
                     transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
                   />
-                  <span className="font-display font-black text-3xl text-ember-300 relative z-10 tracking-widest text-gold-glow">
-                    {initials(principalPartner.name)}
-                  </span>
+                  {principalPartner.logo && !principalLogoError ? (
+                    <img
+                      src={principalPartner.logo}
+                      alt={principalPartner.name}
+                      onError={() => setPrincipalLogoError(true)}
+                      className="relative z-10 w-[68%] h-[68%] object-contain"
+                    />
+                  ) : (
+                    <span className="font-display font-black text-3xl text-ember-300 relative z-10 tracking-widest text-gold-glow">
+                      {initials(principalPartner.name)}
+                    </span>
+                  )}
                 </motion.div>
                 <div className="text-center">
                   <p className="font-display text-ember-300 font-bold tracking-wide">

@@ -41,6 +41,9 @@ function initials(name) {
 }
 
 function PartnerCard({ partner, color }) {
+  const [imgError, setImgError] = useState(false);
+  const hasLogo = partner.logo && !imgError;
+
   return (
     <motion.a
       variants={fadeInUp}
@@ -56,12 +59,22 @@ function PartnerCard({ partner, color }) {
       whileHover={partner.url && partner.url !== "#" ? { borderColor: `${color}70`, y: -3 } : {}}
     >
       <div
-        className="w-16 h-16 flex items-center justify-center border"
+        className="w-16 h-16 flex items-center justify-center border overflow-hidden"
         style={{ borderColor: `${color}40`, background: `${color}10` }}
       >
-        <span className="font-display font-black text-lg" style={{ color }}>
-          {initials(partner.name)}
-        </span>
+        {hasLogo ? (
+          <img
+            src={partner.logo}
+            alt={partner.name}
+            onError={() => setImgError(true)}
+            className="w-[70%] h-[70%] object-contain"
+            loading="lazy"
+          />
+        ) : (
+          <span className="font-display font-black text-lg" style={{ color }}>
+            {initials(partner.name)}
+          </span>
+        )}
       </div>
       <p className="font-body text-zinc-300 text-sm text-center leading-tight">{partner.name}</p>
       {partner.url && partner.url !== "#" && (

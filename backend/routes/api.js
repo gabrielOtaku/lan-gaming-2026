@@ -504,14 +504,17 @@ router.get('/events', (_req, res) => {
 });
 
 // ── GET /api/partners ────────────────────────────────────────────────────────
+// Centre Hi-Fi et e-distribution retirés (rien de confirmé par écrit).
+// MRC du Domaine-du-Roy et UQAC ajoutés — tier "argent" par défaut faute de
+// palier de commandite confirmé ; à ajuster une fois l'entente précisée.
 router.get('/partners', (_req, res) => {
   const partners = [
-    { id: 1, name: 'Cégep de Saint-Félicien', logo: '/logos/cegep.svg', url: 'https://www.cstfelicien.qc.ca', tier: 'principal' },
+    { id: 1, name: 'Cégep de Saint-Félicien', logo: '/logos/cegep.jpg', url: 'https://www.cstfelicien.qc.ca', tier: 'principal' },
     { id: 2, name: 'Fondation du Cégep', logo: '/logos/fondation.svg', url: '#fondation', tier: 'charitable' },
     { id: 3, name: 'Metro', logo: '/logos/metro.svg', url: 'https://www.metro.ca', tier: 'diamant' },
-    { id: 4, name: 'Centre Hi-Fi', logo: '/logos/centrehifi.svg', url: '#', tier: 'diamant' },
-    { id: 5, name: 'Mazda', logo: '/logos/mazda.svg', url: 'https://www.mazda.ca', tier: 'or' },
-    { id: 6, name: 'e-distribution', logo: '/logos/edistribution.svg', url: '#', tier: 'or' },
+    { id: 4, name: 'Mazda', logo: '/logos/mazda.svg', url: 'https://www.mazda.ca', tier: 'or' },
+    { id: 5, name: 'MRC du Domaine-du-Roy', logo: '/logos/mrc.svg', url: 'https://mrcdomaineduroy.ca/', tier: 'argent' },
+    { id: 6, name: 'UQAC', logo: '/logos/uqac.svg', url: 'https://www.uqac.ca/', tier: 'argent' },
   ];
   res.status(200).json({ success: true, data: partners });
 });

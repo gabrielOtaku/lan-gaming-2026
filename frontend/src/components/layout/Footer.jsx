@@ -2,19 +2,11 @@ import React, { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { fadeInUp, staggerContainer } from '../../utils/animations.js';
 
-// ── Social platform data (Twitch, Instagram, TikTok, YouTube, Facebook) ──────
+// ── Social platform data ──────────────────────────────────────────────────────
+// Twitch, TikTok et Facebook retirés : les comptes dédiés LAN Gaming 2026
+// n'existent pas encore sur ces plateformes. Seuls Instagram (compte du
+// Cégep) et YouTube (chaîne du Cégep) sont réels et actifs aujourd'hui.
 const SOCIALS = [
-  {
-    label: 'Twitch',
-    url: 'https://twitch.tv/lan2026csf',
-    color: '#9146FF',
-    bg: 'rgba(145,70,255,0.12)',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-        <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z" />
-      </svg>
-    ),
-  },
   {
     label: 'Instagram',
     url: 'https://instagram.com/cegepstfelicien',
@@ -27,17 +19,6 @@ const SOCIALS = [
     ),
   },
   {
-    label: 'TikTok',
-    url: 'https://tiktok.com/@lan2026csf',
-    color: '#00F2EA',
-    bg: 'rgba(0,242,234,0.08)',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.79 1.52V6.76a4.85 4.85 0 01-1.02-.07z" />
-      </svg>
-    ),
-  },
-  {
     label: 'YouTube',
     url: 'https://www.youtube.com/@C%C3%A9gepdeSt-F%C3%A9licien',
     color: '#FF0000',
@@ -45,17 +26,6 @@ const SOCIALS = [
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
         <path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Facebook',
-    url: 'https://facebook.com/cegepstfelicien',
-    color: '#1877F2',
-    bg: 'rgba(24,119,242,0.12)',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
       </svg>
     ),
   },
