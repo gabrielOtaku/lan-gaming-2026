@@ -2,6 +2,9 @@
   "name": "lan-gaming-2026-frontend",
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=22 <23"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

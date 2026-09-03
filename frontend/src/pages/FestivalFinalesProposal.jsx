@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Navigate } from 'react-router-dom';
 import { AlertTriangle, Clock, Users, Heart, Handshake, MapPin, ShieldAlert } from 'lucide-react';
 import { pageTransition, staggerContainer, fadeInUp, scrollReveal } from '../utils/animations.js';
+import { useAuth } from '../context/AuthContext.jsx';
 
 // ── Document interne — non lié dans la navigation publique. Empêche
 // l'indexation moteur au montage (le <meta robots> global du site est
@@ -103,7 +105,12 @@ function SectionLabel({ children }) {
 }
 
 export default function FestivalFinalesProposal() {
+  // Un noindex n'est pas une protection (plan de mise en ligne V1 §1) —
+  // cette page interne exige désormais une vraie session admin, comme /admin.
+  const { isAdmin } = useAuth();
   useNoIndex();
+
+  if (!isAdmin) return <Navigate to="/" replace />;
 
   return (
     <motion.div

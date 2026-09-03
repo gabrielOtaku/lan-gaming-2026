@@ -4,8 +4,9 @@ import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { Menu, X, Sword, Zap, Ticket, Mail, Shield, LogOut, AlertCircle, Heart, Trophy, Crown, Info, Radio } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
-
+// Chemin relatif — le frontend et /api partagent le même domaine en
+// production via reverse proxy (plan de mise en ligne V1 §4), donc aucun
+// fallback localhost ne peut jamais être exposé à un visiteur réel.
 const NAV_LINKS = [
   { to: '/', label: 'Accueil', icon: Zap, code: 'HOME' },
   { to: '/calendrier', label: 'Calendrier', icon: Sword, code: 'SCHED' },
@@ -103,14 +104,14 @@ function LoginModal({ onClose }) {
         {/* OAuth Buttons */}
         <div className="px-6 pt-5 pb-3 space-y-2.5">
           <a
-            href={`${API_URL}/api/auth/google`}
+            href="/api/auth/google"
             className="flex items-center gap-3 px-4 py-2.5 border border-zinc-700 hover:border-zinc-500 bg-zinc-900/60 hover:bg-zinc-800 transition-all duration-200 w-full"
           >
             <GoogleIcon />
             <span className="font-body text-zinc-300 text-sm">Continuer avec Google</span>
           </a>
           <a
-            href={`${API_URL}/api/auth/microsoft`}
+            href="/api/auth/microsoft"
             className="flex items-center gap-3 px-4 py-2.5 border border-zinc-700 hover:border-zinc-500 bg-zinc-900/60 hover:bg-zinc-800 transition-all duration-200 w-full"
           >
             <MicrosoftIcon />

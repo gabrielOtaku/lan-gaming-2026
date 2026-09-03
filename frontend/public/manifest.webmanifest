@@ -20,12 +20,12 @@
     {
       "name": "Billetterie",
       "url": "/billetterie",
-      "description": "Acheter des billets pour LAN Gaming 2026"
+      "description": "Billetterie LAN Gaming 2026 — bientôt disponible"
     },
     {
       "name": "Compétitions",
       "url": "/competitions",
-      "description": "Voir les brackets de tournois en direct"
+      "description": "Tournois officiels LoL, CS2 et Rocket League"
     }
   ]
 }

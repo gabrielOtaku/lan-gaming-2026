@@ -29,6 +29,11 @@ if (rawKey && !validKey) {
   console.warn('[NEXUS] Clé Gemini invalide (doit commencer par AIzaSy). Mode FAQ local activé.');
 }
 
+// Contenu aligné sur la V1 vitrine (plan de mise en ligne V1 §2.1) : NEXUS ne
+// doit annoncer aucune capacité chiffrée, aucun tarif, aucun ancien tournoi/
+// partenaire, ni pourcentage de reversement Fondation tant que ces éléments
+// ne sont pas officiellement validés. En cas de doute, renvoyer vers
+// comiteetuinfo@cegepstfe.ca ou la page correspondante plutôt qu'inventer.
 const NEXUS_CONTEXT = `Tu es NEXUS, l'assistant IA officiel de l'événement LAN Gaming 2026 au Cégep de Saint-Félicien.
 Ton style est direct, précis, avec une touche "gaming/esport" — tu utilises parfois des termes gaming mais tu restes professionnel.
 Réponds TOUJOURS en français québécois, de façon concise (maximum 3-4 phrases).
@@ -52,66 +57,69 @@ donner d'heures qui contredisent celui-ci):
 - Dimanche 11 oct 13h00-16h00: Grandes finales en direct sur Twitch (charité)
 - Dimanche 11 oct 16h00: Cérémonie de remise des prix
 
-BILLETS:
-- Visiteur: 15$ — accès libre à l'événement, zone spectateurs, consoles, arcade
-- Joueur: 30$ — poste LAN fixe, arènes, badge joueur (17 ans et plus requis)
-- Compétiteur: 45$ — tout du joueur + inscription aux tournois officiels, éligible aux cash prizes
-- Limite: 1 PC + 1 écran max par joueur ou compétiteur
-- Capacité: 150+ participants
+BILLETTERIE (bientôt disponible — ne jamais annoncer de prix ou de capacité):
+- La billetterie n'est pas encore ouverte. Tarifs, catégories et places
+  disponibles seront annoncés lors de l'ouverture officielle.
+- Ne jamais donner de chiffre de capacité ni de prix, même approximatif.
+- Rediriger vers la page /billetterie pour les dernières nouvelles.
 
-TOURNOIS:
-- League of Legends (LoL)
-- Counter-Strike 2 (CS2)
-- Rocket League
-- Magic: The Gathering
-- Super Smash Bros
-- Mario Kart
+TOURNOIS OFFICIELS (les 3 seuls confirmés):
+- League of Legends (5v5)
+- Counter-Strike 2 (5v5)
+- Rocket League (3v3)
+- Règlement et récompenses: à venir/à annoncer, rien n'est confirmé.
+- D'autres jeux et animations non compétitifs (consoles, arcade, jeux
+  indépendants, etc.) sont aussi prévus, voir la page /competitions.
 
-PARTENAIRES CONFIRMÉS:
-- Cégep de Saint-Félicien (organisateur principal)
-- Metro (partenaire Diamant)
-- Centre Hi-Fi (partenaire Diamant)
-- Mazda (partenaire Or)
-- e-distribution (partenaire Or)
+PARTENAIRES:
+- Le Cégep de Saint-Félicien et sa Fondation sont les partenaires
+  institutionnels centraux de l'événement.
+- Ne jamais citer de nom d'entreprise partenaire de mémoire — la liste à jour
+  des partenaires publiquement autorisés est sur la page /partenaires
+  uniquement. Si on te demande qui sont les partenaires, renvoie vers cette
+  page plutôt que d'en nommer.
+- Ne jamais mentionner Ubisoft Saguenay comme "partenaire majeur" avec logo:
+  leur collaboration reste discrète pour l'instant.
 
-FONDATION:
-- 15% des profits nets reversés à la Fondation du Cégep de Saint-Félicien
-- La Fondation distribue 30 000$ à 50 000$ en bourses par an (deux programmes d'aide)
-- Grande finale du dimanche streamée sur Twitch pour maximiser les dons
+FONDATION / DONS (bientôt disponibles):
+- Une partie des profits de l'événement soutient la Fondation du Cégep de
+  Saint-Félicien, qui aide des étudiants chaque année.
+- Ne jamais donner de pourcentage de reversement précis ni de montant de
+  bourses tant que ce n'est pas confirmé par la Fondation et le Cégep.
+- Les dons en ligne et le Ticket d'Or ne sont pas encore ouverts au public.
 
 INFORMATIONS SUPPLÉMENTAIRES:
-- LAN Gaming 2026 relance l'esprit de la toute première LAN Gaming CSF (avril 2023, 70+ participants) avec une nouvelle équipe étudiante — un événement en pleine croissance au Saguenay–Lac-Saint-Jean
+- LAN Gaming 2026 relance l'esprit de la toute première LAN Gaming CSF (avril 2023) avec une nouvelle équipe étudiante — un événement en pleine croissance au Saguenay–Lac-Saint-Jean
 - Trois espaces: Salle Azimut (scène principale), arènes de jeu, zone consoles
-- 17 ans et plus pour les joueurs et compétiteurs
 
-Si tu ne sais pas quelque chose sur l'événement, dis-le honnêtement et redirige vers comiteetuinfo@cegepstfe.ca.
+Si tu ne sais pas quelque chose sur l'événement, ou si l'information n'est pas encore confirmée publiquement, dis-le honnêtement et redirige vers comiteetuinfo@cegepstfe.ca plutôt que d'inventer un chiffre, un nom ou une date.
 Ne réponds PAS aux questions hors-sujet (politique, médecine, etc.) — recentre sur l'événement.`;
 
 // ── NEXUS Smart Local FAQ (fallback sans API Gemini) ─────────────────────────
 const NEXUS_FAQ = [
   {
     keywords: ['quand', 'date', 'dates', 'octobre', 'quand est', 'pendant', 'horaire'],
-    response: "LAN Gaming 2026 se déroule du 9 au 11 octobre 2026 — 47h de gaming non-stop! Ça débute vendredi le 9 à 17h00 avec le bal d'ouverture à la Salle Azimut.",
+    response: "LAN Gaming 2026 se déroule du 9 au 11 octobre 2026 — 47h de gaming non-stop! Ça débute vendredi le 9 avec la cérémonie d'ouverture à la Salle Azimut.",
   },
   {
-    keywords: ['billet', 'billets', 'ticket', 'prix', 'coût', 'combien', 'tarif', 'payer', 'achat'],
-    response: "Visiteur: 15$ | Joueur: 30$ (poste LAN fixe, 17 ans+) | Compétiteur: 45$ (joueur + tournois officiels, cash prizes). Limite de 150 participants — réserve vite!",
+    keywords: ['billet', 'billets', 'ticket', 'prix', 'coût', 'combien', 'tarif', 'payer', 'achat', 'capacité', 'places'],
+    response: "La billetterie n'est pas encore ouverte — les tarifs et les places disponibles seront annoncés bientôt sur la page Billetterie. Reste à l'affût!",
   },
   {
-    keywords: ['tournoi', 'tournois', 'jeu', 'jeux', 'lol', 'league', 'cs2', 'counter', 'rocket', 'magic', 'smash', 'mario', 'compétition'],
-    response: "Tournois officiels: League of Legends, Counter-Strike 2, Rocket League, Magic: The Gathering, Super Smash Bros et Mario Kart. Finales LoL/CS2 streamées sur Twitch dimanche pour la charité!",
+    keywords: ['tournoi', 'tournois', 'jeu', 'jeux', 'lol', 'league', 'cs2', 'counter', 'rocket', 'compétition'],
+    response: "Tournois officiels: League of Legends, Counter-Strike 2 et Rocket League. Des jeux et animations non compétitifs sont aussi prévus — détails sur la page Compétitions.",
   },
   {
     keywords: ['où', 'ou', 'lieu', 'adresse', 'cégep', 'cegep', 'saint-félicien', 'felicien', 'saguenay', 'lac'],
     response: "LAN Gaming 2026 a lieu au Cégep de Saint-Félicien, 525 Boul. Hamel, Saint-Félicien, QC G8K 2R8 — au cœur du Saguenay–Lac-Saint-Jean!",
   },
   {
-    keywords: ['partenaire', 'partenaires', 'sponsor', 'commanditaire', 'metro', 'hi-fi', 'mazda', 'distribution'],
-    response: "Partenaires confirmés: Metro (Diamant), Centre Hi-Fi (Diamant), Mazda (Or), e-distribution (Or). Tu veux devenir partenaire? Écris à comiteetuinfo@cegepstfe.ca!",
+    keywords: ['partenaire', 'partenaires', 'sponsor', 'commanditaire'],
+    response: "La liste à jour de nos partenaires officiels est sur la page Partenaires. Intéressé à le devenir? Écris à comiteetuinfo@cegepstfe.ca!",
   },
   {
     keywords: ['fondation', 'bourse', 'bourses', 'charité', 'don', 'dons', 'twitch', 'stream'],
-    response: "15% des profits nets vont à la Fondation du Cégep de Saint-Félicien (30 000–50 000$/an en bourses). La finale du dimanche est streamée sur Twitch pour maximiser les dons!",
+    response: "Une partie des profits de l'événement soutient la Fondation du Cégep de Saint-Félicien. Les dons en ligne et le Ticket d'Or ouvriront bientôt — suis la page Cagnotte!",
   },
   {
     keywords: ['contact', 'courriel', 'email', 'téléphone', 'telephone', 'joindre', 'organisateur', 'équipe'],
@@ -119,23 +127,19 @@ const NEXUS_FAQ = [
   },
   {
     keywords: ['programme', 'schedule', 'vendredi', 'samedi', 'dimanche', 'calendrier', 'agenda'],
-    response: "Ven 9: 18h arrivée, 19h cérémonie d'ouverture, 19h30 GRIND. Sam 10: 10h-17h tournois, 13h-15h conférence, 20h-22h quarts/demi-finales. Dim 11: 10h-12h matchs 3e place, 13h finales Twitch, 16h cérémonie!",
-  },
-  {
-    keywords: ['âge', 'age', '17', 'mineur', 'jeune', 'requis', 'minimum'],
-    response: "17 ans et plus requis pour les billets Joueur et Compétiteur. Les Visiteurs n'ont pas de restriction d'âge. Règle équipement: 1 PC + 1 écran max par joueur.",
+    response: "Ven 9: cérémonie d'ouverture puis début des qualifications. Sam 10: tournois toute la journée, quarts/demi-finales en soirée. Dim 11: matchs pour la 3e place puis grandes finales en direct sur Twitch. Programme complet sur la page Calendrier!",
   },
   {
     keywords: ['équipement', 'equipement', 'pc', 'ordinateur', 'écran', 'setup', 'matériel', 'apporter'],
-    response: "Chaque joueur/compétiteur apporte son propre matériel: 1 PC + 1 écran maximum. Le réseau est fourni sur place. Les visiteurs n'ont rien à apporter!",
+    response: "Les modalités précises (équipement à apporter, limites) seront confirmées avec l'ouverture de la billetterie. Pour l'instant, prévois ton PC gaming et de la bonne humeur!",
   },
   {
     keywords: ['inscription', 'inscrire', 'comment', 'participer', 'enregistrement', 'register'],
-    response: "Achète un billet Joueur (30$) ou Compétiteur (45$). Le billet Compétiteur inclut automatiquement l'inscription aux tournois officiels. Capacité: 150 participants!",
+    response: "Les inscriptions aux tournois ouvriront avec la billetterie, qui n'est pas encore disponible. Reste à l'affût sur la page Billetterie et nos réseaux!",
   },
   {
     keywords: ['remboursement', 'annulation', 'cancel', 'rembours'],
-    response: "La date limite de remboursement est le 2 octobre 2026. Après cette date, les billets ne sont plus remboursables. Pour toute demande, contacte comiteetuinfo@cegepstfe.ca.",
+    response: "La politique de remboursement sera précisée à l'ouverture de la billetterie. Pour toute question, contacte comiteetuinfo@cegepstfe.ca.",
   },
 ];
 
@@ -505,16 +509,18 @@ router.get('/events', (_req, res) => {
 
 // ── GET /api/partners ────────────────────────────────────────────────────────
 // Centre Hi-Fi et e-distribution retirés (rien de confirmé par écrit).
-// MRC du Domaine-du-Roy et UQAC ajoutés — tier "argent" par défaut faute de
-// palier de commandite confirmé ; à ajuster une fois l'entente précisée.
+// UQAC et MRC du Domaine-du-Roy retirés à nouveau (plan de mise en ligne V1
+// §2.2, 2 sept. 2026) : UQAC a une collaboration réelle en cours mais le
+// palier de visibilité reste à convenir (contact : Mme Stéphanie Gobeil) ;
+// la contribution de la MRC est à reconfirmer, ne pas l'afficher comme
+// commanditaire acquis. Les réintégrer seulement une fois confirmés par
+// écrit avec un palier précis.
 router.get('/partners', (_req, res) => {
   const partners = [
     { id: 1, name: 'Cégep de Saint-Félicien', logo: '/logos/cegep.jpg', url: 'https://www.cstfelicien.qc.ca', tier: 'principal' },
     { id: 2, name: 'Fondation du Cégep', logo: '/logos/fondation.svg', url: '#fondation', tier: 'charitable' },
     { id: 3, name: 'Metro', logo: '/logos/metro.svg', url: 'https://www.metro.ca', tier: 'diamant' },
     { id: 4, name: 'Mazda', logo: '/logos/mazda.svg', url: 'https://www.mazda.ca', tier: 'or' },
-    { id: 5, name: 'MRC du Domaine-du-Roy', logo: '/logos/mrc.svg', url: 'https://mrcdomaineduroy.ca/', tier: 'argent' },
-    { id: 6, name: 'UQAC', logo: '/logos/uqac.svg', url: 'https://www.uqac.ca/', tier: 'argent' },
   ];
   res.status(200).json({ success: true, data: partners });
 });

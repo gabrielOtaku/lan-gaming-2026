@@ -4,6 +4,9 @@
   "description": "Backend sécurisé pour LAN Gaming 2026 - Cégep de Saint-Félicien",
   "main": "server.js",
   "type": "module",
+  "engines": {
+    "node": ">=22 <23"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"

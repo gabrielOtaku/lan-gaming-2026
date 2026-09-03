@@ -1,28 +1,43 @@
 import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as OAuth2Strategy } from 'passport-oauth2';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET, ADMIN_PASSWORD } from '../config/secrets.js';
+import { JWT_SECRET, ADMIN_PASSWORD, ADMIN_LOGIN_EMAIL, ADMIN_OAUTH_EMAILS } from '../config/secrets.js';
 
 const router = Router();
 
+// Rate limit dédié, plus strict que le limiteur /api général — cible le
+// brute-force sur le seul point d'entrée protégé par mot de passe (plan de
+// mise en ligne V1 §5). Ne compte que les tentatives échouées pour ne pas
+// bloquer un admin qui recharge la page après une connexion réussie.
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 8,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,
+  message: { error: 'Trop de tentatives de connexion. Réessayez dans quelques minutes.' },
+});
+
 const FRONTEND_URL = process.env.FRONTEND_URL  || 'http://localhost:5173';
 
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'gabrielherve94@gmail.com,jovan.knezevic@cegepstfe.ca')
-  .split(',').map((e) => e.trim().toLowerCase());
-
-// Cookie options — HttpOnly blocks JS access (XSS-safe)
+// Cookie options — HttpOnly blocks JS access (XSS-safe). SameSite=Lax in both
+// dev and prod: l'architecture recommandée sert le frontend et /api depuis le
+// même domaine via reverse proxy (plan de mise en ligne V1 §4/§5), donc
+// SameSite=None (cross-site) n'est pas nécessaire et n'augmenterait que le
+// risque CSRF sans bénéfice.
 const COOKIE_OPTS = {
   httpOnly: true,
   secure:   process.env.NODE_ENV === 'production',
-  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+  sameSite: 'lax',
   maxAge:   7 * 24 * 60 * 60 * 1000,
   path:     '/',
 };
 
 function createToken(email, name, picture) {
-  const role = ADMIN_EMAILS.includes(email.toLowerCase()) ? 'admin' : 'user';
+  const role = ADMIN_OAUTH_EMAILS.includes(email.toLowerCase()) ? 'admin' : 'user';
   return jwt.sign({ email, name, picture, role }, JWT_SECRET, { expiresIn: '7d' });
 }
 
@@ -72,13 +87,11 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // ── POST /api/auth/login ──────────────────────────────────────────────────────
-router.post('/login', (req, res) => {
+router.post('/login', loginLimiter, (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: 'Email et mot de passe requis.' });
 
-  const adminEmail = (process.env.ADMIN_EMAIL || 'gabrielherve94@gmail.com').toLowerCase();
-
-  if (email.toLowerCase() !== adminEmail || password !== ADMIN_PASSWORD) {
+  if (email.toLowerCase() !== ADMIN_LOGIN_EMAIL || password !== ADMIN_PASSWORD) {
     return setTimeout(() => res.status(401).json({ error: 'Identifiants incorrects.' }), 400);
   }
 
