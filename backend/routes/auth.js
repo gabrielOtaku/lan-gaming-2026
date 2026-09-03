@@ -4,7 +4,8 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as OAuth2Strategy } from 'passport-oauth2';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET, ADMIN_PASSWORD, ADMIN_LOGIN_EMAIL, ADMIN_OAUTH_EMAILS } from '../config/secrets.js';
+import { JWT_SECRET, ADMIN_PASSWORD, ADMIN_EMAIL_HASH, ADMIN_EMAIL_HASHES } from '../config/secrets.js';
+import { emailMatchesHash } from '../utils/emailHash.js';
 
 const router = Router();
 
@@ -37,7 +38,7 @@ const COOKIE_OPTS = {
 };
 
 function createToken(email, name, picture) {
-  const role = ADMIN_OAUTH_EMAILS.includes(email.toLowerCase()) ? 'admin' : 'user';
+  const role = ADMIN_EMAIL_HASHES.some((h) => emailMatchesHash(email, h)) ? 'admin' : 'user';
   return jwt.sign({ email, name, picture, role }, JWT_SECRET, { expiresIn: '7d' });
 }
 
@@ -91,7 +92,7 @@ router.post('/login', loginLimiter, (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: 'Email et mot de passe requis.' });
 
-  if (email.toLowerCase() !== ADMIN_LOGIN_EMAIL || password !== ADMIN_PASSWORD) {
+  if (!emailMatchesHash(email, ADMIN_EMAIL_HASH) || password !== ADMIN_PASSWORD) {
     return setTimeout(() => res.status(401).json({ error: 'Identifiants incorrects.' }), 400);
   }
 

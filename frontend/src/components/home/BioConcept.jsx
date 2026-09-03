@@ -1,10 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { Float, Bounds } from '@react-three/drei';
 import { scrollReveal, scrollRevealLeft, scrollRevealRight, staggerContainer, EASE_GAME } from '../../utils/animations.js';
-import WebGLErrorBoundary from '../layout/WebGLErrorBoundary.jsx';
-import { MaelleModel } from '../three/GameAssets.jsx';
 
 const CONCEPT_BLOCKS = [
   {
@@ -166,7 +162,9 @@ function SectionTitle() {
   );
 }
 
-// ── Maelle showcase — companion character card with a representative quote ────
+// ── Maelle showcase — companion quote card ────────────────────────────────────
+// Le modèle 3D (maelle.glb, ~22 Mo) a été retiré : trop lourd pour une V1
+// mobile-first stable et fluide. La citation reste affichée sans rendu WebGL.
 function MaelleShowcase() {
   return (
     <motion.div
@@ -178,23 +176,13 @@ function MaelleShowcase() {
     >
       <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-px w-32 h-px bg-gradient-to-r from-transparent via-rune-blue to-transparent" />
 
-      <div className="w-full sm:w-40 h-48 sm:h-56 mx-auto flex-shrink-0">
-        <WebGLErrorBoundary fallback={<div className="w-full h-full" />}>
-          <Canvas camera={{ fov: 32 }} dpr={[1, 1.5]} gl={{ alpha: true }}>
-            <ambientLight intensity={0.9} />
-            <pointLight position={[2, 2, 2]} intensity={2.6} color="#4FC3F7" />
-            <pointLight position={[-2, 0, 1]} intensity={0.9} color="#C89B3C" />
-            <React.Suspense fallback={null}>
-              <Bounds fit clip observe margin={1.3}>
-                <Float speed={1.4} rotationIntensity={0.15} floatIntensity={0.4}>
-                  <group rotation={[0, -0.3, 0]}>
-                    <MaelleModel />
-                  </group>
-                </Float>
-              </Bounds>
-            </React.Suspense>
-          </Canvas>
-        </WebGLErrorBoundary>
+      <div className="w-full sm:w-40 h-48 sm:h-56 mx-auto flex-shrink-0 flex items-center justify-center">
+        <div
+          className="w-24 h-24 sm:w-28 sm:h-28 clip-hex flex items-center justify-center text-4xl"
+          style={{ background: 'radial-gradient(circle, rgba(79,195,247,0.15), transparent)', border: '1px solid rgba(79,195,247,0.3)' }}
+        >
+          🎨
+        </div>
       </div>
 
       <div className="text-center sm:text-left">

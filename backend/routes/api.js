@@ -509,18 +509,18 @@ router.get('/events', (_req, res) => {
 
 // ── GET /api/partners ────────────────────────────────────────────────────────
 // Centre Hi-Fi et e-distribution retirés (rien de confirmé par écrit).
-// UQAC et MRC du Domaine-du-Roy retirés à nouveau (plan de mise en ligne V1
-// §2.2, 2 sept. 2026) : UQAC a une collaboration réelle en cours mais le
-// palier de visibilité reste à convenir (contact : Mme Stéphanie Gobeil) ;
-// la contribution de la MRC est à reconfirmer, ne pas l'afficher comme
-// commanditaire acquis. Les réintégrer seulement une fois confirmés par
-// écrit avec un palier précis.
+// UQAC et MRC du Domaine-du-Roy réintégrés (confirmation directe du comité,
+// 2 sept. 2026) : les deux sont officiellement retenus comme partenaires —
+// annule la restriction posée par le plan de mise en ligne V1 §2.2, qui
+// demandait une confirmation écrite avant réaffichage.
 router.get('/partners', (_req, res) => {
   const partners = [
     { id: 1, name: 'Cégep de Saint-Félicien', logo: '/logos/cegep.jpg', url: 'https://www.cstfelicien.qc.ca', tier: 'principal' },
     { id: 2, name: 'Fondation du Cégep', logo: '/logos/fondation.svg', url: '#fondation', tier: 'charitable' },
     { id: 3, name: 'Metro', logo: '/logos/metro.svg', url: 'https://www.metro.ca', tier: 'diamant' },
     { id: 4, name: 'Mazda', logo: '/logos/mazda.svg', url: 'https://www.mazda.ca', tier: 'or' },
+    { id: 5, name: 'UQAC', logo: '/logos/uqac.svg', url: 'https://www.uqac.ca', tier: 'or' },
+    { id: 6, name: 'MRC du Domaine-du-Roy', logo: '/logos/mrc-domaine-du-roy.svg', url: 'https://www.mrcdomaineduroy.ca', tier: 'or' },
   ];
   res.status(200).json({ success: true, data: partners });
 });

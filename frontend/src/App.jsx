@@ -104,9 +104,10 @@ const prefersReducedMotion =
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // Le radar de curseurs multijoueurs (LiveCursors) reste retiré de la V1
-// publique. Le loader plein écran, lui, est conservé à la demande — seuls
-// les assets 3D fournis (Esquie, Maelle, agent CS2, voitures Rocket League)
-// ont été retirés des autres pages.
+// publique. Le loader plein écran, lui, est conservé à la demande — les
+// assets 3D fournis (Esquie, agent CS2, voitures Rocket League) ont été
+// retirés des autres pages, et Maelle (~22 Mo, trop lourd pour une V1
+// mobile stable) a été retiré entièrement, y compris de l'accueil.
 function MainApp() {
   const [isLoading, setIsLoading] = useState(!prefersReducedMotion);
 

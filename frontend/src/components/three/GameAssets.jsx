@@ -12,7 +12,6 @@ import * as THREE from 'three';
 
 export const MODEL_SCALE = {
   esquie: 0.55,
-  maelle: 1.4,
   sasCs2: 14,
   rifle: 24,
   dominus: 0.02,
@@ -44,10 +43,6 @@ function ClonedScene({ url, ...props }) {
 
 export function EsquieModel(props) {
   return <ClonedScene url="/models/esquie.glb" scale={MODEL_SCALE.esquie} {...props} />;
-}
-
-export function MaelleModel(props) {
-  return <ClonedScene url="/models/maelle.glb" scale={MODEL_SCALE.maelle} {...props} />;
 }
 
 export function SasCs2Model(props) {
