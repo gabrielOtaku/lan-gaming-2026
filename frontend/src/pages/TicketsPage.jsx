@@ -163,7 +163,7 @@ function TicketsHero({ salesEnabled }) {
           <p className="font-body text-zinc-500 text-sm">
             {salesEnabled
               ? "Billets disponibles en quantité limitée — Ne manque pas l'événement gaming de l'année"
-              : "Les inscriptions au Cégep en LAN 2026 seront disponibles prochainement — reste à l'affût"}
+              : "Les inscriptions à Lan St-Jean seront disponibles prochainement — reste à l'affût"}
           </p>
         </motion.div>
       </div>
@@ -376,7 +376,7 @@ function SeatsBar({ inventory, salesClosed }) {
 const FAQ_ITEMS = [
   {
     q: "Quand et où se déroule l'événement ?",
-    a: "LAN Gaming 2026 se tient du vendredi 9 au dimanche 11 octobre 2026 au Cégep de Saint-Félicien (525, boul. Hamel, Saint-Félicien, QC G8K 2R8). Les portes ouvrent à 17h avec le bal d'ouverture à la Salle Azimut.",
+    a: "Lan St-Jean se tient du vendredi 9 au dimanche 11 octobre 2026 au Cégep de Saint-Félicien (525, boul. Hamel, Saint-Félicien, QC G8K 2R8). Les portes ouvrent à 17h avec le bal d'ouverture à la Salle Azimut.",
   },
   {
     q: "Quelle est la différence entre Joueur et Compétiteur ?",
@@ -517,7 +517,7 @@ function ComingSoonNotice() {
           La billetterie ouvre bientôt
         </p>
         <p className="font-body text-zinc-400 text-sm max-w-lg mx-auto leading-relaxed mb-6">
-          Les inscriptions au Cégep en LAN 2026 seront disponibles prochainement.
+          Les inscriptions à Lan St-Jean seront disponibles prochainement.
         </p>
         <p className="font-display text-white font-bold text-lg mb-1">
           9 – 11 octobre 2026 <span className="text-zinc-600">•</span> Cégep de Saint-Félicien

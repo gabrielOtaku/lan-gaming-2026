@@ -292,7 +292,7 @@ export default function PartnerBanner() {
               Rejoindre l'aventure
             </p>
             <p className="font-body text-zinc-400 text-sm mb-5 leading-relaxed">
-              Intéressé à devenir partenaire de LAN Gaming 2026? Tiers Diamant
+              Intéressé à devenir partenaire de Lan St-Jean? Tiers Diamant
               (5 000$+), Or (2 000$+), Argent (500$+), Bronze.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">

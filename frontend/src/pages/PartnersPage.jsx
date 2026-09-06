@@ -113,7 +113,7 @@ export default function PartnersPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="text-center mb-14">
           <motion.p variants={fadeInUp} className="font-mono text-ember-600 text-xs tracking-[0.5em] uppercase mb-4">
-            [ Ils rendent LAN Gaming 2026 possible ]
+            [ Ils rendent Lan St-Jean possible ]
           </motion.p>
           <motion.h1 variants={fadeInUp} className="font-display text-5xl sm:text-6xl font-black uppercase text-white leading-none mb-4">
             Nos <span className="text-ember-300 text-ember-glow">Partenaires</span>
@@ -171,7 +171,7 @@ export default function PartnersPage() {
             Rejoindre l'aventure
           </p>
           <p className="font-body text-zinc-400 text-sm mb-6 leading-relaxed">
-            Intéressé à devenir partenaire de LAN Gaming 2026 ? Tiers Diamant
+            Intéressé à devenir partenaire de Lan St-Jean ? Tiers Diamant
             (5 000$+), Or (2 000$+), Argent (500$+), Bronze.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">

@@ -47,7 +47,7 @@ function drawCrewmate(ctx, x, y, scale, tilt, slapT, isHov) {
   ctx.lineWidth = 1.6;
   ctx.stroke();
 
-  // Gold trim (LAN Gaming accent)
+  // Gold trim (Lan St-Jean accent)
   ctx.beginPath();
   ctx.moveTo(-9, 6.5);
   ctx.lineTo(10, 6.5);

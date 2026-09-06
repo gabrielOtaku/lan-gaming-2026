@@ -143,7 +143,7 @@ export default function CompetitionsPage() {
             className="font-body text-zinc-500 text-sm max-w-lg mt-4"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}
           >
-            Trois tournois officiels au programme du Cégep en LAN 2026. Équipes, règlement et récompenses seront annoncés à l'ouverture des inscriptions.
+            Trois tournois officiels au programme de Lan St-Jean. Équipes, règlement et récompenses seront annoncés à l'ouverture des inscriptions.
           </motion.p>
         </div>
       </div>

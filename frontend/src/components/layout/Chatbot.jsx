@@ -168,7 +168,7 @@ function TypingDots() {
 export default function Chatbot() {
   const [isOpen, setIsOpen]       = useState(false);
   const [messages, setMessages]   = useState([
-    { sender: 'bot', text: 'NEXUS en ligne. Joueur, quelle est ta question sur LAN Gaming 2026?' },
+    { sender: 'bot', text: 'NEXUS en ligne. Joueur, quelle est ta question sur Lan St-Jean?' },
   ]);
   const [input, setInput]         = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -323,7 +323,7 @@ export default function Chatbot() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <WaveformBars active={isLoading || isSpeaking} />
                   <span style={{ fontFamily: 'monospace', fontSize: 8, color: 'rgba(113,113,122,0.8)', letterSpacing: '0.25em' }}>
-                    {isLoading ? 'TRAITEMENT...' : isSpeaking ? 'RÉPONSE' : 'LAN 2026 AI'}
+                    {isLoading ? 'TRAITEMENT...' : isSpeaking ? 'RÉPONSE' : 'LAN ST-JEAN AI'}
                   </span>
                 </div>
               </div>
@@ -457,7 +457,7 @@ export default function Chatbot() {
               color: 'rgba(39,39,42,0.9)', letterSpacing: '0.3em',
               textTransform: 'uppercase',
             }}>
-              LAN Gaming 2026 · IA Support System
+              Lan St-Jean · IA Support System
             </div>
           </motion.div>
         )}

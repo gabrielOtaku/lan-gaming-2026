@@ -34,7 +34,7 @@ if (rawKey && !validKey) {
 // partenaire, ni pourcentage de reversement Fondation tant que ces éléments
 // ne sont pas officiellement validés. En cas de doute, renvoyer vers
 // comiteetuinfo@cegepstfe.ca ou la page correspondante plutôt qu'inventer.
-const NEXUS_CONTEXT = `Tu es NEXUS, l'assistant IA officiel de l'événement LAN Gaming 2026 au Cégep de Saint-Félicien.
+const NEXUS_CONTEXT = `Tu es NEXUS, l'assistant IA officiel de l'événement Lan St-Jean au Cégep de Saint-Félicien.
 Ton style est direct, précis, avec une touche "gaming/esport" — tu utilises parfois des termes gaming mais tu restes professionnel.
 Réponds TOUJOURS en français québécois, de façon concise (maximum 3-4 phrases).
 Tu connais parfaitement ces informations sur l'événement:
@@ -89,7 +89,7 @@ FONDATION / DONS (bientôt disponibles):
 - Les dons en ligne et le Ticket d'Or ne sont pas encore ouverts au public.
 
 INFORMATIONS SUPPLÉMENTAIRES:
-- LAN Gaming 2026 relance l'esprit de la toute première LAN Gaming CSF (avril 2023) avec une nouvelle équipe étudiante — un événement en pleine croissance au Saguenay–Lac-Saint-Jean
+- Lan St-Jean relance l'esprit de la toute première LAN Gaming CSF (avril 2023) avec une nouvelle équipe étudiante — un événement en pleine croissance au Saguenay–Lac-Saint-Jean
 - Trois espaces: Salle Azimut (scène principale), arènes de jeu, zone consoles
 
 Si tu ne sais pas quelque chose sur l'événement, ou si l'information n'est pas encore confirmée publiquement, dis-le honnêtement et redirige vers comiteetuinfo@cegepstfe.ca plutôt que d'inventer un chiffre, un nom ou une date.
@@ -99,7 +99,7 @@ Ne réponds PAS aux questions hors-sujet (politique, médecine, etc.) — recent
 const NEXUS_FAQ = [
   {
     keywords: ['quand', 'date', 'dates', 'octobre', 'quand est', 'pendant', 'horaire'],
-    response: "LAN Gaming 2026 se déroule du 9 au 11 octobre 2026 — 47h de gaming non-stop! Ça débute vendredi le 9 avec la cérémonie d'ouverture à la Salle Azimut.",
+    response: "Lan St-Jean se déroule du 9 au 11 octobre 2026 — 47h de gaming non-stop! Ça débute vendredi le 9 avec la cérémonie d'ouverture à la Salle Azimut.",
   },
   {
     keywords: ['billet', 'billets', 'ticket', 'prix', 'coût', 'combien', 'tarif', 'payer', 'achat', 'capacité', 'places'],
@@ -111,7 +111,7 @@ const NEXUS_FAQ = [
   },
   {
     keywords: ['où', 'ou', 'lieu', 'adresse', 'cégep', 'cegep', 'saint-félicien', 'felicien', 'saguenay', 'lac'],
-    response: "LAN Gaming 2026 a lieu au Cégep de Saint-Félicien, 525 Boul. Hamel, Saint-Félicien, QC G8K 2R8 — au cœur du Saguenay–Lac-Saint-Jean!",
+    response: "Lan St-Jean a lieu au Cégep de Saint-Félicien, 525 Boul. Hamel, Saint-Félicien, QC G8K 2R8 — au cœur du Saguenay–Lac-Saint-Jean!",
   },
   {
     keywords: ['partenaire', 'partenaires', 'sponsor', 'commanditaire'],
@@ -502,7 +502,7 @@ router.get('/events', (_req, res) => {
     { id: 14, date: '2026-10-11', startTime: '12:00', endTime: '13:00', title: 'Pause déjeuner', description: 'Dernier repas avant les grandes finales.', location: 'Zone buffet', category: 'break', color: '#27AE60' },
     { id: 15, date: '2026-10-11', startTime: '13:00', endTime: '16:00', title: 'Grandes Finales — Live Twitch Charité', description: 'Finales LoL, CS2 et Rocket League sur grand écran avec commentateurs, éclairages et ambiance de finale. Rotation des finales pour que tout le monde puisse suivre. 100% des dons Twitch à la Fondation.', location: 'Salle Azimut — Scène principale', category: 'final', color: '#FFD700', streamed: true },
     { id: 16, date: '2026-10-11', startTime: '16:00', endTime: '17:00', title: 'Cérémonie de remise des prix', description: 'Remise des trophées et lots aux vainqueurs. Remerciements aux participants, bénévoles et sponsors. Photo de groupe officielle.', location: 'Salle Azimut', category: 'ceremony', color: '#FFD700' },
-    { id: 17, date: '2026-10-11', startTime: '17:00', endTime: '18:00', title: 'Démontage', description: 'Rangement et nettoyage des lieux. Merci à tous d\'avoir fait de LAN Gaming 2026 une histoire indélébile!', location: 'Toutes les salles', category: 'setup', color: '#636E72' },
+    { id: 17, date: '2026-10-11', startTime: '17:00', endTime: '18:00', title: 'Démontage', description: 'Rangement et nettoyage des lieux. Merci à tous d\'avoir fait de Lan St-Jean une histoire indélébile!', location: 'Toutes les salles', category: 'setup', color: '#636E72' },
   ];
   res.status(200).json({ success: true, data: events });
 });
@@ -548,10 +548,10 @@ router.post('/boutique/commande', async (req, res) => {
     try {
       // Notification à l'organisateur
       await mailer.sendMail({
-        from: `"LAN Gaming 2026 - Boutique" <${process.env.SMTP_USER}>`,
+        from: `"Lan St-Jean - Boutique" <${process.env.SMTP_USER}>`,
         to: process.env.SMTP_TO || 'comiteetuinfo@cegepstfe.ca',
         replyTo: cleanEmail,
-        subject: `[LAN 2026] Nouvelle commande boutique — ${cleanName} (${total}$)`,
+        subject: `[Lan St-Jean] Nouvelle commande boutique — ${cleanName} (${total}$)`,
         html: `<h2 style="color:#C89B3C;font-family:sans-serif">Nouvelle commande boutique</h2>
 <p style="font-family:sans-serif"><strong>Client :</strong> ${cleanName} &lt;${cleanEmail}&gt;</p>
 <table style="font-family:sans-serif;font-size:14px;border-collapse:collapse;width:100%;max-width:500px">
@@ -571,9 +571,9 @@ router.post('/boutique/commande', async (req, res) => {
       });
       // Confirmation au client
       await mailer.sendMail({
-        from: `"LAN Gaming 2026" <${process.env.SMTP_USER}>`,
+        from: `"Lan St-Jean" <${process.env.SMTP_USER}>`,
         to: cleanEmail,
-        subject: `[LAN Gaming 2026] Confirmation de ta commande — ${total}$`,
+        subject: `[Lan St-Jean] Confirmation de ta commande — ${total}$`,
         html: `<h2 style="color:#C89B3C;font-family:sans-serif">Ta commande est confirmée !</h2>
 <p style="font-family:sans-serif">Bonjour ${cleanName},</p>
 <p style="font-family:sans-serif">Merci pour ta commande ! Voici le récapitulatif :</p>
@@ -591,7 +591,7 @@ router.post('/boutique/commande', async (req, res) => {
   </tr></tfoot>
 </table>
 <p style="font-family:sans-serif;margin-top:16px">Tu pourras récupérer tes articles et payer sur place lors de l'événement :</p>
-<p style="font-family:sans-serif"><strong>LAN Gaming 2026 — 9, 10 et 11 octobre 2026</strong><br>Cégep de Saint-Félicien, 525 Boul. Hamel, Saint-Félicien, QC</p>
+<p style="font-family:sans-serif"><strong>Lan St-Jean — 9, 10 et 11 octobre 2026</strong><br>Cégep de Saint-Félicien, 525 Boul. Hamel, Saint-Félicien, QC</p>
 <p style="font-family:sans-serif;color:#888;font-size:12px">Des questions ? comiteetuinfo@cegepstfe.ca · 581 704-1221</p>`,
       });
     } catch (err) {
@@ -610,12 +610,12 @@ router.post('/contact', validateContact, async (req, res) => {
   if (mailer) {
     try {
       await mailer.sendMail({
-        from: `"LAN Gaming 2026 - Contact" <${process.env.SMTP_USER}>`,
+        from: `"Lan St-Jean - Contact" <${process.env.SMTP_USER}>`,
         to: process.env.SMTP_TO || 'comiteetuinfo@cegepstfe.ca',
         replyTo: clean.email,
-        subject: `[LAN 2026] ${clean.subject} — ${clean.name}`,
+        subject: `[Lan St-Jean] ${clean.subject} — ${clean.name}`,
         text: `Nom: ${clean.name}\nCourriel: ${clean.email}\nSujet: ${clean.subject}\n\n${clean.message}`,
-        html: `<h2 style="color:#C89B3C">Nouveau message — LAN Gaming 2026</h2>
+        html: `<h2 style="color:#C89B3C">Nouveau message — Lan St-Jean</h2>
 <table style="font-family:sans-serif;font-size:14px;border-collapse:collapse">
   <tr><td style="padding:4px 12px 4px 0;color:#666;font-weight:bold">Nom</td><td>${clean.name}</td></tr>
   <tr><td style="padding:4px 12px 4px 0;color:#666;font-weight:bold">Courriel</td><td><a href="mailto:${clean.email}">${clean.email}</a></td></tr>
@@ -711,11 +711,11 @@ router.post('/cagnotte/ticket-or', async (req, res) => {
   if (mailer) {
     try {
       await mailer.sendMail({
-        from: `"LAN Gaming 2026 - Cagnotte" <${process.env.SMTP_USER}>`,
+        from: `"Lan St-Jean - Cagnotte" <${process.env.SMTP_USER}>`,
         to: process.env.SMTP_TO || 'comiteetuinfo@cegepstfe.ca',
         replyTo: sanitizedEmail,
-        subject: `[LAN 2026] Ticket d'Or — ${sanitizedName} — ${qty} ticket${qty > 1 ? 's' : ''} (${total}$)`,
-        html: `<h2 style="color:#FFD700">Nouveau Ticket d'Or — LAN Gaming 2026</h2>
+        subject: `[Lan St-Jean] Ticket d'Or — ${sanitizedName} — ${qty} ticket${qty > 1 ? 's' : ''} (${total}$)`,
+        html: `<h2 style="color:#FFD700">Nouveau Ticket d'Or — Lan St-Jean</h2>
 <table style="font-family:sans-serif;font-size:14px">
   <tr><td style="padding:4px 12px 4px 0;color:#666;font-weight:bold">Nom</td><td>${sanitizedName}</td></tr>
   <tr><td style="padding:4px 12px 4px 0;color:#666;font-weight:bold">Courriel</td><td><a href="mailto:${sanitizedEmail}">${sanitizedEmail}</a></td></tr>

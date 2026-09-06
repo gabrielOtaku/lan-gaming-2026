@@ -57,7 +57,7 @@ export default function MentionsLegalesPage() {
           </h1>
           <p className="font-body text-zinc-500 max-w-xl text-sm leading-relaxed">
             Informations sur l'éditeur du site et sur le traitement de tes renseignements
-            personnels dans le cadre de LAN Gaming 2026.
+            personnels dans le cadre de Lan St-Jean.
           </p>
         </motion.div>
 
@@ -65,7 +65,7 @@ export default function MentionsLegalesPage() {
           <Section icon={ScrollText} title="Éditeur du site">
             <p>
               Ce site est édité par le Comité étudiant informatique du Cégep de Saint-Félicien
-              dans le cadre de l'organisation de l'événement LAN Gaming 2026, sous la coresponsabilité
+              dans le cadre de l'organisation de l'événement Lan St-Jean, sous la coresponsabilité
               de Gabriel Hervé et Jovan Knezevic.
             </p>
             <p>

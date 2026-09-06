@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { loaderExit, loaderBar, EASE_DRAMATIC, EASE_GAME } from '../../utils/animations.js';
+import logoLan from '../../assets/Logo/logoLan.jpg';
 
 const LOADING_STEPS = [
   'Initialisation des systèmes...',
@@ -80,7 +81,7 @@ export default function Loader({ onComplete }) {
             transition={{ delay: 0.6, duration: 0.8, ease: EASE_GAME }}
           >
             <h1 className="font-display text-4xl md:text-6xl font-black tracking-widest text-ember-300 text-ember-glow uppercase">
-              LAN Gaming
+              Lan St-Jean
             </h1>
             <motion.span
               className="font-mono text-ember-200 text-xl tracking-[0.5em] block"
@@ -209,9 +210,9 @@ function EmberEmblem() {
         transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
       />
 
-      {/* Center hexagon */}
+      {/* Center emblem */}
       <motion.div
-        className="w-16 h-16 clip-hex bg-gradient-to-br from-ember-400 to-ember-600 flex items-center justify-center"
+        className="w-16 h-16 rounded-full overflow-hidden"
         animate={{
           boxShadow: [
             '0 0 15px rgba(200,155,60,0.4)',
@@ -221,7 +222,7 @@ function EmberEmblem() {
         }}
         transition={{ duration: 2, repeat: Infinity }}
       >
-        <span className="font-rune text-obsidian-900 text-lg font-bold">LG</span>
+        <img src={logoLan} alt="Lan St-Jean" className="w-full h-full object-cover" />
       </motion.div>
     </div>
   );

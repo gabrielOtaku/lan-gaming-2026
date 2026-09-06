@@ -130,7 +130,7 @@ export default function NotFoundPage() {
         transition={{ delay: 0.8 }}
         className="absolute bottom-8 font-mono text-zinc-800 text-[10px] tracking-widest"
       >
-        LAN Gaming 2026 · Cégep de Saint-Félicien · 9-11 oct. 2026
+        Lan St-Jean · Cégep de Saint-Félicien · 9-11 oct. 2026
       </motion.p>
     </motion.div>
   );

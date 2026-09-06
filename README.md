@@ -1,4 +1,4 @@
-# ⚔️ LAN Gaming 2026 — Cégep de Saint-Félicien
+# ⚔️ Lan St-Jean — Cégep de Saint-Félicien
 
 > Site événementiel full-stack gaming. DA "Clair-Obscur" / God of War. React · Three.js · Framer Motion · Node.js · Zod.
 
@@ -231,4 +231,4 @@ Pour la mise en production, configurer :
 
 ---
 
-*LAN Gaming 2026 · Cégep de Saint-Félicien · Développé avec ⚔️ et 🔥*
+*Lan St-Jean · Cégep de Saint-Félicien · Développé avec ⚔️ et 🔥*

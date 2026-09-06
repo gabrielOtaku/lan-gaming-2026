@@ -1,7 +1,7 @@
 {
   "name": "lan-gaming-2026",
   "version": "1.0.0",
-  "description": "LAN Gaming 2026 — Cégep de Saint-Félicien. Full-stack gaming event platform.",
+  "description": "Lan St-Jean — Cégep de Saint-Félicien. Full-stack gaming event platform.",
   "private": true,
   "scripts": {
     "install:all": "npm install --prefix backend && npm install --prefix frontend",

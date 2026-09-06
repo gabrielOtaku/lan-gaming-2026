@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { Menu, X, Sword, Zap, Ticket, Mail, Shield, LogOut, AlertCircle, Heart, Trophy, Crown, Info, Radio } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
+import logoLan from '../../assets/Logo/logoLan.jpg';
 
 // Chemin relatif — le frontend et /api partagent le même domaine en
 // production via reverse proxy (plan de mise en ligne V1 §4), donc aucun
@@ -94,7 +95,7 @@ function LoginModal({ onClose }) {
         <div className="flex items-center justify-between px-6 py-4 border-b border-ember-400/20">
           <div>
             <p className="font-display text-ember-300 text-sm font-bold tracking-widest">CONNEXION ADMIN</p>
-            <p className="font-mono text-zinc-600 text-[9px] tracking-widest mt-0.5">LAN Gaming 2026 · Accès Privilégié</p>
+            <p className="font-mono text-zinc-600 text-[9px] tracking-widest mt-0.5">Lan St-Jean · Accès Privilégié</p>
           </div>
           <button onClick={onClose} className="text-zinc-600 hover:text-ember-300 transition-colors">
             <X size={18} />
@@ -213,16 +214,16 @@ export default function Navbar() {
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink-0">
               <motion.div
-                className="w-9 h-9 sm:w-10 sm:h-10 clip-hex bg-gradient-to-br from-ember-300 to-ember-600 flex items-center justify-center"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden flex-shrink-0"
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 whileTap={{ scale: 0.95 }}
                 animate={{ boxShadow: ['0 0 10px rgba(200,155,60,0.4)', '0 0 25px rgba(255,215,0,0.7)', '0 0 10px rgba(200,155,60,0.4)'] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                <span className="font-rune text-obsidian-900 text-xs font-bold">LG</span>
+                <img src={logoLan} alt="Lan St-Jean" className="w-full h-full object-cover" />
               </motion.div>
               <div className="hidden sm:block">
-                <p className="font-display text-ember-300 text-sm font-bold tracking-widest leading-none">LAN Gaming</p>
+                <p className="font-display text-ember-300 text-sm font-bold tracking-widest leading-none">Lan St-Jean</p>
                 <p className="font-mono text-ember-500 text-[10px] tracking-[0.4em] leading-none mt-0.5">2026 · CSF</p>
               </div>
             </Link>
@@ -369,7 +370,7 @@ export default function Navbar() {
             >
               <div className="flex items-center justify-between px-6 py-5 border-b border-ember-400/10">
                 <div>
-                  <p className="font-display text-ember-300 text-sm font-bold tracking-widest">LAN Gaming</p>
+                  <p className="font-display text-ember-300 text-sm font-bold tracking-widest">Lan St-Jean</p>
                   <p className="font-mono text-ember-600 text-[10px] tracking-[0.4em]">2026 · CSF</p>
                 </div>
                 <button onClick={() => setMenuOpen(false)} className="text-zinc-600 hover:text-ember-300 transition-colors p-1" aria-label="Fermer">

@@ -11,56 +11,56 @@ import { RifleModel } from '../components/three/GameAssets.jsx';
 // ── Catalogue produits ────────────────────────────────────────────────────────
 const PRODUCTS = [
   {
-    id: 1, category: 'Vêtements', name: 'T-Shirt Officiel LAN Gaming 2026',
+    id: 1, category: 'Vêtements', name: 'T-Shirt Officiel Lan St-Jean',
     price: 30, image: 'https://picsum.photos/seed/merch-tshirt/500/500',
     badge: 'Best-seller', badgeColor: '#C89B3C',
     description: 'T-shirt unisexe noir premium, sérigraphie or dorée. 100% coton ring-spun 180g.',
     sizes: ['S', 'M', 'L', 'XL', 'XXL'], color: '#C89B3C', available: true,
   },
   {
-    id: 2, category: 'Vêtements', name: 'Hoodie Champion LAN 2026',
+    id: 2, category: 'Vêtements', name: 'Hoodie Champion Lan St-Jean',
     price: 55, image: 'https://picsum.photos/seed/merch-hoodie/500/500',
     badge: 'Limité', badgeColor: '#FF4655',
     description: 'Hoodie zip noir premium, broderie or sur la poitrine. Coton/polyester 320g, poche avant.',
     sizes: ['S', 'M', 'L', 'XL', 'XXL'], color: '#C89B3C', available: true,
   },
   {
-    id: 3, category: 'Vêtements', name: 'Casquette Officielle LAN 2026',
+    id: 3, category: 'Vêtements', name: 'Casquette Officielle Lan St-Jean',
     price: 25, image: 'https://picsum.photos/seed/merch-cap/500/500',
     badge: null, badgeColor: null,
-    description: 'Snapback ajustable noire, logo LG brodé en or, fermeture classique.',
+    description: 'Snapback ajustable noire, logo Lan St-Jean brodé en or, fermeture classique.',
     sizes: ['Unique'], color: '#4FC3F7', available: true,
   },
   {
-    id: 4, category: 'Vêtements', name: 'Jersey Équipe LAN 2026',
+    id: 4, category: 'Vêtements', name: 'Jersey Équipe Lan St-Jean',
     price: 45, image: 'https://picsum.photos/seed/merch-jersey/500/500',
     badge: 'Exclusif', badgeColor: '#7C3AED',
     description: 'Jersey esport sublimé, coupe athlétique. Tissu respirant. Personnalisation possible (prénom + numéro).',
     sizes: ['S', 'M', 'L', 'XL', 'XXL'], color: '#7C3AED', available: true,
   },
   {
-    id: 5, category: 'Accessoires', name: 'Mousepad XL LAN Gaming 2026',
+    id: 5, category: 'Accessoires', name: 'Mousepad XL Lan St-Jean',
     price: 40, image: 'https://picsum.photos/seed/merch-pad/500/500',
     badge: 'Gaming', badgeColor: '#4FC3F7',
-    description: 'Tapis de souris XL 90×40cm, base antidérapante, bords cousus, design exclusif LAN 2026.',
+    description: 'Tapis de souris XL 90×40cm, base antidérapante, bords cousus, design exclusif Lan St-Jean.',
     sizes: ['90×40cm'], color: '#4FC3F7', available: true,
   },
   {
     id: 6, category: 'Accessoires', name: 'Pack Stickers Officiel (×12)',
     price: 12, image: 'https://picsum.photos/seed/merch-stickers/500/500',
     badge: null, badgeColor: null,
-    description: 'Pack de 12 stickers vinyle imperméables aux couleurs de LAN Gaming 2026 et des tournois.',
+    description: 'Pack de 12 stickers vinyle imperméables aux couleurs de Lan St-Jean et des tournois.',
     sizes: ['Pack ×12'], color: '#C89B3C', available: true,
   },
   {
     id: 7, category: 'Accessoires', name: 'Poster Officiel A2 (Art Print)',
     price: 18, image: 'https://picsum.photos/seed/merch-poster/500/500',
     badge: null, badgeColor: null,
-    description: 'Poster A2 (42×59cm) sur papier mat 300g. Visuel exclusif LAN Gaming 2026. Numéroté.',
+    description: 'Poster A2 (42×59cm) sur papier mat 300g. Visuel exclusif Lan St-Jean. Numéroté.',
     sizes: ['A2 (42×59cm)'], color: '#FFD700', available: true,
   },
   {
-    id: 8, category: 'Accessoires', name: 'Bracelet Tissu LAN 2026',
+    id: 8, category: 'Accessoires', name: 'Bracelet Tissu Lan St-Jean',
     price: 8, image: 'https://picsum.photos/seed/merch-bracelet/500/500',
     badge: null, badgeColor: null,
     description: "Bracelet tissu officiel, couleurs or/noir, logo tissé. Port recommandé pendant l'événement.",
@@ -81,7 +81,7 @@ const PRODUCTS = [
     sizes: ['S', 'M', 'L', 'XL', 'XXL'], color: '#FF4655', available: true,
   },
   {
-    id: 11, category: 'Packs', name: 'Pack Cadeau LAN 2026',
+    id: 11, category: 'Packs', name: 'Pack Cadeau Lan St-Jean',
     price: 50, image: 'https://picsum.photos/seed/merch-pack3/500/500',
     badge: 'Idée cadeau', badgeColor: '#4FC3F7',
     description: 'T-shirt + Casquette + Pack Stickers + Poster. Parfait pour un cadeau à un passionné de gaming.',
@@ -98,7 +98,7 @@ const PRODUCTS = [
     id: 13, category: 'Partenaires', name: 'Bundle Gaming — Centre Hi-Fi',
     price: 0, image: 'https://picsum.photos/seed/merch-hifi/500/500',
     badge: 'En magasin', badgeColor: '#0057A8',
-    description: 'Offres exclusives sur les périphériques gaming disponibles chez Centre Hi-Fi pour les participants LAN 2026.',
+    description: 'Offres exclusives sur les périphériques gaming disponibles chez Centre Hi-Fi pour les participants Lan St-Jean.',
     sizes: ['Voir en magasin'], color: '#0057A8', available: false,
   },
 ];
@@ -904,7 +904,7 @@ export default function BoutiquePage() {
           >
             <span className="text-white">Merch</span>{' '}
             <span style={{ WebkitTextFillColor: 'transparent', WebkitTextStroke: '2px #C89B3C' }}>
-              LAN 2026
+              Lan St-Jean
             </span>
           </motion.h1>
           <motion.div
@@ -992,7 +992,7 @@ export default function BoutiquePage() {
             Besoin d'une personnalisation, d'une quantité spéciale ou d'un produit non listé? Contacte-nous directement.
           </p>
           <a
-            href="mailto:comiteetuinfo@cegepstfe.ca?subject=[LAN 2026] Commande boutique personnalisée"
+            href="mailto:comiteetuinfo@cegepstfe.ca?subject=[Lan St-Jean] Commande boutique personnalisée"
             className="inline-flex items-center gap-2 font-mono text-xs text-ember-400 border border-ember-400/30 px-6 py-2.5 hover:border-ember-400 hover:bg-ember-400/5 transition-all"
           >
             comiteetuinfo@cegepstfe.ca <ChevronRight size={12} />

@@ -441,7 +441,7 @@ export default function FoundationBlock() {
                   Au-delà du gaming
                 </h3>
                 <p className="font-body text-zinc-400 leading-relaxed">
-                  LAN Gaming 2026 s'inscrit dans une démarche plus grande. Les dons Twitch en direct ainsi que les ventes de <span className="text-ember-300 font-semibold">Tickets d'Or</span> (moitié-moitié) sont intégralement reversés à la Fondation du Cégep, qui soutient des dizaines d'étudiants chaque année.
+                  Lan St-Jean s'inscrit dans une démarche plus grande. Les dons Twitch en direct ainsi que les ventes de <span className="text-ember-300 font-semibold">Tickets d'Or</span> (moitié-moitié) sont intégralement reversés à la Fondation du Cégep, qui soutient des dizaines d'étudiants chaque année.
                 </p>
               </div>
             </div>
@@ -495,7 +495,7 @@ export default function FoundationBlock() {
               <div className="absolute top-0 left-6 -translate-y-px w-16 h-px bg-gradient-to-r from-transparent via-red-700 to-transparent" />
 
               <p className="font-rune text-red-300/80 text-lg leading-relaxed mb-6">
-                "Chaque ticket acheté pour LAN Gaming 2026, c'est un coup de pouce concret pour un étudiant qui en a besoin."
+                "Chaque ticket acheté pour Lan St-Jean, c'est un coup de pouce concret pour un étudiant qui en a besoin."
               </p>
 
               <div className="flex items-center gap-3">

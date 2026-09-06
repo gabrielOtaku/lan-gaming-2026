@@ -1,7 +1,7 @@
 {
   "name": "lan-gaming-2026-backend",
   "version": "1.0.0",
-  "description": "Backend sécurisé pour LAN Gaming 2026 - Cégep de Saint-Félicien",
+  "description": "Backend sécurisé pour Lan St-Jean - Cégep de Saint-Félicien",
   "main": "server.js",
   "type": "module",
   "engines": {

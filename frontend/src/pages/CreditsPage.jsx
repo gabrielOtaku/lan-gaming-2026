@@ -129,7 +129,7 @@ export default function CreditsPage() {
           className="font-body text-zinc-500 text-sm max-w-xl mb-14"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
         >
-          Les personnages et véhicules 3D de LAN Gaming 2026 sont l'œuvre de créateurs indépendants
+          Les personnages et véhicules 3D de Lan St-Jean sont l'œuvre de créateurs indépendants
           publiée sur Sketchfab. Voici leurs crédits, comme l'exigent leurs licences.
         </motion.p>
 

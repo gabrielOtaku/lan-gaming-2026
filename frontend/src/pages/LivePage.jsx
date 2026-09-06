@@ -90,7 +90,7 @@ export default function LivePage() {
   // Cagnotte "native" (Ticket d'Or + dons Twitch) — le total incluant les dons
   // en ligne (Supabase/Stripe) vit sur /cagnotte, pas répété ici.
   const cagnotteTotal = cagnotte ? (cagnotte.twitchTotal || 0) + (cagnotte.ticketOrTotal || 0) : 0;
-  const cagnotteGoal = 100000;
+  const cagnotteGoal = 15000;
   const pct = cagnotte ? Math.min(100, (cagnotteTotal / cagnotteGoal) * 100) : 0;
 
   return (
@@ -114,7 +114,7 @@ export default function LivePage() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="text-center mb-10">
           <motion.p variants={fadeInUp} className="font-mono text-ember-600 text-xs tracking-[0.5em] uppercase mb-4">
-            [ LAN Gaming 2026 · Diffusion ]
+            [ Lan St-Jean · Diffusion ]
           </motion.p>
           <motion.h1 variants={fadeInUp} className="font-display text-5xl sm:text-6xl font-black uppercase text-white leading-none mb-4">
             Live

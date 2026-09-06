@@ -177,7 +177,7 @@ app.use((err, _req, res, _next) => {
 
 // ── Start ──────────────────────────────────────────────────────────────────────
 httpServer.listen(PORT, () => {
-  console.log(`🎮 LAN Gaming 2026 Backend → http://localhost:${PORT}`);
+  console.log(`🎮 Lan St-Jean Backend → http://localhost:${PORT}`);
 });
 
 export default app;

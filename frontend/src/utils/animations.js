@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════════════════════════════
-// animations.js — Librairie de variants Framer Motion | LAN Gaming 2026
+// animations.js — Librairie de variants Framer Motion | Lan St-Jean
 // ══════════════════════════════════════════════════════════════════════════════
 
 // ── Easing Curves Gaming ────────────────────────────────────────────────────

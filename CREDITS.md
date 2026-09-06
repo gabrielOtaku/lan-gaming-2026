@@ -13,10 +13,9 @@ par Yennesis (https://sketchfab.com/sdarksoul99), licence CC-BY-4.0
 par Théo Domon (https://sketchfab.com/Gloomeskk), licence **CC-BY-NC-4.0**
 (http://creativecommons.org/licenses/by-nc/4.0/) — **usage non commercial uniquement.**
 
-> ⚠️ À valider avec le Cégep : cette licence interdit l'usage commercial. LAN Gaming 2026
-> vend des billets et une boutique — à clarifier si l'affichage de ce modèle sur le site
-> constitue un usage commercial au sens de la licence, et si oui, obtenir une autorisation
-> de l'auteur ou remplacer le modèle avant le lancement public.
+> ℹ️ Résolu : ce modèle a été retiré du site (poids ~22 Mo, incompatible avec une V1
+> mobile stable et fluide) — la question de l'usage commercial ne se pose donc plus.
+> Crédit conservé ici par courtoisie envers l'auteur.
 
 ## Dominus — Rocket League Car
 "Dominus - Rocket League Car" (https://sketchfab.com/3d-models/dominus-rocket-league-car-f592f249a65f41cd81a0e5aa3d418cb2)

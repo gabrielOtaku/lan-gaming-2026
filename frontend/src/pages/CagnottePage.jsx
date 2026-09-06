@@ -549,7 +549,7 @@ export default function CagnottePage() {
   const [lastRefresh, setLastRefresh] = useState(new Date());
 
   const raisedOnline = (campaign?.raised_cents || 0) / 100;
-  const goal = (campaign?.goal_cents || 10000000) / 100;
+  const goal = (campaign?.goal_cents || 1500000) / 100;
   const totalRaised =
     raisedOnline + (data.twitchTotal || 0) + (data.ticketOrTotal || 0);
 

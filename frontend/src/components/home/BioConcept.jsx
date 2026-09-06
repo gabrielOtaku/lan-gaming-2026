@@ -27,7 +27,7 @@ const CONCEPT_BLOCKS = [
   {
     year: '2026',
     title: 'La légende — Octobre',
-    body: `LAN Gaming 2026 naît de l'ambition de reproduire la même vibe que cette première édition tant appréciée — mais en voyant les choses en bien plus grand. Notre but : faire de cet événement une histoire indélébile dont tout le monde se souviendra. 47 heures. Un maximum de guerriers. Que le grind commence.`,
+    body: `Lan St-Jean naît de l'ambition de reproduire la même vibe que cette première édition tant appréciée — mais en voyant les choses en bien plus grand. Notre but : faire de cet événement une histoire indélébile dont tout le monde se souviendra. 47 heures. Un maximum de guerriers. Que le grind commence.`,
     accent: '#FFD700',
     icon: '👑',
   },
@@ -248,7 +248,7 @@ export default function BioConcept() {
             C'est une langue universelle."
           </p>
           <p className="font-mono text-zinc-600 text-xs tracking-widest mt-6">
-            — ÉQUIPE LAN GAMING 2026 · CSF
+            — ÉQUIPE LAN ST-JEAN · CSF
           </p>
         </motion.div>
       </div>

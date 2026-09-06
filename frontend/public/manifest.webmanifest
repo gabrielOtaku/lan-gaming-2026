@@ -1,6 +1,6 @@
 {
-  "name": "LAN Gaming 2026",
-  "short_name": "LAN 2026",
+  "name": "Lan St-Jean",
+  "short_name": "Lan St-Jean",
   "description": "L'événement gaming de l'année au Cégep de Saint-Félicien — 9, 10 et 11 octobre 2026.",
   "start_url": "/",
   "display": "standalone",
@@ -20,7 +20,7 @@
     {
       "name": "Billetterie",
       "url": "/billetterie",
-      "description": "Billetterie LAN Gaming 2026 — bientôt disponible"
+      "description": "Billetterie Lan St-Jean — bientôt disponible"
     },
     {
       "name": "Compétitions",

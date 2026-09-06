@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { fadeInUp, staggerContainer } from "../../utils/animations.js";
 
 // ── Social platform data ──────────────────────────────────────────────────────
-// Twitch, TikTok et Facebook retirés : les comptes dédiés LAN Gaming 2026
+// Twitch, TikTok et Facebook retirés : les comptes dédiés Lan St-Jean
 // n'existent pas encore sur ces plateformes. Seuls Instagram (compte du
 // Cégep) et YouTube (chaîne du Cégep) sont réels et actifs aujourd'hui.
 const SOCIALS = [
@@ -60,7 +60,7 @@ function SocialCard({ social }) {
       href={social.url}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`LAN Gaming 2026 sur ${social.label}`}
+      aria-label={`Lan St-Jean sur ${social.label}`}
       className="block cursor-none"
     >
       <motion.div
@@ -185,7 +185,7 @@ export default function Footer() {
           {/* Left */}
           <motion.div variants={fadeInUp} className="text-center md:text-left">
             <p className="font-display text-ember-400 text-sm tracking-widest">
-              LAN Gaming 2026
+              Lan St-Jean
             </p>
             <p className="font-body text-zinc-600 text-xs mt-1 tracking-wide">
               Cégep de Saint-Félicien · 9-11 Oct 2026

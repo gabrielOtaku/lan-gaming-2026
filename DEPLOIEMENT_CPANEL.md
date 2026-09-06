@@ -17,7 +17,7 @@ génère lui-même le `.htaccess` de passthrough Passenger à partir du champ
 
 ## 0. Où ça vit dans cPanel
 
-WordPress reste sur le domaine principal du Cégep, intact. LAN Gaming 2026
+WordPress reste sur le domaine principal du Cégep, intact. Lan St-Jean
 vit sur son propre **sous-domaine** (`lan2026.cegepstfe.ca`, déjà la valeur
 utilisée partout dans le code — `index.html`, `sitemap.xml`, `robots.txt`,
 `.env.example`). Créer ce sous-domaine dans cPanel (*Domains* ou

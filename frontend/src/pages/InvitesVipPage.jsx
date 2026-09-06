@@ -88,7 +88,7 @@ function UltraCharacterTeaser() {
           New Ultra <span className="text-ember-300 text-ember-glow">Characters</span> In Coming !
         </h3>
         <p className="font-body text-zinc-500 text-sm mt-4 max-w-md">
-          De nouveaux agents ultra rares rejoignent bientôt la collection LAN 2026 — révélation exclusive à venir pour nos invités VIP.
+          De nouveaux agents ultra rares rejoignent bientôt la collection Lan St-Jean — révélation exclusive à venir pour nos invités VIP.
         </p>
       </div>
 
