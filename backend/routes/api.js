@@ -47,15 +47,31 @@ DATES ET LIEU:
 
 HORAIRE (source unique: le calendrier détaillé de la page Calendrier — ne pas
 donner d'heures qui contredisent celui-ci):
-- Vendredi 9 oct 18h00: Arrivée et installation des joueurs
-- Vendredi 9 oct 19h00: Cérémonie d'ouverture à la Salle Azimut
-- Vendredi 9 oct 19h30: Début des qualifications (LoL, CS2, Rocket League)
-- Samedi 10 oct 10h00-17h00: Tournois et qualifications
-- Samedi 10 oct 13h00-15h00: Conférence et temps fort pour le public
-- Samedi 10 oct 20h00-22h00: Quarts et demi-finales sur la scène principale
-- Dimanche 11 oct 10h00-12h00: Matchs pour la 3e place
-- Dimanche 11 oct 13h00-16h00: Grandes finales en direct sur Twitch (charité)
-- Dimanche 11 oct 16h00: Cérémonie de remise des prix
+- Vendredi 9 oct 18h00-19h15: accueil et installation des participants
+- Vendredi 9 oct 19h30-20h20: cérémonie officielle d'ouverture à la Salle Azimut
+- Vendredi 9 oct 20h20-21h50: programmation artistique d'ouverture, artistes à annoncer
+- Vendredi 9 oct 22h00-02h00: qualifications LoL, CS2 et Rocket League
+- Samedi 10 oct 10h00-12h00: qualifications et jeux libres
+- Samedi 10 oct 12h00-13h00: pause repas
+- Samedi 10 oct 13h00-15h00: rencontres, entrevues, conférences et contenus Twitch
+- Samedi 10 oct 15h00-17h00: deuxième vague de qualifications
+- Samedi 10 oct 17h00-18h30: animations et activités visiteurs
+- Samedi 10 oct 18h30-20h00: pause repas
+- Samedi 10 oct 20h00-22h00: quarts et demi-finales sélectionnés, en direct sur Twitch
+- Samedi 10 oct 22h00-00h00: animations nocturnes et jeux libres
+- Dimanche 11 oct 09h30-11h30: derniers matchs et qualification des finalistes
+- Dimanche 11 oct 11h30-15h30: pause générale et reconfiguration
+- Dimanche 11 oct 15h30: réouverture au public pour le Festival des finales
+- Dimanche 11 oct 16h00-16h30: show d'ouverture du Festival des finales, artiste à annoncer
+- Dimanche 11 oct 16h30-16h45: présentation des finalistes
+- Dimanche 11 oct 16h45-20h30: grandes finales LoL, CS2 et Rocket League en direct sur Twitch
+- Dimanche 11 oct 20h30-21h00: remise des prix, remerciements et clôture
+- La programmation du dimanche soir reste sous réserve de validation finale du Cégep; ne jamais annoncer de capacité publique pour cette soirée tant qu'elle n'est pas confirmée.
+
+PROGRAMMATION ARTISTIQUE:
+- Deux créneaux publics existent actuellement: vendredi 20h20-21h50 et dimanche 16h00-16h30.
+- Les noms des artistes et l'ordre détaillé des prestations ne doivent pas être annoncés avant validation du comité et des équipes artistiques.
+- Le cœur du projet demeure le gaming et les compétitions esport; les shows viennent renforcer l'expérience et les temps forts du week-end.
 
 BILLETTERIE (bientôt disponible — ne jamais annoncer de prix ou de capacité):
 - La billetterie n'est pas encore ouverte. Tarifs, catégories et places
@@ -127,7 +143,11 @@ const NEXUS_FAQ = [
   },
   {
     keywords: ['programme', 'schedule', 'vendredi', 'samedi', 'dimanche', 'calendrier', 'agenda'],
-    response: "Ven 9: cérémonie d'ouverture puis début des qualifications. Sam 10: tournois toute la journée, quarts/demi-finales en soirée. Dim 11: matchs pour la 3e place puis grandes finales en direct sur Twitch. Programme complet sur la page Calendrier!",
+    response: "Ven 9: ouverture officielle 19h30, programmation artistique dès 20h20, qualifications à 22h. Sam 10: tournois, animations et quarts/demi-finales. Dim 11: Festival des finales prévu dès 15h30, grandes finales à partir de 16h45, sous réserve de validation finale du Cégep. Programme complet sur la page Calendrier!",
+  },
+  {
+    keywords: ['artiste', 'artistes', 'concert', 'show', 'spectacle'],
+    response: "Des créneaux artistiques sont prévus vendredi soir et dimanche au Festival des finales. Les noms et l'ordre détaillé seront annoncés seulement après validation officielle; le gaming et les compétitions restent au cœur du week-end.",
   },
   {
     keywords: ['équipement', 'equipement', 'pc', 'ordinateur', 'écran', 'setup', 'matériel', 'apporter'],
@@ -486,23 +506,29 @@ router.get('/admin/competitors', requireAdmin, (_req, res) => {
 // ── GET /api/events ──────────────────────────────────────────────────────────
 router.get('/events', (_req, res) => {
   const events = [
-    { id: 1,  date: '2026-10-09', startTime: '18:00', endTime: '19:00', title: 'Arrivée et installation', description: 'Accueil des participants, vérification des billets, attribution des postes. DJ local ou playlist gaming pour mettre l\'ambiance.', location: 'Arènes de jeu', category: 'setup', color: '#636E72' },
-    { id: 2,  date: '2026-10-09', startTime: '19:00', endTime: '19:30', title: 'Cérémonie d\'ouverture & Formation des équipes', description: 'Bienvenue au micro, présentation des règles, du planning et des prix. Ouverture des buffets. Formation des équipes via Discord dédié.', location: 'Salle Azimut', category: 'show', color: '#FFD700' },
-    { id: 3,  date: '2026-10-09', startTime: '19:30', endTime: '22:30', title: 'Qualifications — Phase 1', description: 'Lancement des premiers matchs de qualification pour tous les tournois simultanément. Stream A (LoL) et Stream B (CS2) sur Twitch.', location: 'Toutes les arènes', category: 'tournament', color: '#C89B3C', streamed: true },
-    { id: 4,  date: '2026-10-09', startTime: '22:30', endTime: '01:00', title: 'Soirée détente & Mini-jeux', description: 'Break des tournois majeurs. Tournoi de jeu de combat sur console (Smash Bros, Street Fighter) sur grand écran. Rocket League, Jackbox Games, jeux de cartes (Magic, Pokémon) et jeux de société.', location: 'Zone consoles', category: 'activity', color: '#E74C3C' },
-    { id: 5,  date: '2026-10-10', startTime: '10:00', endTime: '12:00', title: 'Tournois & Jeux libres', description: 'Poursuite des matchs de qualification — LoL, CS2 et Rocket League. Gaming libre en parallèle.', location: 'Toutes les arènes', category: 'tournament', color: '#C89B3C' },
-    { id: 6,  date: '2026-10-10', startTime: '12:00', endTime: '13:00', title: 'Pause déjeuner', description: 'Repas servi sur place. Jeux libres accessibles pendant la pause.', location: 'Zone buffet', category: 'break', color: '#27AE60' },
-    { id: 7,  date: '2026-10-10', startTime: '13:00', endTime: '15:00', title: 'Conférence & Temps fort pour le public', description: 'Accueil d\'une entreprise ou d\'un invité spécial. Zone de jeux rétro (consoles, bornes d\'arcade) disponible en parallèle.', location: 'Salle Azimut', category: 'show', color: '#4FC3F7' },
-    { id: 8,  date: '2026-10-10', startTime: '15:00', endTime: '17:00', title: 'Deuxième vague de qualifications', description: 'Poursuite et fin des matchs de qualification. Huitièmes et quarts de finale de certains tournois.', location: 'Toutes les arènes', category: 'tournament', color: '#C89B3C' },
-    { id: 9,  date: '2026-10-10', startTime: '17:00', endTime: '18:30', title: 'Animations physiques & Divertissements', description: 'Option 1 : Airsoft / Initiation boxe ou sumo / Ping-pong. Option 2 : Jeux de société géants (Jenga, Twister) ou Speedrun challenge.', location: 'Zone activités', category: 'activity', color: '#FF6B35' },
-    { id: 10, date: '2026-10-10', startTime: '18:30', endTime: '20:00', title: 'Pause repas', description: 'Repas du soir. Musique d\'ambiance et jeux libres.', location: 'Zone buffet', category: 'break', color: '#27AE60' },
-    { id: 11, date: '2026-10-10', startTime: '20:00', endTime: '22:00', title: 'Quarts et demi-finales — Scène principale', description: 'Les matchs les plus attendus sur la scène principale, diffusés en direct sur Twitch avec commentateurs.', location: 'Salle Azimut — Scène principale', category: 'final', color: '#FFD700', streamed: true },
-    { id: 12, date: '2026-10-10', startTime: '22:00', endTime: '00:00', title: 'Quiz géant & Soirée ambiance', description: 'Kahoot géant ouvert à tous! Animation musicale et jeux libres jusqu\'au bout de la nuit.', location: 'Salle Azimut', category: 'activity', color: '#9B59B6' },
-    { id: 13, date: '2026-10-11', startTime: '10:00', endTime: '12:00', title: 'Matchs pour la 3e place & Révisions', description: 'Petites finales et matchs de classement. Temps libre pour que les finalistes se préparent.', location: 'Arènes de jeu', category: 'tournament', color: '#FF4655' },
-    { id: 14, date: '2026-10-11', startTime: '12:00', endTime: '13:00', title: 'Pause déjeuner', description: 'Dernier repas avant les grandes finales.', location: 'Zone buffet', category: 'break', color: '#27AE60' },
-    { id: 15, date: '2026-10-11', startTime: '13:00', endTime: '16:00', title: 'Grandes Finales — Live Twitch Charité', description: 'Finales LoL, CS2 et Rocket League sur grand écran avec commentateurs, éclairages et ambiance de finale. Rotation des finales pour que tout le monde puisse suivre. 100% des dons Twitch à la Fondation.', location: 'Salle Azimut — Scène principale', category: 'final', color: '#FFD700', streamed: true },
-    { id: 16, date: '2026-10-11', startTime: '16:00', endTime: '17:00', title: 'Cérémonie de remise des prix', description: 'Remise des trophées et lots aux vainqueurs. Remerciements aux participants, bénévoles et sponsors. Photo de groupe officielle.', location: 'Salle Azimut', category: 'ceremony', color: '#FFD700' },
-    { id: 17, date: '2026-10-11', startTime: '17:00', endTime: '18:00', title: 'Démontage', description: 'Rangement et nettoyage des lieux. Merci à tous d\'avoir fait de Lan St-Jean une histoire indélébile!', location: 'Toutes les salles', category: 'setup', color: '#636E72' },
+    { id: 1,  date: '2026-10-09', startTime: '18:00', endTime: '19:15', title: 'Accueil et installation des participants', description: 'Accueil des participants, vérification des accès et installation aux postes de jeu.', location: 'Place centrale — zones LAN', category: 'setup', color: '#636E72' },
+    { id: 2,  date: '2026-10-09', startTime: '19:15', endTime: '19:30', title: 'Accueil des invités et partenaires', description: 'Déplacement vers la Salle Azimut et accueil des invités, partenaires et personnes présentes pour l\'ouverture.', location: 'Salle Azimut', category: 'setup', color: '#636E72' },
+    { id: 3,  date: '2026-10-09', startTime: '19:30', endTime: '20:20', title: 'Cérémonie officielle d\'ouverture', description: 'Présentation du projet, du Cégep, de la Fondation et des partenaires, suivie des prises de parole officielles.', location: 'Salle Azimut', category: 'ceremony', color: '#FFD700' },
+    { id: 4,  date: '2026-10-09', startTime: '20:20', endTime: '21:50', title: 'Programmation artistique d\'ouverture', description: 'Shows et prestations d\'ouverture. Les artistes et l\'ordre détaillé seront annoncés après validation officielle.', location: 'Salle Azimut', category: 'show', color: '#4FC3F7', streamed: true },
+    { id: 5,  date: '2026-10-09', startTime: '21:50', endTime: '22:00', title: 'Transition vers les compétitions', description: 'Dernière transition technique et retour vers les zones de jeu avant le lancement officiel des tournois.', location: 'Place centrale — zones LAN', category: 'setup', color: '#636E72' },
+    { id: 6,  date: '2026-10-09', startTime: '22:00', endTime: '02:00', title: 'Qualifications — League of Legends · CS2 · Rocket League', description: 'Lancement des qualifications des trois compétitions officielles. Certains matchs et temps forts seront intégrés au live Twitch.', location: 'Zones compétition', category: 'tournament', color: '#C89B3C', streamed: true },
+
+    { id: 7,  date: '2026-10-10', startTime: '10:00', endTime: '12:00', title: 'Qualifications et jeux libres', description: 'Poursuite des qualifications League of Legends, Counter-Strike 2 et Rocket League. Jeux libres en parallèle.', location: 'Zones compétition', category: 'tournament', color: '#C89B3C' },
+    { id: 8,  date: '2026-10-10', startTime: '12:00', endTime: '13:00', title: 'Pause repas', description: 'Pause repas pour les participants. Certaines zones d\'animation peuvent rester accessibles selon la programmation.', location: 'Cégep', category: 'break', color: '#27AE60' },
+    { id: 9,  date: '2026-10-10', startTime: '13:00', endTime: '15:00', title: 'Rencontres, entrevues, conférences et contenus Twitch', description: 'Séquences consacrées aux invités, partenaires, projets étudiants, entrevues et contenus produits pour le live.', location: 'Zones animation et Twitch', category: 'activity', color: '#FF6B35', streamed: true },
+    { id: 10, date: '2026-10-10', startTime: '15:00', endTime: '17:00', title: 'Deuxième vague de qualifications', description: 'Poursuite des matchs officiels et progression des brackets vers les phases finales.', location: 'Zones compétition', category: 'tournament', color: '#C89B3C' },
+    { id: 11, date: '2026-10-10', startTime: '17:00', endTime: '18:30', title: 'Animations et activités visiteurs', description: 'Jeux, animations et activités publiques organisées en parallèle du volet compétitif.', location: 'Zones publiques', category: 'activity', color: '#FF6B35' },
+    { id: 12, date: '2026-10-10', startTime: '18:30', endTime: '20:00', title: 'Pause repas', description: 'Pause repas et période de transition avant les matchs du soir.', location: 'Cégep', category: 'break', color: '#27AE60' },
+    { id: 13, date: '2026-10-10', startTime: '20:00', endTime: '22:00', title: 'Quarts et demi-finales — matchs sélectionnés', description: 'Sélection de matchs importants des phases finales, avec commentaires et diffusion en direct sur Twitch.', location: 'Zones compétition / Twitch', category: 'final', color: '#FFD700', streamed: true },
+    { id: 14, date: '2026-10-10', startTime: '22:00', endTime: '00:00', title: 'Animations nocturnes et jeux libres', description: 'Animations de soirée, jeux libres et moments communautaires après les matchs officiels de la journée.', location: 'Cégep', category: 'activity', color: '#9B59B6' },
+
+    { id: 15, date: '2026-10-11', startTime: '09:30', endTime: '11:30', title: 'Derniers matchs et qualification des finalistes', description: 'Derniers matchs nécessaires pour déterminer les équipes qui accéderont aux grandes finales.', location: 'Zones compétition', category: 'tournament', color: '#C89B3C' },
+    { id: 16, date: '2026-10-11', startTime: '11:30', endTime: '15:30', title: 'Pause générale et reconfiguration', description: 'Pause pour les participants et transformation des espaces en vue du Festival des finales. Programmation du dimanche soir sous réserve de validation finale du Cégep.', location: 'Cégep', category: 'setup', color: '#636E72' },
+    { id: 17, date: '2026-10-11', startTime: '15:30', endTime: '16:00', title: 'Réouverture au public — Festival des finales', description: 'Accueil du public, mise en ambiance et lancement de la grande séquence finale du week-end.', location: 'Place centrale', category: 'ceremony', color: '#FFD700' },
+    { id: 18, date: '2026-10-11', startTime: '16:00', endTime: '16:30', title: 'Show d\'ouverture du Festival des finales', description: 'Prestation artistique d\'ouverture. Le nom de l\'artiste sera annoncé après validation officielle.', location: 'Place centrale — scène', category: 'show', color: '#4FC3F7', streamed: true },
+    { id: 19, date: '2026-10-11', startTime: '16:30', endTime: '16:45', title: 'Présentation des finalistes', description: 'Présentation des équipes, mise en scène des finalistes et lancement de la séquence compétitive.', location: 'Place centrale — scène', category: 'ceremony', color: '#FFD700', streamed: true },
+    { id: 20, date: '2026-10-11', startTime: '16:45', endTime: '20:30', title: 'Grandes finales — LoL · CS2 · Rocket League', description: 'Grandes finales des trois compétitions officielles, avec commentaires et diffusion en direct sur Twitch. L\'ordre précis des jeux sera publié après verrouillage des formats de tournoi.', location: 'Place centrale / Twitch', category: 'final', color: '#FFD700', streamed: true },
+    { id: 21, date: '2026-10-11', startTime: '20:30', endTime: '21:00', title: 'Remise des prix et clôture', description: 'Remise des prix, remerciements aux participants, bénévoles, partenaires et à la Fondation, puis clôture officielle du week-end.', location: 'Place centrale — scène', category: 'ceremony', color: '#FFD700', streamed: true },
   ];
   res.status(200).json({ success: true, data: events });
 });
