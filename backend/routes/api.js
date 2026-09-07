@@ -184,6 +184,22 @@ const ticketInventory = loadJSON('tickets.json', {
   competiteur: { capacity: 30, sold: 0 },
 });
 
+// Tarifs — jamais codés en dur côté frontend (cahier §11 : non validés par
+// le Cégep). Renseignés par variables d'environnement à la validation, sans
+// redéploiement (cPanel > Setup Node.js App > variables). Tant qu'ils sont
+// absents, le front affiche « À venir » et bloque l'achat.
+function envPrice(name) {
+  const raw = process.env[name];
+  if (raw === undefined || raw === '') return null;
+  const n = Number(raw);
+  return Number.isFinite(n) && n >= 0 ? n : null;
+}
+const TICKET_PRICES = {
+  visiteur:    envPrice('TICKET_PRICE_VISITEUR'),
+  joueur:      envPrice('TICKET_PRICE_JOUEUR'),
+  competiteur: envPrice('TICKET_PRICE_COMPETITEUR'),
+};
+
 function computeTicketData() {
   const now = new Date();
   const deadlinePassed = now >= TICKET_DEADLINE;
@@ -218,13 +234,14 @@ router.get('/tickets/status', (_req, res) => {
   const { ticketSalesEnabled, showCapacity } = getSiteSettings();
   const data = { ticketSalesEnabled, showCapacity };
   if (showCapacity) Object.assign(data, computeTicketData());
+  if (ticketSalesEnabled) data.prices = TICKET_PRICES;
   res.json({ success: true, data });
 });
 
 // ── GET /api/admin/tickets/status (admin) ─────────────────────────────────────
 // Vue complète pour la gestion d'inventaire, indépendante des flags publics.
 router.get('/admin/tickets/status', requireAdmin, (_req, res) => {
-  res.json({ success: true, data: { ...getSiteSettings(), ...computeTicketData() } });
+  res.json({ success: true, data: { ...getSiteSettings(), ...computeTicketData(), prices: TICKET_PRICES } });
 });
 
 // ── POST /api/admin/tickets/adjust (admin) ────────────────────────────────────
@@ -589,18 +606,18 @@ router.get('/events', (_req, res) => {
 
 // ── GET /api/partners ────────────────────────────────────────────────────────
 // Centre Hi-Fi et e-distribution retirés (rien de confirmé par écrit).
-// UQAC et MRC du Domaine-du-Roy réintégrés (confirmation directe du comité,
-// 2 sept. 2026) : les deux sont officiellement retenus comme partenaires —
-// annule la restriction posée par le plan de mise en ligne V1 §2.2, qui
-// demandait une confirmation écrite avant réaffichage.
+// Paliers confirmés par le comité (6 sept. 2026) : UQAC Diamant, Mazda Or,
+// MRC du Domaine-du-Roy Or, Metro Bronze. L'ordre du tableau = ordre
+// d'affichage des sections sur l'accueil (Sponsor.jsx groupe par tier dans
+// l'ordre reçu).
 router.get('/partners', (_req, res) => {
   const partners = [
     { id: 1, name: 'Cégep de Saint-Félicien', logo: '/logos/cegep.jpg', url: 'https://www.cstfelicien.qc.ca', tier: 'principal' },
     { id: 2, name: 'Fondation du Cégep', logo: '/logos/fondation.svg', url: '#fondation', tier: 'charitable' },
-    { id: 3, name: 'Metro', logo: '/logos/metro.svg', url: 'https://www.metro.ca', tier: 'diamant' },
+    { id: 5, name: 'UQAC', logo: '/logos/uqac.svg', url: 'https://www.uqac.ca', tier: 'diamant' },
     { id: 4, name: 'Mazda', logo: '/logos/mazda.svg', url: 'https://www.mazda.ca', tier: 'or' },
-    { id: 5, name: 'UQAC', logo: '/logos/uqac.svg', url: 'https://www.uqac.ca', tier: 'or' },
     { id: 6, name: 'MRC du Domaine-du-Roy', logo: '/logos/mrc-domaine-du-roy.svg', url: 'https://www.mrcdomaineduroy.ca', tier: 'or' },
+    { id: 3, name: 'Metro', logo: '/logos/metro.svg', url: 'https://www.metro.ca', tier: 'bronze' },
   ];
   res.status(200).json({ success: true, data: partners });
 });

@@ -132,7 +132,7 @@ function TicketManager() {
         />
         <FlagToggle
           label="Afficher la capacité"
-          hint="Publie le nombre de places (150+) et les compteurs par catégorie."
+          hint="Publie le nombre de places (somme des capacités ci-dessous) et les compteurs par catégorie."
           checked={status.showCapacity}
           onChange={(v) => handleFlag('showCapacity', v)}
           disabled={flagBusy}
@@ -674,6 +674,18 @@ function TournamentManager() {
 // ── Main AdminPage ─────────────────────────────────────────────────────────────
 export default function AdminPage() {
   const { user, isAdmin, logout } = useAuth();
+  // Capacité totale lue de l'inventaire backend — plus de « 150+ » codé en dur.
+  const [totalCapacity, setTotalCapacity] = useState(null);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    adminGetTicketsStatus()
+      .then((res) => {
+        const inv = res.data?.inventory || {};
+        setTotalCapacity(Object.values(inv).reduce((s, i) => s + (i?.capacity || 0), 0));
+      })
+      .catch(() => {});
+  }, [isAdmin]);
 
   if (!isAdmin) return <Navigate to="/" replace />;
 
@@ -735,9 +747,9 @@ export default function AdminPage() {
         >
           {[
             { icon: Calendar, label: 'Jours avant l\'event', value: daysToEvent, color: '#C89B3C' },
-            { icon: Users,    label: 'Capacité totale',     value: '150+',      color: '#4FC3F7' },
+            { icon: Users,    label: 'Capacité totale',     value: totalCapacity ?? '…', color: '#4FC3F7' },
             { icon: Mail,     label: 'Contact',             value: 'Actif',     color: '#22c55e' },
-            { icon: Zap,      label: 'Tournois',            value: '6',         color: '#FFD700' },
+            { icon: Zap,      label: 'Tournois',            value: String(Object.keys(GAME_META).length), color: '#FFD700' },
           ].map(({ icon: Icon, label, value, color }) => (
             <motion.div
               key={label}

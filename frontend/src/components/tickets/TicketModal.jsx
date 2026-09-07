@@ -4,13 +4,14 @@ import { X, Zap, Shield, Star, ChevronRight, ExternalLink, Lock, AlertTriangle }
 import { modalBackdrop, modalPanel, EASE_GAME } from '../../utils/animations.js';
 import { getTicketRedirect } from '../../utils/api.js';
 
+// Aucun prix ici : les tarifs viennent de /api/tickets/status (prices), eux-
+// mêmes lus des variables d'environnement du backend — rien dans le bundle JS
+// tant que le Cégep ne les a pas validés (cahier §11). Sans prix → « À venir ».
 const TICKET_TYPES = [
   {
     id: 'visiteur',
     label: 'Visiteur',
     subtitle: 'Venir encourager',
-    price: '15$',
-    priceNote: '+ taxes',
     color: '#4FC3F7',
     features: [
       'Accès libre à l\'événement',
@@ -26,8 +27,6 @@ const TICKET_TYPES = [
     id: 'joueur',
     label: 'Joueur',
     subtitle: 'Accès LAN complet',
-    price: '30$',
-    priceNote: '+ taxes',
     color: '#C89B3C',
     features: [
       'Poste LAN fixe assigné',
@@ -44,8 +43,6 @@ const TICKET_TYPES = [
     id: 'competiteur',
     label: 'Compétiteur',
     subtitle: 'Pour viser le trophée',
-    price: '45$',
-    priceNote: '+ taxes',
     color: '#FFD700',
     features: [
       'Tout du Joueur inclus',
@@ -59,7 +56,7 @@ const TICKET_TYPES = [
 ];
 
 // ── Ticket card ───────────────────────────────────────────────────────────────
-function TicketCard({ ticket, isSelected, onSelect, remaining }) {
+function TicketCard({ ticket, price, isSelected, onSelect, remaining }) {
   const soldOut = typeof remaining === 'number' && remaining <= 0;
   const lowStock = typeof remaining === 'number' && remaining > 0 && remaining <= 5;
 
@@ -115,10 +112,10 @@ function TicketCard({ ticket, isSelected, onSelect, remaining }) {
         </h4>
 
         <div className="flex items-baseline gap-1 mb-3">
-          <span className="font-display font-black text-3xl" style={{ color: soldOut ? '#555' : ticket.color }}>
-            {ticket.price}
+          <span className={`font-display font-black ${price == null ? 'text-xl' : 'text-3xl'}`} style={{ color: soldOut ? '#555' : ticket.color }}>
+            {price == null ? 'À venir' : `${price}$`}
           </span>
-          <span className="font-mono text-zinc-700 text-xs">{ticket.priceNote}</span>
+          {price != null && <span className="font-mono text-zinc-700 text-xs">+ taxes</span>}
         </div>
 
         {/* Seats indicator */}
@@ -145,7 +142,7 @@ function TicketCard({ ticket, isSelected, onSelect, remaining }) {
 }
 
 // ── Redirect confirmation modal ───────────────────────────────────────────────
-function RedirectConfirm({ ticket, quantity, onConfirm, onCancel, loading, error }) {
+function RedirectConfirm({ ticket, price, quantity, onConfirm, onCancel, loading, error }) {
   return (
     <motion.div
       variants={modalPanel}
@@ -179,7 +176,7 @@ function RedirectConfirm({ ticket, quantity, onConfirm, onCancel, loading, error
         <div className="flex justify-between items-center pt-2 border-t border-zinc-800">
           <span className="font-mono text-zinc-500 text-xs">Total estimé</span>
           <span className="font-display font-black text-ember-300">
-            {(parseFloat(ticket.price) * quantity).toFixed(0)}$ + taxes
+            {price == null ? 'À venir' : `${(price * quantity).toFixed(0)}$ + taxes`}
           </span>
         </div>
       </div>
@@ -229,7 +226,7 @@ function RedirectConfirm({ ticket, quantity, onConfirm, onCancel, loading, error
 }
 
 // ── Main Export ───────────────────────────────────────────────────────────────
-export default function TicketModal({ inventory, salesClosed }) {
+export default function TicketModal({ inventory, prices, salesClosed }) {
   const [selectedType, setSelectedType] = useState('competiteur');
   const [quantity, setQuantity] = useState(1);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -238,8 +235,11 @@ export default function TicketModal({ inventory, salesClosed }) {
 
   const selectedTicket = TICKET_TYPES.find(t => t.id === selectedType);
   const selectedRemaining = inventory?.[selectedType]?.remaining;
+  const selectedPrice = prices?.[selectedType] ?? null;
+  const priceUnknown = selectedPrice == null;
 
   const handleProceed = () => {
+    if (priceUnknown) return;
     setError(null);
     setShowConfirm(true);
   };
@@ -265,6 +265,7 @@ export default function TicketModal({ inventory, salesClosed }) {
           <TicketCard
             key={ticket.id}
             ticket={ticket}
+            price={prices?.[ticket.id] ?? null}
             isSelected={selectedType === ticket.id}
             onSelect={setSelectedType}
             remaining={inventory?.[ticket.id]?.remaining}
@@ -308,24 +309,26 @@ export default function TicketModal({ inventory, salesClosed }) {
             <div className="text-right">
               <p className="font-mono text-zinc-600 text-xs">Total estimé</p>
               <p className="font-display font-black text-2xl text-ember-300">
-                {(parseFloat(selectedTicket?.price || '0') * quantity).toFixed(0)}$
+                {priceUnknown ? 'À venir' : `${(selectedPrice * quantity).toFixed(0)}$`}
               </p>
             </div>
 
             <motion.button
               onClick={handleProceed}
-              className="relative px-8 py-3.5 clip-diagonal overflow-hidden group"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              animate={{
+              disabled={priceUnknown}
+              title={priceUnknown ? 'Tarifs en cours de validation' : undefined}
+              className="relative px-8 py-3.5 clip-diagonal overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
+              whileHover={!priceUnknown ? { scale: 1.04 } : {}}
+              whileTap={!priceUnknown ? { scale: 0.97 } : {}}
+              animate={!priceUnknown ? {
                 boxShadow: ['0 0 15px rgba(200,155,60,0.3)', '0 0 40px rgba(255,215,0,0.6)', '0 0 15px rgba(200,155,60,0.3)'],
-              }}
+              } : {}}
               transition={{ duration: 2.5, repeat: Infinity }}
             >
               <span className="absolute inset-0 bg-ember-400 group-hover:bg-ember-300 transition-colors" />
               <span className="relative font-display font-bold text-obsidian-900 text-sm tracking-widest uppercase flex items-center gap-2">
                 <Zap size={14} />
-                Acheter mes billets
+                {priceUnknown ? 'Tarifs à venir' : 'Acheter mes billets'}
               </span>
             </motion.button>
           </div>
@@ -357,6 +360,7 @@ export default function TicketModal({ inventory, salesClosed }) {
           >
             <RedirectConfirm
               ticket={selectedTicket}
+              price={selectedPrice}
               quantity={quantity}
               onConfirm={handleConfirm}
               onCancel={() => setShowConfirm(false)}

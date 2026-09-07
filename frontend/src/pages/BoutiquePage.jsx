@@ -91,7 +91,7 @@ const PRODUCTS = [
     id: 12, category: 'Partenaires', name: 'Carte-Cadeau Metro (20$)',
     price: 20, image: 'https://picsum.photos/seed/merch-metro/500/500',
     badge: 'Metro', badgeColor: '#E31837',
-    description: 'Carte-cadeau Metro offerte par notre partenaire Diamant. Valable dans tous les Metro du Québec.',
+    description: 'Carte-cadeau Metro offerte par notre partenaire Metro. Valable dans tous les Metro du Québec.',
     sizes: ['20$'], color: '#E31837', available: true,
   },
   {

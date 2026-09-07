@@ -172,12 +172,17 @@ function TicketsHero({ salesEnabled }) {
 }
 
 // ── Event info quick bar ──────────────────────────────────────────────────────
-function EventInfoBar({ showCapacity }) {
+function EventInfoBar({ showCapacity, inventory }) {
+  // Le nombre de places n'est publié qu'après validation électrique (cahier §3)
+  // et vient toujours du backend (somme des capacités de l'inventaire) —
+  // aucun chiffre codé en dur ici, rien qui puisse être réactivé par erreur.
+  const totalCapacity = inventory
+    ? Object.values(inventory).reduce((sum, i) => sum + (i?.capacity || 0), 0)
+    : 0;
   const infos = [
     { icon: Clock, label: "Dates", value: "9 – 11 Octobre 2026" },
     { icon: MapPin, label: "Lieu", value: "Cégep de Saint-Félicien" },
-    // Le nombre de places n'est publié qu'après validation électrique (cahier §3).
-    { icon: Users, label: "Capacité", value: showCapacity ? "150+ participants" : "À venir" },
+    { icon: Users, label: "Capacité", value: showCapacity && totalCapacity > 0 ? `${totalCapacity} participants` : "À venir" },
     { icon: Zap, label: "Format", value: "LAN 3 jours" },
   ];
 
@@ -380,12 +385,12 @@ const FAQ_ITEMS = [
   },
   {
     q: "Quelle est la différence entre Joueur et Compétiteur ?",
-    a: "Le billet Joueur (30$) donne un poste LAN fixe et accès à toutes les arènes pendant tout l'événement. Le Compétiteur (45$) inclut tout ça plus l'inscription officielle aux tournois (LoL, CS2, Rocket League).",
+    a: "Le billet Joueur donne un poste LAN fixe et accès à toutes les arènes pendant tout l'événement. Le Compétiteur inclut tout ça plus l'inscription officielle aux tournois (LoL, CS2, Rocket League). Les tarifs sont affichés sur les billets ci-dessus.",
     salesOnly: true,
   },
   {
     q: "Les visiteurs peuvent-ils assister sans jouer ?",
-    a: "Absolument ! Le billet Visiteur (15$) donne accès libre à l'ensemble de l'événement, à la zone spectateurs, aux consoles et aux kiosques partenaires.",
+    a: "Absolument ! Le billet Visiteur donne accès libre à l'ensemble de l'événement, à la zone spectateurs, aux consoles et aux kiosques partenaires.",
     salesOnly: true,
   },
   {
@@ -563,7 +568,7 @@ export default function TicketsPage() {
       className="min-h-screen"
     >
       <TicketsHero salesEnabled={salesEnabled} />
-      <EventInfoBar showCapacity={salesEnabled && showCapacity} />
+      <EventInfoBar showCapacity={salesEnabled && showCapacity} inventory={ticketStatus?.inventory} />
 
       <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
         {!salesEnabled ? (
@@ -616,6 +621,7 @@ export default function TicketsPage() {
             >
               <TicketModal
                 inventory={ticketStatus?.inventory}
+                prices={ticketStatus?.prices}
                 salesClosed={salesClosed}
               />
             </motion.div>

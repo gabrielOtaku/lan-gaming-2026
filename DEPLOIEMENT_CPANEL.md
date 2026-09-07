@@ -74,6 +74,7 @@ Reprendre `backend/.env.example` intégralement, en particulier :
 - `ALLOWED_ORIGINS=https://lan2026.cegepstfe.ca`
 - `FRONTEND_URL=https://lan2026.cegepstfe.ca`
 - `TICKET_URL=https://lan2026.cegepstfe.ca/billetterie`
+- `TICKET_PRICE_VISITEUR` / `TICKET_PRICE_JOUEUR` / `TICKET_PRICE_COMPETITEUR` — **laisser vides** tant que les tarifs ne sont pas validés par le Cégep : le site affiche « À venir » et bloque l'achat. Aucun prix n'existe dans le code frontend ; les renseigner ici (puis Restart) suffit, sans redéploiement.
 - `JWT_SECRET`, `SESSION_SECRET`, `ADMIN_PASSWORD` — chaînes aléatoires longues et **distinctes**.
 - `EMAIL_HASH_PEPPER` — chaîne aléatoire longue, à ne changer qu'en régénérant aussi les hashes ci-dessous.
 - `ADMIN_EMAIL_HASH` / `ADMIN_EMAILS_HASH` — générés **en local**, jamais en clair ici :
