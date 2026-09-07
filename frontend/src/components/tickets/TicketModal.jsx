@@ -13,7 +13,7 @@ const TICKET_TYPES = [
     priceNote: '+ taxes',
     color: '#4FC3F7',
     features: [
-      'Accès libre à l\'événement (47h)',
+      'Accès libre à l\'événement',
       'Zone spectateurs & consoles',
       'Suivi des tournois sur grands écrans',
       'Accès kiosques partenaires',
@@ -30,7 +30,7 @@ const TICKET_TYPES = [
     priceNote: '+ taxes',
     color: '#C89B3C',
     features: [
-      'Poste LAN fixe assigné (47h)',
+      'Poste LAN fixe assigné',
       'Accès toutes les arènes gaming',
       'Badge joueur officiel',
       'Wi-Fi haute performance dédié',
@@ -50,9 +50,7 @@ const TICKET_TYPES = [
     features: [
       'Tout du Joueur inclus',
       'Inscription aux tournois officiels',
-      'LoL · CS2 · Rocket League · Magic:TG',
-      'Super Smash Bros · Mario Kart',
-      'Éligible aux cash prizes',
+      'LoL · CS2 · Rocket League',
       'Badge Compétiteur exclusif',
     ],
     icon: '👑',

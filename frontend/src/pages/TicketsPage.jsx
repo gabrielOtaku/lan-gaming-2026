@@ -178,7 +178,7 @@ function EventInfoBar({ showCapacity }) {
     { icon: MapPin, label: "Lieu", value: "Cégep de Saint-Félicien" },
     // Le nombre de places n'est publié qu'après validation électrique (cahier §3).
     { icon: Users, label: "Capacité", value: showCapacity ? "150+ participants" : "À venir" },
-    { icon: Zap, label: "Format", value: "47h non-stop" },
+    { icon: Zap, label: "Format", value: "LAN 3 jours" },
   ];
 
   return (
@@ -376,11 +376,11 @@ function SeatsBar({ inventory, salesClosed }) {
 const FAQ_ITEMS = [
   {
     q: "Quand et où se déroule l'événement ?",
-    a: "Lan St-Jean se tient du vendredi 9 au dimanche 11 octobre 2026 au Cégep de Saint-Félicien (525, boul. Hamel, Saint-Félicien, QC G8K 2R8). Les portes ouvrent à 17h avec le bal d'ouverture à la Salle Azimut.",
+    a: "Lan St-Jean se tient du vendredi 9 au dimanche 11 octobre 2026 au Cégep de Saint-Félicien (525, boul. Hamel, Saint-Félicien, QC G8K 2R8). L'accueil et l'installation débutent à 18h le vendredi, suivis de la cérémonie officielle d'ouverture à 19h30 à la Salle Azimut.",
   },
   {
     q: "Quelle est la différence entre Joueur et Compétiteur ?",
-    a: "Le billet Joueur (30$) donne un poste LAN fixe et accès à toutes les arènes pendant 47h. Le Compétiteur (45$) inclut tout ça plus l'inscription officielle aux tournois (LoL, CS2, Rocket League, Magic:TG, Smash Bros, Mario Kart) et rend éligible aux cash prizes.",
+    a: "Le billet Joueur (30$) donne un poste LAN fixe et accès à toutes les arènes pendant tout l'événement. Le Compétiteur (45$) inclut tout ça plus l'inscription officielle aux tournois (LoL, CS2, Rocket League).",
     salesOnly: true,
   },
   {

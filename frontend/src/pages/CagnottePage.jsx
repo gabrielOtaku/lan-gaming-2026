@@ -217,7 +217,7 @@ function TicketOrCard({ data, onPurchase, comingSoon = false }) {
           {[
             {
               icon: Star,
-              text: `Achète un Ticket d'Or à ${data.ticketOrPrice || 10}$ — 100% va dans le pot commun`,
+              text: `Achète un Ticket d'Or à ${data.ticketOrPrice || 10}$ — la totalité va dans le pot commun`,
             },
             {
               icon: Trophy,
@@ -673,9 +673,12 @@ export default function CagnottePage() {
             variants={fadeInUp}
             className="font-body text-zinc-500 max-w-lg mx-auto text-sm leading-relaxed"
           >
-            Chaque don en ligne, don Twitch et Ticket d'Or vendu est entièrement
-            reversé à la Fondation du Cégep de Saint-Félicien pour soutenir les
-            bourses étudiantes.
+            Les dons en ligne et les dons Twitch sont intégralement reversés à
+            la Fondation du Cégep de Saint-Félicien pour soutenir les bourses
+            étudiantes. La moitié des ventes de Tickets d'Or s'y ajoute,
+            l'autre moitié récompensant un gagnant tiré au sort — mécanisme
+            détaillé ci-dessous, sous réserve de confirmation finale par la
+            Fondation et le Cégep.
           </motion.p>
 
           {/* Refresh indicator */}
@@ -976,7 +979,7 @@ export default function CagnottePage() {
               icon: Star,
               color: "#FFD700",
               title: "Ticket d'Or",
-              body: "Seulement les ventes de Tickets d'Or (moitié-moitié) vont à la Fondation, pas les billets réguliers.",
+              body: "Seulement les ventes de Tickets d'Or (moitié-moitié) vont à la Fondation, pas les billets réguliers. Mécanisme sous réserve de confirmation finale.",
             },
             {
               icon: Zap,

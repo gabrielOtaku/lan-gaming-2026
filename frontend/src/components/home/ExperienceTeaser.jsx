@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import { Eye, Gamepad2, Trophy, ArrowRight } from "lucide-react";
 import { scrollReveal, staggerContainer, fadeInUp, EASE_GAME } from "../../utils/animations.js";
 
+// Pas de prix ni de durée ici tant que la billetterie n'est pas ouverte
+// (cahier §3) — voir /experience et /billetterie pour le détail complet.
 const PATHS = [
-  { key: "visiteur", title: "Visiteur", price: "15$", color: "#4FC3F7", icon: Eye, blurb: "Regarder, spectateur libre" },
-  { key: "joueur", title: "Joueur LAN", price: "30$", color: "#C89B3C", icon: Gamepad2, blurb: "Ton poste, 47h de gaming" },
-  { key: "competiteur", title: "Compétiteur", price: "45$", color: "#FFD700", icon: Trophy, blurb: "Tournois officiels, cash prizes" },
+  { key: "visiteur", title: "Visiteur", color: "#4FC3F7", icon: Eye, blurb: "Regarder, spectateur libre" },
+  { key: "joueur", title: "Joueur LAN", color: "#C89B3C", icon: Gamepad2, blurb: "Ton poste, tout le week-end" },
+  { key: "competiteur", title: "Compétiteur", color: "#FFD700", icon: Trophy, blurb: "Tournois officiels LoL, CS2, Rocket League" },
 ];
 
 export default function ExperienceTeaser() {
@@ -45,7 +47,7 @@ export default function ExperienceTeaser() {
           viewport={{ once: true }}
           className="grid sm:grid-cols-3 gap-4 mb-8"
         >
-          {PATHS.map(({ key, title, price, color, icon: Icon, blurb }) => (
+          {PATHS.map(({ key, title, color, icon: Icon, blurb }) => (
             <motion.div
               key={key}
               variants={fadeInUp}
@@ -56,7 +58,6 @@ export default function ExperienceTeaser() {
             >
               <Icon size={22} style={{ color }} />
               <p className="font-display text-white font-bold text-sm mt-1">{title}</p>
-              <p className="font-mono text-[10px] tracking-widest" style={{ color }}>{price}</p>
               <p className="font-body text-zinc-500 text-xs">{blurb}</p>
             </motion.div>
           ))}

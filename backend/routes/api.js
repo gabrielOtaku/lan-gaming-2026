@@ -40,7 +40,7 @@ Réponds TOUJOURS en français québécois, de façon concise (maximum 3-4 phras
 Tu connais parfaitement ces informations sur l'événement:
 
 DATES ET LIEU:
-- Dates: 9, 10 et 11 octobre 2026 (47h de gaming non-stop)
+- Dates: 9, 10 et 11 octobre 2026
 - Lieu: Cégep de Saint-Félicien, 525 Boul. Hamel, Saint-Félicien, Québec G8K 2R8
 - Contact: comiteetuinfo@cegepstfe.ca | Téléphone: 581 704-1221
 - Co-organisateurs: Gabriel Hervé et Jovan Knezevic
@@ -115,7 +115,7 @@ Ne réponds PAS aux questions hors-sujet (politique, médecine, etc.) — recent
 const NEXUS_FAQ = [
   {
     keywords: ['quand', 'date', 'dates', 'octobre', 'quand est', 'pendant', 'horaire'],
-    response: "Lan St-Jean se déroule du 9 au 11 octobre 2026 — 47h de gaming non-stop! Ça débute vendredi le 9 avec la cérémonie d'ouverture à la Salle Azimut.",
+    response: "Lan St-Jean se déroule du 9 au 11 octobre 2026! Ça débute vendredi le 9 avec l'accueil à 18h et la cérémonie officielle d'ouverture à 19h30 à la Salle Azimut.",
   },
   {
     keywords: ['billet', 'billets', 'ticket', 'prix', 'coût', 'combien', 'tarif', 'payer', 'achat', 'capacité', 'places'],
@@ -257,15 +257,13 @@ router.post('/admin/site-settings', requireAdmin, (req, res) => {
 });
 
 // ── Tournament State ──────────────────────────────────────────────────────────
-const GAMES = ['lol', 'cs2', 'rocket_league', 'magic_tg', 'smash_bros', 'mario_kart'];
+// Les 3 seuls tournois officiellement confirmés (plan de mise en ligne V1 §2.1)
+const GAMES = ['lol', 'cs2', 'rocket_league'];
 
 const GAME_INFO = {
   lol:          { name: 'League of Legends', short: 'LoL',      icon: '⚔️',  color: '#C89B3C', teamSize: 5 },
   cs2:          { name: 'Counter-Strike 2',  short: 'CS2',      icon: '🔫',  color: '#FF4655', teamSize: 5 },
   rocket_league:{ name: 'Rocket League',     short: 'Rocket',   icon: '🚀',  color: '#4FC3F7', teamSize: 3 },
-  magic_tg:     { name: 'Magic: The Gathering', short: 'Magic', icon: '🃏',  color: '#9B59B6', teamSize: 1 },
-  smash_bros:   { name: 'Super Smash Bros',  short: 'Smash',    icon: '👊',  color: '#FFD700', teamSize: 1 },
-  mario_kart:   { name: 'Mario Kart',        short: 'Mario K.', icon: '🏎️', color: '#27AE60', teamSize: 1 },
 };
 
 // Load persisted tournament data (teams, rounds, status) — GAME_INFO is always static
@@ -295,43 +293,6 @@ function saveTournaments() {
     };
   });
   saveJSON('tournaments.json', toSave);
-}
-
-// ── Données de test : 16 équipes LoL + bracket généré ────────────────────────
-const LOL_SEED_TEAMS = [
-  { name: 'Team Noxus',          captainName: 'Gabriel H.',  captainEmail: 'captain1@lan2026.ca'  },
-  { name: 'Les Demaciens',       captainName: 'Jovan K.',    captainEmail: 'captain2@lan2026.ca'  },
-  { name: 'Shadow Isles Gaming', captainName: 'Marc T.',     captainEmail: 'captain3@lan2026.ca'  },
-  { name: 'Ionia Drift',         captainName: 'Théo B.',     captainEmail: 'captain4@lan2026.ca'  },
-  { name: 'Piltover Tech',       captainName: 'Alexis R.',   captainEmail: 'captain5@lan2026.ca'  },
-  { name: 'Freljord 5',          captainName: 'Samuel G.',   captainEmail: 'captain6@lan2026.ca'  },
-  { name: 'Void Hunters',        captainName: 'Félix M.',    captainEmail: 'captain7@lan2026.ca'  },
-  { name: 'Bandle City Ballers', captainName: 'Antoine P.',  captainEmail: 'captain8@lan2026.ca'  },
-  { name: 'Bilgewater Buccaneers', captainName: 'Noah C.',   captainEmail: 'captain9@lan2026.ca'  },
-  { name: 'Hextech Syndicate',   captainName: 'Raphaël S.',  captainEmail: 'captain10@lan2026.ca' },
-  { name: 'Dragon Court',        captainName: 'Liam D.',     captainEmail: 'captain11@lan2026.ca' },
-  { name: 'The Iron Order',      captainName: 'Étienne V.',  captainEmail: 'captain12@lan2026.ca' },
-  { name: 'Shurima Rising',      captainName: 'William F.',  captainEmail: 'captain13@lan2026.ca' },
-  { name: 'Targon Ascended',     captainName: 'Charles B.',  captainEmail: 'captain14@lan2026.ca' },
-  { name: 'Zaun Underground',    captainName: 'Olivier N.',  captainEmail: 'captain15@lan2026.ca' },
-  { name: 'Ixtal Jungle',        captainName: 'Maxime L.',   captainEmail: 'captain16@lan2026.ca' },
-];
-
-// Seed LoL with demo data only if no saved state exists yet
-const lolState = tournamentState['lol'];
-if (lolState.teams.length === 0) {
-  lolState.teams = LOL_SEED_TEAMS.map((t, i) => ({
-    id: `lol_seed_${i + 1}`,
-    name: t.name,
-    game: 'lol',
-    captainEmail: t.captainEmail,
-    captainName: t.captainName,
-    registeredAt: new Date().toISOString(),
-  }));
-  lolState.rounds   = generateBracket(lolState.teams);
-  lolState.status   = 'bracket';
-  lolState.generated = true;
-  saveTournaments();
 }
 
 function generateBracket(teams) {
@@ -374,8 +335,11 @@ function generateBracket(teams) {
   return rounds;
 }
 
-// ── GET /api/tournaments ──────────────────────────────────────────────────────
-router.get('/tournaments', (_req, res) => {
+// ── GET /api/tournaments (admin) ───────────────────────────────────────────────
+// La vitrine publique (/competitions) est statique, sans bracket public (plan
+// de mise en ligne V1) — cette liste (et le détail ci-dessous, qui inclut les
+// noms d'équipes et courriels des capitaines) reste réservée à l'admin.
+router.get('/tournaments', requireAdmin, (_req, res) => {
   const data = GAMES.map(game => ({
     game,
     ...GAME_INFO[game],
@@ -386,8 +350,8 @@ router.get('/tournaments', (_req, res) => {
   res.json({ success: true, data });
 });
 
-// ── GET /api/tournaments/:game ────────────────────────────────────────────────
-router.get('/tournaments/:game', (req, res) => {
+// ── GET /api/tournaments/:game (admin) ────────────────────────────────────────
+router.get('/tournaments/:game', requireAdmin, (req, res) => {
   const { game } = req.params;
   if (!GAMES.includes(game)) return res.status(404).json({ error: 'Tournoi introuvable.' });
   res.json({ success: true, data: tournamentState[game] });
@@ -501,6 +465,96 @@ router.get('/admin/competitors', requireAdmin, (_req, res) => {
     tournamentState[game].teams.map(t => ({ ...t, gameName: GAME_INFO[game].name })),
   );
   res.json({ success: true, data: competitors });
+});
+
+// ── GET /api/admin/festival-finales-proposal (admin) ─────────────────────────
+// Document de travail interne (format du dimanche). Servi uniquement à une
+// session admin authentifiée — avant, ce contenu vivait en dur dans le bundle
+// JS de la page React /interne/festival-finales, donc téléchargé par N'IMPORTE
+// QUEL visiteur même si l'affichage était bloqué côté client (le garde
+// isAdmin ne protège que le rendu, pas le code déjà présent dans le bundle).
+router.get('/admin/festival-finales-proposal', requireAdmin, (_req, res) => {
+  res.json({
+    success: true,
+    data: {
+      intro: 'Interrompre la phase LAN du dimanche en fin de matinée, offrir une vraie période de repos, puis rouvrir en fin d\'après-midi pour une soirée de grandes finales pensée comme un véritable « main event ». Objectif : concilier le besoin de repos du Cégep avec une clôture à la hauteur de l\'importance sportive et médiatique des finales.',
+      sequence: [
+        { time: 'Matin — jusqu\'à 11h / 11h30', phase: 'Fin de la phase LAN', detail: 'Dernières activités, fermeture progressive, clarification des finalistes.' },
+        { time: '11h / 11h30 à 16h', phase: 'Pause technique et humaine', detail: 'Repos, repas, douche, déplacement à l\'hôtel; rangement, nettoyage, reconfiguration, balances et tests.' },
+        { time: '16h – 21h', phase: 'Festival des Finales', detail: 'Réouverture au public, animations, interviews, shows, finales, remise des prix et clôture.' },
+      ],
+      contentItems: [
+        'Réouverture de la place centrale dans une configuration orientée spectacle',
+        'Billetterie visiteurs / accès grand public à étudier selon capacité et sécurité',
+        'Bars et restauration, selon les politiques et partenaires autorisés par le Cégep',
+        'Présentation des équipes finalistes et séquences d\'interviews',
+        'Finales de Rocket League, Counter-Strike 2 et League of Legends',
+        'Interventions artistiques courtes entre certaines séquences, selon ententes',
+        'Remise des trophées, photos officielles, mot de la Fondation et clôture',
+        'Production Twitch renforcée — compte à rebours, transitions, interviews, "main event"',
+      ],
+      benefits: [
+        {
+          icon: 'Users', color: '#C89B3C', title: 'Participants & finalistes',
+          items: [
+            'Une vraie coupure pour manger, dormir, se laver, se changer',
+            'Finales disputées dans de meilleures conditions',
+            'Les finalistes ne terminent pas dans un espace qui se vide',
+            'Cérémonie de remise des prix plus marquante',
+          ],
+        },
+        {
+          icon: 'ShieldAlert', color: '#4FC3F7', title: 'Organisateurs & Cégep',
+          items: [
+            'Fenêtre pour nettoyer, ranger, reconfigurer, tester',
+            'Séparation claire entre phase "LAN" et phase "spectacle"',
+            'Meilleure maîtrise de l\'expérience partenaires/public',
+            'Contenu institutionnel plus fort après l\'événement',
+          ],
+        },
+        {
+          icon: 'Heart', color: '#FF4655', title: 'Fondation',
+          items: [
+            'Rassemblement avec un public plus large',
+            'Meilleure visibilité de la mission caritative',
+            'Potentiel accru pour les dons Twitch et sur place',
+            'Moment central pour impliquer médias et partenaires',
+          ],
+        },
+        {
+          icon: 'Handshake', color: '#7C3AED', title: 'Partenaires & Saint-Félicien',
+          items: [
+            'Public concentré pour les séquences les plus visibles',
+            'Meilleure qualité photos/vidéos/activation de marque',
+            'Peut attirer des visiteurs spécifiquement pour les finales',
+            'Image forte pour promouvoir une édition suivante',
+          ],
+        },
+      ],
+      constraints: [
+        { concern: 'Fatigue des organisateurs et participants', response: 'Pause de 4 à 5 heures; fin des matchs officiels plus tôt le samedi; hébergement partenaire; équipes en rotation.' },
+        { concern: 'Participants qui doivent repartir / travailler / étudier', response: 'La soirée finale ne doit pas empêcher un non-finaliste de quitter plus tôt; horaires communiqués avant la billetterie.' },
+        { concern: 'Coût des agents de sécurité', response: 'Chiffrage précis du surcoût; évaluer si revenus visiteurs/commandites peuvent compenser.' },
+        { concern: 'Entretien et remise en état des lieux', response: 'Utiliser la pause de mi-journée pour un nettoyage complet; équipe dédiée à la fermeture de 21h.' },
+        { concern: 'Risque de dépassement d\'horaire', response: 'Conducteur minute par minute, marges de transition, format de finales compatible avec la fenêtre.' },
+        { concern: 'Complexité technique', response: 'Tester scène, réseau, électricité et régie avant l\'ouverture; simplifier les changements de configuration.' },
+        { concern: 'Capacité du public', response: 'Billetterie visiteurs limitée à la capacité validée; contrôle des accès et zones définies.' },
+        { concern: 'Droits musicaux et diffusion', response: 'Inclure captation/Twitch dans les ententes artistes; finaliser les licences avant l\'événement.' },
+      ],
+      recommendedPosition: 'Présenter la soirée finale comme une option conditionnelle : elle ne doit être retenue que si le budget sécurité, les ressources humaines, la capacité, le nettoyage et les contraintes techniques peuvent être couverts de manière réaliste.',
+      decisions: [
+        'Le Cégep accepte-t-il d\'étudier formellement le principe d\'une pause le dimanche suivie d\'une soirée de finales jusqu\'à environ 21h ?',
+        'Quelles sont les limites non négociables liées à la sécurité, au personnel, au ménage et à l\'accès aux bâtiments ?',
+        'Quelle capacité maximale peut être retenue pour la place centrale et l\'espace visiteurs ?',
+        'Une billetterie visiteurs spécifique aux finales peut-elle être étudiée ?',
+        'Quelles conditions doivent être remplies pour autoriser une scène/animation artistique dans la place centrale ?',
+        'Quel budget et quelles ressources institutionnelles peuvent réellement être engagés ?',
+        'Quelle gouvernance doit être retenue pour la sécurité, la technique, Twitch et la programmation ?',
+        'Quel calendrier de validation doit être respecté pour lancer la billetterie et les teasers sans risque ?',
+      ],
+      nextStep: 'Si le concept est jugé intéressant en réunion, l\'étape suivante n\'est pas de l\'annoncer publiquement, mais de produire un mini-plan de faisabilité : sécurité, personnel, capacité, budget, scénario de repli et horaire détaillé — avant toute mise à jour du calendrier public ou de la billetterie.',
+    },
+  });
 });
 
 // ── GET /api/events ──────────────────────────────────────────────────────────

@@ -18,15 +18,13 @@ const GAME_META = {
   lol:           { name: 'League of Legends', short: 'LoL',    icon: '⚔️',  color: '#C89B3C' },
   cs2:           { name: 'Counter-Strike 2',  short: 'CS2',    icon: '🔫',  color: '#FF4655' },
   rocket_league: { name: 'Rocket League',     short: 'Rocket', icon: '🚀',  color: '#4FC3F7' },
-  magic_tg:      { name: 'Magic: TG',         short: 'Magic',  icon: '🃏',  color: '#9B59B6' },
-  smash_bros:    { name: 'Super Smash Bros',  short: 'Smash',  icon: '👊',  color: '#FFD700' },
-  mario_kart:    { name: 'Mario Kart',        short: 'MK',     icon: '🏎️', color: '#27AE60' },
 };
 
 const QUICK_LINKS = [
   { label: 'Supabase Dashboard (dons en ligne)', href: 'https://supabase.com/dashboard/project/ewpuczmzbmhdwdueahww', icon: ExternalLink, color: '#3ECF8E', external: true },
   { label: 'Stripe Dashboard', href: 'https://dashboard.stripe.com', icon: ExternalLink, color: '#635BFF', external: true },
   { label: 'Dossier de partenariat (PDF)', href: '/partenariat.pdf', icon: ExternalLink, color: '#C89B3C', external: false },
+  { label: 'Entente de partenariat — modèle vierge (PDF)', href: '/entente-partenariat.pdf', icon: ExternalLink, color: '#C89B3C', external: false },
   { label: 'Site Fondation du Cégep', href: 'https://cegepstfe.ca/fondation/', icon: ExternalLink, color: '#FF4655', external: true },
   { label: 'Site du Cégep', href: 'https://www.cstfelicien.qc.ca', icon: ExternalLink, color: '#4FC3F7', external: true },
   { label: 'Chaîne YouTube du Cégep', href: 'https://www.youtube.com/@C%C3%A9gepdeSt-F%C3%A9licien', icon: ExternalLink, color: '#FF0000', external: true },

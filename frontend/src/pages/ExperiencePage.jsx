@@ -10,18 +10,18 @@ import {
   EASE_GAME,
 } from "../utils/animations.js";
 
-// Prix et contenu repris tels quels de TicketsPage.jsx / la FAQ billetterie —
-// même source de vérité, pas de chiffres retapés à la main ici.
+// Pas de prix ni de durée précise ici tant que la billetterie n'est pas
+// ouverte (cahier §3) — seuls les trois tournois officiellement confirmés
+// (LoL, CS2, Rocket League) sont listés.
 const PATHS = [
   {
     key: "visiteur",
     title: "Visiteur",
-    price: "15$",
     color: "#4FC3F7",
     icon: Eye,
     tagline: "Vivre l'ambiance sans jouer",
     points: [
-      "Accès libre à l'ensemble de l'événement, 47h",
+      "Accès libre à l'ensemble de l'événement",
       "Zone spectateurs devant la scène principale",
       "Accès aux consoles et à l'arcade libre",
       "Kiosques partenaires",
@@ -31,12 +31,11 @@ const PATHS = [
   {
     key: "joueur",
     title: "Joueur LAN",
-    price: "30$",
     color: "#C89B3C",
     icon: Gamepad2,
-    tagline: "Ton propre poste, 47h de gaming libre",
+    tagline: "Ton propre poste, tout le week-end",
     points: [
-      "Poste LAN fixe pendant les 47h",
+      "Poste LAN fixe pendant tout l'événement",
       "Accès à toutes les arènes",
       "Apporte ton PC + écran (max 1 de chacun)",
       "Réseau fourni sur place",
@@ -46,15 +45,13 @@ const PATHS = [
   {
     key: "competiteur",
     title: "Compétiteur",
-    price: "45$",
     color: "#FFD700",
     icon: Trophy,
     tagline: "Tout du joueur, plus les tournois officiels",
     points: [
       "Tout ce qu'inclut le billet Joueur",
       "Inscription officielle aux tournois",
-      "LoL, CS2, Rocket League, Magic:TG, Smash, Mario Kart",
-      "Éligible aux cash prizes",
+      "LoL, CS2, Rocket League",
       "17 ans et plus",
     ],
   },
@@ -84,11 +81,7 @@ function PathCard({ path, index }) {
         Parcours {String(index + 1).padStart(2, "0")}
       </p>
       <h2 className="font-display text-2xl md:text-3xl font-black text-white mb-1">{path.title}</h2>
-      <p className="font-body text-zinc-500 text-sm mb-5">{path.tagline}</p>
-
-      <div className="flex items-baseline gap-1 mb-6">
-        <span className="font-display font-black text-3xl" style={{ color: path.color }}>{path.price}</span>
-      </div>
+      <p className="font-body text-zinc-500 text-sm mb-6">{path.tagline}</p>
 
       <ul className="space-y-2.5 mb-8 flex-1">
         {path.points.map((point) => (
@@ -132,7 +125,7 @@ export default function ExperiencePage() {
             Ton <span className="text-ember-300 text-ember-glow">Expérience</span>
           </motion.h1>
           <motion.p variants={fadeInUp} className="font-body text-zinc-500 max-w-xl mx-auto text-sm leading-relaxed">
-            Que tu viennes regarder, jouer en libre ou te battre pour le cash prize, il y a un billet fait pour toi.
+            Que tu viennes regarder, jouer en libre ou viser le podium des tournois officiels, il y a un billet fait pour toi.
           </motion.p>
         </motion.div>
 

@@ -45,6 +45,10 @@ export const updateMatchScore = (matchId, data) => api.put(`/tournaments/match/$
 export const resetTournament = (game) => api.delete(`/tournaments/${game}/reset`);
 export const getCompetitors = () => api.get('/admin/competitors');
 
+// Document de travail interne (/interne/festival-finales) — servi uniquement
+// à une session admin, jamais empaqueté dans le bundle JS public.
+export const getFestivalFinalesProposal = () => api.get('/admin/festival-finales-proposal');
+
 // Cagnotte — Ticket d'Or + dons Twitch natifs uniquement. Le don en ligne
 // (Stripe) est lu directement depuis Supabase, voir hooks/useDonationCampaign.js.
 export const getCagnotte = () => api.get('/cagnotte');
