@@ -1,33 +1,28 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Users, Monitor, Wifi } from 'lucide-react';
 import { scrollReveal, EASE_GAME } from '../../utils/animations.js';
 
+// Descriptions volontairement générales — pas de plan de salle détaillé ni de
+// chiffre de capacité/postes tant que ces informations ne sont pas confirmées
+// (même principe que NEXUS_CONTEXT côté backend : ne jamais inventer de chiffre).
 const VENUES = [
   {
     id: 'place-centrale',
     name: 'Place centrale',
     floors: ['Niveau 1', 'Niveau 2'],
-    description: 'Le cœur névralgique de l\'événement. Deux niveaux d\'activités avec la scène principale et les arènes de jeu (LoL, CS2, Rocket League) au niveau 1, et la zone visiteurs au niveau 2.',
-    capacity: '200+ joueurs',
-    stations: '80 postes gaming',
-    wifi: 'Fibre 10 Gbps',
+    description: 'Le cœur de l\'événement. Niveau 1 : le grind principal, où les participants installent leurs postes et disputent leurs matchs de qualification. Niveau 2 : l\'espace visiteur, ouvert au public.',
     color: '#C89B3C',
     icon: '🏛️',
-    activities: ['Scène principale', 'Arènes de jeu Niv.1', 'Zone visiteurs Niv.2', 'Espace partenaires'],
+    activities: ['Grind principal (Niv. 1)', 'Espace visiteur (Niv. 2)'],
     floorPlans: {
       'Niveau 1': {
         zones: [
-          { id: 'scene', label: 'Scène principale', x: 35, y: 20, w: 30, h: 25, color: '#FFD700' },
-          { id: 'zone-libre', label: 'Arènes de jeu', x: 10, y: 55, w: 35, h: 30, color: '#7C3AED' },
-          { id: 'partners', label: 'Espace partenaires', x: 55, y: 55, w: 35, h: 30, color: '#C89B3C' },
-          { id: 'entry', label: 'Entrée', x: 40, y: 88, w: 20, h: 8, color: '#4FC3F7' },
+          { id: 'grind', label: 'Grind principal', x: 5, y: 5, w: 90, h: 90, color: '#C89B3C' },
         ],
       },
       'Niveau 2': {
         zones: [
-          { id: 'visiteurs', label: 'Zone visiteurs & consoles', x: 10, y: 15, w: 80, h: 50, color: '#FF4655' },
-          { id: 'spectateurs', label: 'Zone spectateurs', x: 10, y: 70, w: 80, h: 20, color: '#636E72' },
+          { id: 'visiteurs', label: 'Espace visiteur', x: 5, y: 5, w: 90, h: 90, color: '#4FC3F7' },
         ],
       },
     },
@@ -36,20 +31,14 @@ const VENUES = [
     id: 'azimut',
     name: 'Salle Azimut',
     floors: ['Rez-de-chaussée'],
-    description: 'La scène principale de l\'événement. Cérémonie d\'ouverture, conférences, quarts/demi-finales et grandes finales de LoL, CS2 et Rocket League, diffusées en direct sur Twitch.',
-    capacity: '150 personnes',
-    stations: '40 postes',
-    wifi: 'Fibre dédiée 5 Gbps',
+    description: 'La salle des compétitions. Cérémonies, programmation artistique, quarts/demi-finales et grandes finales de LoL, CS2 et Rocket League, diffusées en direct sur Twitch.',
     color: '#C89B3C',
     icon: '⚔️',
-    activities: ['Cérémonie d\'ouverture', 'Quarts et demi-finales', 'Grandes Finales (LoL, CS2, RL)', 'Remise des prix'],
+    activities: ['Cérémonies', 'Compétitions diffusées', 'Festival des finales'],
     floorPlans: {
       'Rez-de-chaussée': {
         zones: [
-          { id: 'teams-a', label: 'Équipes A-D', x: 5, y: 10, w: 42, h: 35, color: '#C89B3C' },
-          { id: 'teams-b', label: 'Équipes E-H', x: 53, y: 10, w: 42, h: 35, color: '#C89B3C' },
-          { id: 'stage', label: 'Scène finale', x: 20, y: 52, w: 60, h: 20, color: '#FFD700' },
-          { id: 'crowd', label: 'Tribunes', x: 5, y: 75, w: 90, h: 18, color: '#1A2332' },
+          { id: 'competitions', label: 'Compétitions', x: 5, y: 5, w: 90, h: 90, color: '#FFD700' },
         ],
       },
     },
@@ -58,20 +47,14 @@ const VENUES = [
     id: 'gymnase',
     name: 'Gymnase',
     floors: ['Rez-de-chaussée'],
-    description: 'Espace multi-usages transformé en zone consoles. Ambiance détendue, parfaite pour Super Smash Bros, Mario Kart et les jeux d\'ambiance.',
-    capacity: '100 personnes',
-    stations: '20 consoles',
-    wifi: 'Wi-Fi 2.4 / 5 GHz',
+    description: 'La salle de repos. Pauses repas et moments de détente pour les participants entre les blocs de compétition.',
     color: '#00D4AA',
-    icon: '🎮',
-    activities: ['Tournoi Super Smash Bros', 'Tournoi Mario Kart', 'Jeux consoles & Jackbox', 'Espace détente'],
+    icon: '🛌',
+    activities: ['Pauses repas', 'Détente'],
     floorPlans: {
       'Rez-de-chaussée': {
         zones: [
-          { id: 'consoles-1', label: 'Consoles bloc A', x: 5, y: 10, w: 40, h: 40, color: '#00D4AA' },
-          { id: 'consoles-2', label: 'Consoles bloc B', x: 55, y: 10, w: 40, h: 40, color: '#00D4AA' },
-          { id: 'relax', label: 'Zone détente', x: 15, y: 58, w: 70, h: 25, color: '#1A2332' },
-          { id: 'food', label: 'Ravitaillement', x: 30, y: 85, w: 40, h: 10, color: '#FF6B35' },
+          { id: 'repos', label: 'Salle de repos', x: 5, y: 5, w: 90, h: 90, color: '#00D4AA' },
         ],
       },
     },
@@ -258,21 +241,6 @@ export default function MapOverlay() {
                     {selectedVenue.description}
                   </p>
                 </div>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-3 mb-6">
-                {[
-                  { icon: Users, label: 'Capacité', value: selectedVenue.capacity },
-                  { icon: Monitor, label: 'Postes', value: selectedVenue.stations },
-                  { icon: Wifi, label: 'Réseau', value: selectedVenue.wifi },
-                ].map(({ icon: Icon, label, value }) => (
-                  <div key={label} className="p-3 bg-obsidian-800 border border-ember-400/10 text-center">
-                    <Icon size={14} className="text-ember-500 mx-auto mb-1" />
-                    <p className="font-display font-bold text-white text-xs">{value}</p>
-                    <p className="font-mono text-zinc-700 text-[9px] tracking-widest mt-0.5">{label}</p>
-                  </div>
-                ))}
               </div>
 
               {/* Floor selector */}
