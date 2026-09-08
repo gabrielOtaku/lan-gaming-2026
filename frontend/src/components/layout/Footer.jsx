@@ -3,9 +3,9 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { fadeInUp, staggerContainer } from "../../utils/animations.js";
 
 // ── Social platform data ──────────────────────────────────────────────────────
-// Twitch, TikTok et Facebook retirés : les comptes dédiés Lan St-Jean
-// n'existent pas encore sur ces plateformes. Seuls Instagram (compte du
-// Cégep) et YouTube (chaîne du Cégep) sont réels et actifs aujourd'hui.
+// Twitch et TikTok retirés : les comptes dédiés Lan St-Jean n'existent pas
+// encore sur ces plateformes. Réels et actifs aujourd'hui : YouTube (chaîne
+// du Cégep) et Facebook (page officielle Lan St-Jean, ajoutée 8 sept. 2026).
 const SOCIALS = [
   {
     label: "YouTube",
@@ -15,6 +15,21 @@ const SOCIALS = [
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
         <path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z" />
+      </svg>
+    ),
+  },
+  {
+    label: "Facebook",
+    // URL publique de la page (ID = asset_id du Business Suite). L'URL
+    // business.facebook.com/latest/home?... est le tableau de bord admin :
+    // elle renvoie un visiteur vers un écran de connexion Meta, jamais vers
+    // la page. À valider en cliquant une fois déconnecté de Facebook.
+    url: "https://www.facebook.com/profile.php?id=1231676600037385",
+    color: "#1877F2",
+    bg: "rgba(24,119,242,0.1)",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
       </svg>
     ),
   },
