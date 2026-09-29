@@ -10,7 +10,8 @@ import { Link } from "react-router-dom";
 import * as THREE from "three";
 import WebGLErrorBoundary from "../layout/WebGLErrorBoundary.jsx";
 import { staggerContainer, fadeInUp } from "../../utils/animations.js";
-import { Zap, Shield, ChevronDown } from "lucide-react";
+import { Zap, Shield, ChevronDown, Heart } from "lucide-react";
+import { EVENT_CANCELLED, FONDATION_URL } from "../../config/eventStatus.js";
 
 // ── Fond 3D procédural — aucun asset fourni (pas d'Esquie ni autre .glb) ─────
 // Grille holographique, noyau d'ember, champ de particules et éclats de rune :
@@ -301,7 +302,35 @@ function TimerDigit({ value, label, code }) {
   );
 }
 
+// Édition annulée : le compte à rebours est figé et remplacé par l'annonce.
+function CancelledTimer() {
+  return (
+    <div className="w-full max-w-xl mx-auto px-4">
+      <div
+        className="relative bg-obsidian-900/80 backdrop-blur-md border border-red-500/30 px-5 py-5 text-center"
+        style={{ clipPath: "polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px)" }}
+      >
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+          <span className="font-mono text-red-400 text-[10px] tracking-[0.4em] uppercase">Compte à rebours arrêté</span>
+        </div>
+        <p className="font-display text-white font-bold text-lg sm:text-xl uppercase tracking-wide">
+          Édition 2026 annulée
+        </p>
+        <p className="font-body text-zinc-500 text-xs mt-1">
+          Nous sommes sincèrement désolés. Merci de votre soutien.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function FuturisticTimer() {
+  if (EVENT_CANCELLED) return <CancelledTimer />;
+  return <LiveTimer />;
+}
+
+function LiveTimer() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
   const [glitch, setGlitch] = useState(false);
 
@@ -516,6 +545,21 @@ export default function HeroSection() {
 
           {/* CTA buttons */}
           <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-10">
+            {EVENT_CANCELLED ? (
+              <a href={FONDATION_URL} target="_blank" rel="noopener noreferrer">
+                <motion.span
+                  className="relative inline-block px-8 py-3.5 clip-diagonal overflow-hidden group"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  <span className="absolute inset-0 bg-ember-400 transition-transform duration-300 group-hover:scale-105" />
+                  <span className="relative font-display font-bold text-obsidian-900 text-sm tracking-widest uppercase flex items-center gap-2">
+                    <Heart size={14} />
+                    Faire un don à la Fondation
+                  </span>
+                </motion.span>
+              </a>
+            ) : (
             <Link to="/billetterie">
               <motion.button
                 className="relative px-8 py-3.5 clip-diagonal overflow-hidden group"
@@ -530,6 +574,7 @@ export default function HeroSection() {
                 </span>
               </motion.button>
             </Link>
+            )}
 
             <Link to="/competitions">
               <motion.button

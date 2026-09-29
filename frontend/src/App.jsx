@@ -8,6 +8,7 @@ import Footer from "./components/layout/Footer.jsx";
 import Loader from "./components/layout/Loader.jsx";
 import CustomCursor from "./components/layout/CustomCursor.jsx";
 import Chatbot from "./components/layout/Chatbot.jsx";
+import CancellationOverlay from "./components/layout/CancellationOverlay.jsx";
 
 // Chaque page (et les scènes 3D + polices/librairies qu'elle importe, ex.
 // socket.io-client pour Competitions) part dans son propre chunk : visiter
@@ -137,6 +138,7 @@ function MainApp() {
                 </main>
                 <Chatbot />
                 <Footer />
+                <CancellationOverlay />
               </>
             )}
           </div>

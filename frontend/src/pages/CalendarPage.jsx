@@ -6,6 +6,7 @@ import WebGLErrorBoundary from '../components/layout/WebGLErrorBoundary.jsx';
 import { pageTransition } from '../utils/animations.js';
 import Timeline from '../components/calendar/Timeline.jsx';
 import MapOverlay from '../components/calendar/MapOverlay.jsx';
+import { EVENT_CANCELLED, FONDATION_URL } from '../config/eventStatus.js';
 
 // ── Subtle background 3D ──────────────────────────────────────────────────────
 function CalendarBackground() {
@@ -87,6 +88,25 @@ function CalendarHero() {
 
 // ── Countdown banner ──────────────────────────────────────────────────────────
 function CountdownBanner() {
+  if (EVENT_CANCELLED) {
+    return (
+      <div className="bg-red-500/5 border-y border-red-500/20 py-4">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8 text-center sm:text-left">
+          <p className="font-display font-bold text-white text-sm md:text-base tracking-wide uppercase">
+            Édition 2026 annulée — compte à rebours arrêté
+          </p>
+          <a
+            href={FONDATION_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono text-ember-400 hover:text-ember-300 text-xs tracking-widest uppercase border border-ember-400/30 px-3 py-1.5 transition-colors"
+          >
+            Soutenir la Fondation →
+          </a>
+        </div>
+      </div>
+    );
+  }
   const eventDate = new Date('2026-10-09T17:00:00');
   const now = new Date();
   const diff = eventDate - now;
