@@ -100,14 +100,14 @@ app.use(express.urlencoded({ extended: false, limit: "10kb" }));
 // ── Rate Limiting ─────────────────────────────────────────────────────────────
 const apiLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
-  max: 100,
+  limit: 100,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Limite API atteinte. Veuillez réessayer dans quelques minutes." },
 });
 const chatLimiter = rateLimit({
   windowMs: 60 * 1000,
-  max: 15,
+  limit: 15,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Trop de messages. Patientez une minute, Joueur." },

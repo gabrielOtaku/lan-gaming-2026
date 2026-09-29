@@ -15,7 +15,7 @@ const router = Router();
 // bloquer un admin qui recharge la page après une connexion réussie.
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 8,
+  limit: 8,
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: true,

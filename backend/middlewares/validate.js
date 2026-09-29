@@ -9,8 +9,7 @@ const contactSchema = z.object({
     .max(80, 'Le nom ne peut dépasser 80 caractères.')
     .regex(/^[\p{L}\s'-]+$/u, 'Le nom contient des caractères non autorisés.'),
   email: z
-    .string()
-    .email('Adresse courriel invalide.')
+    .email({ error: 'Adresse courriel invalide.' })
     .max(254, 'Adresse courriel trop longue.'),
   subject: z
     .string()
@@ -24,20 +23,20 @@ const contactSchema = z.object({
 
 const ticketRequestSchema = z.object({
   ticketType: z.enum(['visiteur', 'joueur', 'competiteur'], {
-    errorMap: () => ({ message: 'Type de billet invalide.' }),
+    error: 'Type de billet invalide.',
   }),
   quantity: z
-    .number({ invalid_type_error: 'La quantité doit être un nombre.' })
+    .number({ error: 'La quantité doit être un nombre.' })
     .int()
     .min(1, 'Minimum 1 billet.')
     .max(10, 'Maximum 10 billets par transaction.'),
   consent: z
-    .literal(true, { errorMap: () => ({ message: 'Vous devez accepter les conditions.' }) }),
+    .literal(true, { error: 'Vous devez accepter les conditions.' }),
 });
 
 const chatSchema = z.object({
   message: z
-    .string({ required_error: 'Message requis.' })
+    .string({ error: 'Message requis.' })
     .min(1, 'Message vide.')
     .max(500, 'Message trop long (500 caractères max).'),
 });
@@ -48,7 +47,7 @@ function createValidator(schema) {
   return (req, res, next) => {
     const result = schema.safeParse(req.body);
     if (!result.success) {
-      const errors = result.error.errors.map((e) => ({
+      const errors = result.error.issues.map((e) => ({
         field: e.path.join('.'),
         message: e.message,
       }));
