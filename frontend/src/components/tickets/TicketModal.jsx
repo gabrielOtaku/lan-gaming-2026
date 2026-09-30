@@ -131,7 +131,7 @@ function TicketCard({ ticket, price, isSelected, onSelect, remaining }) {
         <ul className="space-y-2">
           {ticket.features.map((feat, i) => (
             <li key={i} className="flex items-start gap-2">
-              <ChevronRight size={12} className="flex-shrink-0 mt-0.5" style={{ color: soldOut ? '#555' : ticket.color }} />
+              <ChevronRight size={12} className="shrink-0 mt-0.5" style={{ color: soldOut ? '#555' : ticket.color }} />
               <span className={`font-body text-xs leading-relaxed ${soldOut ? 'text-zinc-700' : 'text-zinc-400'}`}>{feat}</span>
             </li>
           ))}
@@ -182,7 +182,7 @@ function RedirectConfirm({ ticket, price, quantity, onConfirm, onCancel, loading
       </div>
 
       <div className="flex items-center gap-2 mb-6 px-3 py-2 bg-obsidian-900 border border-zinc-800">
-        <Lock size={12} className="text-green-500 flex-shrink-0" />
+        <Lock size={12} className="text-green-500 shrink-0" />
         <p className="font-mono text-zinc-600 text-[10px] tracking-wide">
           Transaction sécurisée — billetterie officielle Cégep de Saint-Félicien
         </p>
@@ -355,7 +355,7 @@ export default function TicketModal({ inventory, prices, salesClosed }) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-obsidian-900/80 backdrop-blur-sm"
+            className="fixed inset-0 z-2000 flex items-center justify-center p-4 bg-obsidian-900/80 backdrop-blur-xs"
             onClick={(e) => e.target === e.currentTarget && setShowConfirm(false)}
           >
             <RedirectConfirm

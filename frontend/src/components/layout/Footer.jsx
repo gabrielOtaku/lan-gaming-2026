@@ -150,7 +150,7 @@ export default function Footer() {
   return (
     <footer className="relative bg-obsidian-900 border-t border-ember-400/15 overflow-hidden">
       {/* Top ember line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-ember-400/50 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-ember-400/50 to-transparent" />
 
       {/* Ambient glow — pur CSS, remplace l'ancien fond en particules WebGL */}
       <div

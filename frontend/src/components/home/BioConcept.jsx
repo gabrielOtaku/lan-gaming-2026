@@ -39,7 +39,7 @@ function TimelineConnector({ color }) {
   const inView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <div ref={ref} className="hidden md:flex flex-col items-center flex-shrink-0 mx-8">
+    <div ref={ref} className="hidden md:flex flex-col items-center shrink-0 mx-8">
       <motion.div
         className="w-px"
         style={{ background: `linear-gradient(to bottom, transparent, ${color}, transparent)` }}
@@ -67,7 +67,7 @@ function ConceptCard({ block, index }) {
       }`}
     >
       {/* Year pillar */}
-      <div className="flex-shrink-0 flex flex-col items-center gap-2">
+      <div className="shrink-0 flex flex-col items-center gap-2">
         <motion.div
           className="w-16 h-16 clip-hex flex items-center justify-center text-2xl"
           style={{ background: `radial-gradient(circle, ${block.accent}22, transparent)`, border: `1px solid ${block.accent}40` }}
@@ -152,7 +152,7 @@ function SectionTitle() {
         </span>
       </motion.h2>
       <motion.div
-        className="h-px max-w-xs mx-auto mt-6 bg-gradient-to-r from-transparent via-ember-400 to-transparent"
+        className="h-px max-w-xs mx-auto mt-6 bg-linear-to-r from-transparent via-ember-400 to-transparent"
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
@@ -168,15 +168,15 @@ function SectionTitle() {
 function MaelleShowcase() {
   return (
     <motion.div
-      className="mt-16 grid grid-cols-1 sm:grid-cols-[auto,1fr] gap-6 sm:gap-10 items-center border border-rune-blue/15 bg-glass p-6 md:p-10 relative"
+      className="mt-16 grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-6 sm:gap-10 items-center border border-rune-blue/15 bg-glass p-6 md:p-10 relative"
       variants={scrollReveal}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: '-60px' }}
     >
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-px w-32 h-px bg-gradient-to-r from-transparent via-rune-blue to-transparent" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-px w-32 h-px bg-linear-to-r from-transparent via-rune-blue to-transparent" />
 
-      <div className="w-full sm:w-40 h-48 sm:h-56 mx-auto flex-shrink-0 flex items-center justify-center">
+      <div className="w-full sm:w-40 h-48 sm:h-56 mx-auto shrink-0 flex items-center justify-center">
         <div
           className="w-24 h-24 sm:w-28 sm:h-28 clip-hex flex items-center justify-center text-4xl"
           style={{ background: 'radial-gradient(circle, rgba(79,195,247,0.15), transparent)', border: '1px solid rgba(79,195,247,0.3)' }}
@@ -203,7 +203,7 @@ export default function BioConcept() {
   return (
     <section className="relative py-24 md:py-40 overflow-hidden">
       {/* Background atmosphere */}
-      <div className="absolute inset-0 bg-gradient-to-b from-obsidian-900 via-obsidian-800 to-obsidian-900" />
+      <div className="absolute inset-0 bg-linear-to-b from-obsidian-900 via-obsidian-800 to-obsidian-900" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full"
         style={{ background: 'radial-gradient(circle, rgba(200,155,60,0.04) 0%, transparent 70%)' }}
       />
@@ -219,7 +219,7 @@ export default function BioConcept() {
               {i < CONCEPT_BLOCKS.length - 1 && (
                 <div className="flex justify-center">
                   <motion.div
-                    className="w-px h-16 bg-gradient-to-b from-ember-500/50 to-transparent"
+                    className="w-px h-16 bg-linear-to-b from-ember-500/50 to-transparent"
                     initial={{ scaleY: 0 }}
                     whileInView={{ scaleY: 1 }}
                     viewport={{ once: true }}
@@ -241,7 +241,7 @@ export default function BioConcept() {
           whileInView="visible"
           viewport={{ once: true, margin: '-60px' }}
         >
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-px w-32 h-px bg-gradient-to-r from-transparent via-ember-400 to-transparent" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-px w-32 h-px bg-linear-to-r from-transparent via-ember-400 to-transparent" />
           <p className="font-rune text-ember-300 text-xl md:text-3xl leading-relaxed text-gold-glow">
             "Le gaming n'est pas un passe-temps.<br />
             C'est une culture. C'est une communauté.<br />

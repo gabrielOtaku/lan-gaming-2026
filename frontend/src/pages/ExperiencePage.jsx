@@ -86,7 +86,7 @@ function PathCard({ path, index }) {
       <ul className="space-y-2.5 mb-8 flex-1">
         {path.points.map((point) => (
           <li key={point} className="flex items-start gap-2.5">
-            <Check size={14} className="mt-0.5 flex-shrink-0" style={{ color: path.color }} />
+            <Check size={14} className="mt-0.5 shrink-0" style={{ color: path.color }} />
             <span className="font-body text-zinc-400 text-sm leading-relaxed">{point}</span>
           </li>
         ))}
@@ -155,7 +155,7 @@ export default function ExperiencePage() {
             <span className="font-body text-zinc-300 group-hover:text-white text-sm transition-colors">
               Matériel, repas, sommeil, âge, stationnement → Infos pratiques
             </span>
-            <ArrowRight size={14} className="text-zinc-600 flex-shrink-0" />
+            <ArrowRight size={14} className="text-zinc-600 shrink-0" />
           </Link>
           <Link
             to="/calendrier"
@@ -165,7 +165,7 @@ export default function ExperiencePage() {
             <span className="font-body text-zinc-300 group-hover:text-white text-sm transition-colors">
               Voir le programme complet du vendredi au dimanche
             </span>
-            <ArrowRight size={14} className="text-zinc-600 flex-shrink-0" />
+            <ArrowRight size={14} className="text-zinc-600 shrink-0" />
           </Link>
         </motion.div>
       </div>

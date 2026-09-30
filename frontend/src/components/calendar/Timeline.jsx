@@ -38,9 +38,9 @@ function EventCard({ event, index }) {
       className="relative flex gap-4 md:gap-6"
     >
       {/* Timeline line + dot */}
-      <div className="flex flex-col items-center flex-shrink-0">
+      <div className="flex flex-col items-center shrink-0">
         <motion.div
-          className="w-3 h-3 rounded-full border-2 flex-shrink-0 mt-1.5"
+          className="w-3 h-3 rounded-full border-2 shrink-0 mt-1.5"
           style={{ borderColor: event.color, backgroundColor: `${event.color}30` }}
           animate={{ boxShadow: [`0 0 0px ${event.color}00`, `0 0 12px ${event.color}80`, `0 0 6px ${event.color}40`] }}
           transition={{ duration: 2, repeat: Infinity }}
@@ -65,7 +65,7 @@ function EventCard({ event, index }) {
             <div className="flex-1">
               {/* Category badge + time */}
               <div className="flex items-center gap-3 mb-2 flex-wrap">
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-sm" style={{ background: `${event.color}15`, border: `1px solid ${event.color}30` }}>
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-xs" style={{ background: `${event.color}15`, border: `1px solid ${event.color}30` }}>
                   <Icon size={10} style={{ color: event.color }} />
                   <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: event.color }}>
                     {catConfig.label}
@@ -84,7 +84,7 @@ function EventCard({ event, index }) {
 
             {/* Expand icon */}
             <motion.div
-              className="flex-shrink-0 mt-1"
+              className="shrink-0 mt-1"
               animate={{ rotate: expanded ? 45 : 0 }}
               transition={{ duration: 0.2 }}
             >
@@ -146,7 +146,7 @@ function DayColumn({ date, events, isActive }) {
         <div className="flex items-center gap-4 mb-4">
           {/* Day number */}
           <div
-            className="w-14 h-14 clip-hex flex items-center justify-center bg-obsidian-700 border border-ember-400/20 flex-shrink-0"
+            className="w-14 h-14 clip-hex flex items-center justify-center bg-obsidian-700 border border-ember-400/20 shrink-0"
             style={{ borderColor: isActive ? 'rgba(200,155,60,0.5)' : 'rgba(200,155,60,0.15)' }}
           >
             <span className="font-display text-xl font-black text-ember-300">{info.num}</span>

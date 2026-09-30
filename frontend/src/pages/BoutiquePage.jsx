@@ -354,7 +354,7 @@ function CartFab({ cartCount, cartTotal, onClick }) {
   return (
     <motion.button
       onClick={onClick}
-      className="fixed bottom-24 right-5 z-[900] flex flex-col items-center gap-0.5 group"
+      className="fixed bottom-24 right-5 z-900 flex flex-col items-center gap-0.5 group"
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.93 }}
     >
@@ -396,7 +396,7 @@ function CartFab({ cartCount, cartTotal, onClick }) {
           }}
         >
           {/* Inner shine */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-br from-white/20 to-transparent" />
           <ShoppingCart size={22} className="text-obsidian-900 relative z-10" strokeWidth={2.5} />
         </div>
 
@@ -426,7 +426,7 @@ function CartFab({ cartCount, cartTotal, onClick }) {
             initial={{ opacity: 0, y: -4, scale: 0.85 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.85 }}
-            className="bg-obsidian-800 border border-ember-400/30 px-2 py-0.5 rounded-sm"
+            className="bg-obsidian-800 border border-ember-400/30 px-2 py-0.5 rounded-xs"
           >
             <span className="font-display font-black text-ember-300 leading-none" style={{ fontSize: 11 }}>
               {cartTotal}$
@@ -485,7 +485,7 @@ function ProductCard({ product, onAddToCart, onQuickView }) {
           )}
 
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="bg-obsidian-900/80 backdrop-blur-sm px-3 py-1.5 border border-zinc-700">
+            <div className="bg-obsidian-900/80 backdrop-blur-xs px-3 py-1.5 border border-zinc-700">
               <span className="font-mono text-zinc-300 text-[10px] tracking-widest uppercase">Vue rapide →</span>
             </div>
           </div>
@@ -527,7 +527,7 @@ function ProductCard({ product, onAddToCart, onQuickView }) {
           </div>
         </div>
 
-        <div className="h-px w-0 group-hover:w-full bg-gradient-to-r from-transparent via-ember-400/60 to-transparent transition-all duration-500" />
+        <div className="h-px w-0 group-hover:w-full bg-linear-to-r from-transparent via-ember-400/60 to-transparent transition-all duration-500" />
       </div>
     </motion.div>
   );
@@ -548,7 +548,7 @@ function QuickViewModal({ product, onClose, onAddToCart }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[3000] flex items-center justify-center p-4"
+      className="fixed inset-0 z-3000 flex items-center justify-center p-4"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
     >
       <div className="absolute inset-0 bg-obsidian-900/90 backdrop-blur-md" onClick={onClose} />
@@ -687,10 +687,10 @@ function CartDrawer({ cart, onClose, onRemove, onUpdateQty }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[2500] flex justify-end"
+      className="fixed inset-0 z-2500 flex justify-end"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
     >
-      <div className="absolute inset-0 bg-obsidian-900/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-obsidian-900/70 backdrop-blur-xs" onClick={onClose} />
       <motion.div
         className="relative w-full max-w-sm bg-obsidian-800 border-l border-ember-400/20 flex flex-col h-full"
         initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
@@ -730,7 +730,7 @@ function CartDrawer({ cart, onClose, onRemove, onUpdateQty }) {
                 exit={{ opacity: 0, x: 20 }}
                 className="flex gap-3 border border-zinc-800 p-3 bg-obsidian-900/50"
               >
-                <img src={item.product.image} alt={item.product.name} className="w-16 h-16 object-cover flex-shrink-0 filter grayscale" />
+                <img src={item.product.image} alt={item.product.name} className="w-16 h-16 object-cover shrink-0 filter grayscale" />
                 <div className="flex-1 min-w-0">
                   <p className="font-display text-white text-xs font-bold leading-snug truncate">{item.product.name}</p>
                   <p className="font-mono text-zinc-600 text-[9px] tracking-wide mt-0.5">{item.size}</p>
@@ -783,12 +783,12 @@ function CartDrawer({ cart, onClose, onRemove, onUpdateQty }) {
                 <input
                   type="text" placeholder="Ton nom" value={formName}
                   onChange={e => setFormName(e.target.value)}
-                  className="w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white font-mono text-xs px-3 py-2.5 outline-none transition-colors"
+                  className="w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white font-mono text-xs px-3 py-2.5 outline-hidden transition-colors"
                 />
                 <input
                   type="email" placeholder="Ton courriel" value={formEmail}
                   onChange={e => setFormEmail(e.target.value)}
-                  className="w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white font-mono text-xs px-3 py-2.5 outline-none transition-colors"
+                  className="w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white font-mono text-xs px-3 py-2.5 outline-hidden transition-colors"
                 />
                 {formError && (
                   <p className="font-mono text-red-400 text-[10px]">{formError}</p>
@@ -889,7 +889,7 @@ export default function BoutiquePage() {
       {/* ── Hero 3D ─────────────────────────────────────────────────────────── */}
       <div className="relative h-72 md:h-96 flex items-end overflow-hidden">
         <BoutiqueHero3D />
-        <div className="absolute inset-0 bg-gradient-to-b from-obsidian-900/40 via-transparent to-obsidian-900" />
+        <div className="absolute inset-0 bg-linear-to-b from-obsidian-900/40 via-transparent to-obsidian-900" />
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pb-10">
           <motion.p

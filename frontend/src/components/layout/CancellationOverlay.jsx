@@ -50,7 +50,7 @@ export default function CancellationOverlay() {
       {open && (
         <motion.div
           key="cancellation-overlay"
-          className="fixed inset-0 z-[5000] flex items-center justify-center p-4 bg-obsidian-900/90 backdrop-blur-md cursor-auto"
+          className="fixed inset-0 z-5000 flex items-center justify-center p-4 bg-obsidian-900/90 backdrop-blur-md cursor-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

@@ -108,7 +108,7 @@ export default function NotFoundPage() {
           }}
         >
           <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+            className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
             animate={{ x: ['-100%', '200%'] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
           />

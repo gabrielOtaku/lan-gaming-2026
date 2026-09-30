@@ -55,12 +55,12 @@ function PartnerLogo({ partner }) {
       href={partner.url && partner.url !== "#" ? partner.url : undefined}
       target={partner.url && partner.url !== "#" ? "_blank" : undefined}
       rel="noopener noreferrer"
-      className="flex flex-col items-center gap-3 group flex-shrink-0 px-5"
+      className="flex flex-col items-center gap-3 group shrink-0 px-5"
       whileHover={{ scale: 1.08, y: -4 }}
       transition={{ duration: 0.25, ease: EASE_GAME }}
     >
       <motion.div
-        className="w-16 h-16 rounded-sm border flex items-center justify-center bg-obsidian-800 relative overflow-hidden cursor-none"
+        className="w-16 h-16 rounded-xs border flex items-center justify-center bg-obsidian-800 relative overflow-hidden cursor-none"
         style={{ borderColor: `${color}25` }}
         whileHover={{
           borderColor: color,
@@ -109,8 +109,8 @@ function InfinitePartnerTicker({ partners }) {
 
   return (
     <div className="relative overflow-hidden">
-      <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-obsidian-800 to-transparent z-10 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-obsidian-800 to-transparent z-10 pointer-events-none" />
+      <div className="absolute left-0 top-0 bottom-0 w-24 bg-linear-to-r from-obsidian-800 to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-24 bg-linear-to-l from-obsidian-800 to-transparent z-10 pointer-events-none" />
 
       <motion.div
         className="flex items-end py-6"
@@ -165,8 +165,8 @@ export default function PartnerBanner() {
     <section className="relative py-20 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-obsidian-800" />
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-ember-400/30 to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-ember-400/30 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-ember-400/30 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-ember-400/30 to-transparent" />
 
       {/* Subtle circuit board background */}
       <div

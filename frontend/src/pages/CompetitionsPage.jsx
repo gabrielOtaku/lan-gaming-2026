@@ -122,7 +122,7 @@ export default function CompetitionsPage() {
       {/* Hero */}
       <div className="relative h-72 md:h-96 flex items-end overflow-hidden mb-14">
         <CompetitionsHeroGlow />
-        <div className="absolute inset-0 bg-gradient-to-b from-obsidian-900/40 via-transparent to-obsidian-900" />
+        <div className="absolute inset-0 bg-linear-to-b from-obsidian-900/40 via-transparent to-obsidian-900" />
         <div className="relative z-10 w-full max-w-6xl mx-auto px-6 pb-8">
           <motion.p
             className="font-mono text-ember-500 text-xs tracking-[0.5em] uppercase mb-3"

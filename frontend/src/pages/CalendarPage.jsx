@@ -31,7 +31,7 @@ function CalendarHero() {
       <CalendarBackground />
 
       {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-obsidian-900/60 via-obsidian-900/40 to-obsidian-900" />
+      <div className="absolute inset-0 bg-linear-to-b from-obsidian-900/60 via-obsidian-900/40 to-obsidian-900" />
 
       {/* Decorative rune grid */}
       <div
@@ -161,11 +161,11 @@ export default function CalendarPage() {
 
         {/* Separator */}
         <div className="my-20 flex items-center gap-6">
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-ember-400/30 to-transparent" />
+          <div className="flex-1 h-px bg-linear-to-r from-transparent via-ember-400/30 to-transparent" />
           <div className="w-8 h-8 clip-hex border border-ember-400/30 flex items-center justify-center">
             <span className="text-ember-400 text-xs">◆</span>
           </div>
-          <div className="flex-1 h-px bg-gradient-to-l from-transparent via-ember-400/30 to-transparent" />
+          <div className="flex-1 h-px bg-linear-to-l from-transparent via-ember-400/30 to-transparent" />
         </div>
 
         {/* Map / Venues section */}

@@ -92,7 +92,7 @@ function CardInner({ Icon, label, value, color }) {
       style={{ clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))' }}
     >
       <div
-        className="w-10 h-10 clip-hex flex items-center justify-center flex-shrink-0 mt-0.5"
+        className="w-10 h-10 clip-hex flex items-center justify-center shrink-0 mt-0.5"
         style={{ backgroundColor: `${color}20`, borderColor: `${color}40` }}
       >
         <Icon size={16} style={{ color }} />
@@ -130,7 +130,7 @@ function FormField({ label, code, children, error }) {
 }
 
 const inputCls =
-  'w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-4 py-3 outline-none transition-all duration-300 font-body placeholder-zinc-700 focus:bg-obsidian-800/80';
+  'w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-4 py-3 outline-hidden transition-all duration-300 font-body placeholder-zinc-700 focus:bg-obsidian-800/80';
 
 const clipStyle = {
   clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))',
@@ -260,9 +260,9 @@ export default function ContactPage() {
             variants={fadeInUp}
             className="flex items-center justify-center gap-4 mt-8"
           >
-            <div className="h-px flex-1 max-w-24 bg-gradient-to-r from-transparent to-ember-400/30" />
+            <div className="h-px flex-1 max-w-24 bg-linear-to-r from-transparent to-ember-400/30" />
             <Zap size={12} className="text-ember-500" />
-            <div className="h-px flex-1 max-w-24 bg-gradient-to-l from-transparent to-ember-400/30" />
+            <div className="h-px flex-1 max-w-24 bg-linear-to-l from-transparent to-ember-400/30" />
           </motion.div>
         </motion.div>
 
@@ -459,7 +459,7 @@ export default function ContactPage() {
                             setConsent(e.target.checked);
                             if (errors.consent) setErrors((er) => ({ ...er, consent: undefined }));
                           }}
-                          className="mt-0.5 w-4 h-4 flex-shrink-0 accent-ember-400 cursor-pointer"
+                          className="mt-0.5 w-4 h-4 shrink-0 accent-ember-400 cursor-pointer"
                         />
                         <span className="font-body text-zinc-500 text-xs leading-relaxed">
                           J'accepte que les informations transmises via ce formulaire soient
@@ -512,7 +512,7 @@ export default function ContactPage() {
                     >
                       <span className="absolute inset-0 bg-ember-400 group-hover:bg-ember-300 transition-colors duration-300" />
                       <motion.span
-                        className="absolute inset-0 bg-gradient-to-r from-ember-300 via-white/20 to-ember-300 opacity-0 group-hover:opacity-100"
+                        className="absolute inset-0 bg-linear-to-r from-ember-300 via-white/20 to-ember-300 opacity-0 group-hover:opacity-100"
                         animate={{ backgroundPosition: ['200% center', '-200% center'] }}
                         transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
                         style={{ backgroundSize: '200% 100%' }}

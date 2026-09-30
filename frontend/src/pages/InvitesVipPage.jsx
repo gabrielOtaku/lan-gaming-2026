@@ -41,13 +41,13 @@ function ProgrammingInProgress() {
 // ── Carte verrouillée — teaser CSS/Framer, aucun asset 3D ────────────────────
 function LockedRevealCard() {
   return (
-    <div className="relative w-full sm:w-64 h-64 sm:h-72 mx-auto flex-shrink-0 border border-ember-400/25 bg-obsidian-900/60 overflow-hidden"
+    <div className="relative w-full sm:w-64 h-64 sm:h-72 mx-auto shrink-0 border border-ember-400/25 bg-obsidian-900/60 overflow-hidden"
       style={{ clipPath: 'polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px))' }}
     >
       <div className="absolute inset-0 bg-ember-glow opacity-30" />
       {/* Scan line */}
       <motion.div
-        className="absolute left-0 right-0 h-10 bg-gradient-to-b from-transparent via-ember-400/25 to-transparent"
+        className="absolute left-0 right-0 h-10 bg-linear-to-b from-transparent via-ember-400/25 to-transparent"
         animate={{ top: ['-15%', '110%'] }}
         transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
       />
@@ -72,13 +72,13 @@ function LockedRevealCard() {
 function UltraCharacterTeaser() {
   return (
     <motion.div
-      className="mt-10 grid grid-cols-1 sm:grid-cols-[1fr,auto] gap-6 sm:gap-10 items-center border border-ember-400/20 bg-glass p-6 md:p-10 relative overflow-hidden"
+      className="mt-10 grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-6 sm:gap-10 items-center border border-ember-400/20 bg-glass p-6 md:p-10 relative overflow-hidden"
       variants={scrollReveal}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: '-60px' }}
     >
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-px w-32 h-px bg-gradient-to-r from-transparent via-ember-400 to-transparent" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-px w-32 h-px bg-linear-to-r from-transparent via-ember-400 to-transparent" />
 
       <div className="text-center sm:text-left order-2 sm:order-1">
         <p className="font-mono text-ember-500 text-[10px] tracking-widest uppercase mb-3 flex items-center gap-2 justify-center sm:justify-start">
@@ -135,7 +135,7 @@ export default function InvitesVipPage() {
             className="flex items-center gap-4 mt-4 max-w-2xl"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}
           >
-            <div className="h-px w-12 bg-ember-400 flex-shrink-0" />
+            <div className="h-px w-12 bg-ember-400 shrink-0" />
             <p className="font-body text-zinc-500 text-sm">
               Des démarches sont en cours auprès de créateurs et d'artistes québécois.
             </p>

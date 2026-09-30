@@ -7,7 +7,7 @@ function Section({ icon: Icon, title, children }) {
   return (
     <motion.section variants={fadeInUp} className="mb-12">
       <div className="flex items-center gap-3 mb-5">
-        <div className="w-9 h-9 clip-hex flex items-center justify-center bg-ember-400/10 border border-ember-400/30 flex-shrink-0">
+        <div className="w-9 h-9 clip-hex flex items-center justify-center bg-ember-400/10 border border-ember-400/30 shrink-0">
           <Icon size={15} className="text-ember-400" />
         </div>
         <h2 className="font-display text-xl md:text-2xl font-bold text-white uppercase tracking-wide">
@@ -37,7 +37,7 @@ export default function MentionsLegalesPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-3 border border-amber-500/30 bg-amber-500/5 px-4 py-3 mb-10"
         >
-          <AlertTriangle size={16} className="text-amber-400 flex-shrink-0" />
+          <AlertTriangle size={16} className="text-amber-400 shrink-0" />
           <p className="font-mono text-amber-400 text-[11px] tracking-wide leading-relaxed">
             Modèle générique — à faire valider par le Cégep de Saint-Félicien (responsable de
             la protection des renseignements personnels) avant publication officielle, conformément à la Loi 25.

@@ -67,7 +67,7 @@ export default function FestivalFinalesProposal() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-3 border border-red-500/30 bg-red-500/5 px-4 py-3 mb-10"
         >
-          <AlertTriangle size={16} className="text-red-400 flex-shrink-0" />
+          <AlertTriangle size={16} className="text-red-400 shrink-0" />
           <p className="font-mono text-red-400 text-[11px] tracking-wide leading-relaxed">
             Document de travail interne — non public, non lié dans la navigation du site.
             Proposition à valider par le Cégep. Aucun élément ci-dessous n'est confirmé.
@@ -112,7 +112,7 @@ export default function FestivalFinalesProposal() {
                     transition={{ delay: i * 0.08 }}
                     className="grid sm:grid-cols-[180px_1fr] gap-2 sm:gap-6 p-4 sm:p-5"
                   >
-                    <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="flex items-center gap-2 shrink-0">
                       <Clock size={13} className="text-ember-500" />
                       <span className="font-mono text-ember-400 text-xs tracking-wide">{s.time}</span>
                     </div>
@@ -134,7 +134,7 @@ export default function FestivalFinalesProposal() {
               >
                 {data.contentItems.map((item) => (
                   <motion.div key={item} variants={fadeInUp} className="flex items-start gap-2.5 py-2">
-                    <span className="text-ember-500 mt-1 text-xs flex-shrink-0">◆</span>
+                    <span className="text-ember-500 mt-1 text-xs shrink-0">◆</span>
                     <span className="font-body text-zinc-400 text-sm leading-relaxed">{item}</span>
                   </motion.div>
                 ))}
@@ -206,7 +206,7 @@ export default function FestivalFinalesProposal() {
                     transition={{ delay: i * 0.05 }}
                     className="flex items-start gap-3"
                   >
-                    <span className="font-mono text-ember-500 text-xs font-bold flex-shrink-0 mt-0.5 w-5">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="font-mono text-ember-500 text-xs font-bold shrink-0 mt-0.5 w-5">{String(i + 1).padStart(2, '0')}</span>
                     <span className="font-body text-zinc-400 text-sm leading-relaxed">{d}</span>
                   </motion.li>
                 ))}

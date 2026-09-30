@@ -10,7 +10,7 @@ import FoundationBlock from "../components/home/FoundationBlock.jsx";
 function SectionDivider({ label }) {
   return (
     <div className="relative flex items-center justify-center py-2 bg-obsidian-900">
-      <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-ember-400/20 to-transparent" />
+      <div className="absolute left-0 right-0 h-px bg-linear-to-r from-transparent via-ember-400/20 to-transparent" />
       {label && (
         <div className="relative z-10 px-4 py-1 bg-obsidian-900 border border-ember-400/10">
           <span className="font-mono text-ember-700 text-[9px] tracking-[0.5em] uppercase">

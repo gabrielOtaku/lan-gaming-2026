@@ -87,7 +87,7 @@ function PulsingHeart() {
       ))}
 
       {/* Icon */}
-      <div className="relative w-24 h-24 clip-hex bg-gradient-to-br from-blood-mid to-blood-dark border border-red-900/40 flex items-center justify-center">
+      <div className="relative w-24 h-24 clip-hex bg-linear-to-br from-blood-mid to-blood-dark border border-red-900/40 flex items-center justify-center">
         <Heart size={36} className="text-red-400 fill-red-400" />
       </div>
     </motion.div>
@@ -108,7 +108,7 @@ function MissionItem({ text, index }) {
       transition={{ delay: index * 0.1, duration: 0.5, ease: EASE_GAME }}
     >
       <motion.span
-        className="flex-shrink-0 mt-1"
+        className="shrink-0 mt-1"
         animate={{ rotate: [0, 360] }}
         transition={{ duration: 8 + index, repeat: Infinity, ease: 'linear' }}
       >
@@ -153,7 +153,7 @@ function Lightbox({ photos, activeIndex, onClose, onPrev, onNext }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[3000] flex items-center justify-center bg-obsidian-900/95 backdrop-blur-xl p-4"
+      className="fixed inset-0 z-3000 flex items-center justify-center bg-obsidian-900/95 backdrop-blur-xl p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -274,12 +274,12 @@ function FoundationGallery() {
         whileInView="visible"
         viewport={{ once: true }}
       >
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-red-900/40 to-transparent" />
+        <div className="h-px flex-1 bg-linear-to-r from-transparent via-red-900/40 to-transparent" />
         <div className="flex items-center gap-2">
           <ImageIcon size={14} className="text-red-400/60" />
           <span className="font-mono text-red-400/60 text-[10px] tracking-[0.4em] uppercase">Galerie Photos</span>
         </div>
-        <div className="h-px flex-1 bg-gradient-to-l from-transparent via-red-900/40 to-transparent" />
+        <div className="h-px flex-1 bg-linear-to-l from-transparent via-red-900/40 to-transparent" />
       </motion.div>
 
       {/* Photo grid */}
@@ -317,7 +317,7 @@ function FoundationGallery() {
                     className="absolute inset-0 opacity-40 mix-blend-overlay pointer-events-none"
                     style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(79,195,247,0.5) 3px, rgba(79,195,247,0.5) 4px)' }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-obsidian-900/85 via-rune-blue/10 to-transparent group-hover:from-obsidian-900/50 transition-colors duration-300" />
+                  <div className="absolute inset-0 bg-linear-to-t from-obsidian-900/85 via-rune-blue/10 to-transparent group-hover:from-obsidian-900/50 transition-colors duration-300" />
                   {[['top-1.5 left-1.5', 'border-t border-l'], ['top-1.5 right-1.5', 'border-t border-r'], ['bottom-1.5 left-1.5', 'border-b border-l'], ['bottom-1.5 right-1.5', 'border-b border-r']].map(([pos, brd]) => (
                     <span key={pos} className={`absolute ${pos} w-3 h-3 ${brd} border-rune-blue/70`} />
                   ))}
@@ -328,7 +328,7 @@ function FoundationGallery() {
               ) : (
                 <>
                   {/* Charity overlay — warm vignette + heart badge */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-blood-dark/70 via-obsidian-900/40 to-transparent group-hover:from-blood-dark/30 group-hover:via-obsidian-900/10 transition-colors duration-300" />
+                  <div className="absolute inset-0 bg-linear-to-t from-blood-dark/70 via-obsidian-900/40 to-transparent group-hover:from-blood-dark/30 group-hover:via-obsidian-900/10 transition-colors duration-300" />
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ boxShadow: 'inset 0 0 40px rgba(139,0,0,0.35)' }} />
                   <div className="absolute top-2 left-2 w-5 h-5 rounded-full bg-blood-mid/70 border border-red-400/40 flex items-center justify-center">
                     <Heart size={9} className="text-red-300 fill-red-300" />
@@ -381,7 +381,7 @@ export default function FoundationBlock() {
         className="absolute inset-0"
         style={{ y: bgY }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-obsidian-900 via-blood-dark/20 to-obsidian-900" />
+        <div className="absolute inset-0 bg-linear-to-b from-obsidian-900 via-blood-dark/20 to-obsidian-900" />
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full opacity-20"
           style={{ background: 'radial-gradient(ellipse, rgba(139,0,0,0.4) 0%, transparent 70%)' }}
@@ -390,7 +390,7 @@ export default function FoundationBlock() {
 
       {/* Decorative top border */}
       <div className="absolute top-0 left-0 right-0">
-        <div className="h-px bg-gradient-to-r from-transparent via-red-900/50 to-transparent" />
+        <div className="h-px bg-linear-to-r from-transparent via-red-900/50 to-transparent" />
         <div className="flex justify-center -mt-3">
           <div className="px-6 py-1 bg-obsidian-900 border border-red-900/30">
             <span className="font-mono text-red-900/60 text-[10px] tracking-widest uppercase">Partenaire caritatif</span>
@@ -492,7 +492,7 @@ export default function FoundationBlock() {
 
             {/* Featured quote / callout */}
             <div className="border border-red-900/30 bg-blood-dark/20 p-6 md:p-8 relative">
-              <div className="absolute top-0 left-6 -translate-y-px w-16 h-px bg-gradient-to-r from-transparent via-red-700 to-transparent" />
+              <div className="absolute top-0 left-6 -translate-y-px w-16 h-px bg-linear-to-r from-transparent via-red-700 to-transparent" />
 
               <p className="font-rune text-red-300/80 text-lg leading-relaxed mb-6">
                 "Chaque ticket acheté pour Lan St-Jean, c'est un coup de pouce concret pour un étudiant qui en a besoin."
@@ -516,7 +516,7 @@ export default function FoundationBlock() {
             {/* Visual element — allocation donut placeholder */}
             <div className="border border-ember-400/10 bg-glass p-6 flex items-center gap-6">
               {/* Donut chart visual */}
-              <div className="relative w-20 h-20 flex-shrink-0">
+              <div className="relative w-20 h-20 shrink-0">
                 <svg viewBox="0 0 80 80" className="w-20 h-20 -rotate-90">
                   <circle cx="40" cy="40" r="30" fill="none" stroke="#1A2332" strokeWidth="12" />
                   <motion.circle

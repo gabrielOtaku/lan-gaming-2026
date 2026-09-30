@@ -274,7 +274,7 @@ function TimerDigit({ value, label, code }) {
       >
         <motion.div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ opacity: 0.12 }}>
           <motion.div
-            className="absolute left-0 right-0 h-6 bg-gradient-to-b from-transparent via-ember-400/30 to-transparent"
+            className="absolute left-0 right-0 h-6 bg-linear-to-b from-transparent via-ember-400/30 to-transparent"
             animate={{ top: ["-40%", "120%"] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: "linear", repeatDelay: 3 }}
           />
@@ -473,7 +473,7 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-blood-vignette pointer-events-none" />
 
       {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-obsidian-900 to-transparent pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-obsidian-900 to-transparent pointer-events-none z-0" />
 
       {/* Hero content */}
       <div className="relative z-10 min-h-full flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-20 pb-28 sm:pb-32">
@@ -481,7 +481,7 @@ export default function HeroSection() {
           {/* Badge */}
           <motion.div
             variants={fadeInUp}
-            className="inline-flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-1.5 border border-ember-400/30 bg-ember-600/10 rounded-sm mb-5 sm:mb-8"
+            className="inline-flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-1.5 border border-ember-400/30 bg-ember-600/10 rounded-xs mb-5 sm:mb-8"
           >
             <Zap size={12} className="text-ember-300" />
             <span className="font-mono text-ember-400 text-xs tracking-[0.3em] uppercase">
@@ -567,7 +567,7 @@ export default function HeroSection() {
                 whileTap={{ scale: 0.97 }}
               >
                 <span className="absolute inset-0 bg-ember-400 transition-transform duration-300 group-hover:scale-105" />
-                <motion.span className="absolute inset-0 bg-gradient-to-r from-ember-300 via-ember-200 to-ember-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <motion.span className="absolute inset-0 bg-linear-to-r from-ember-300 via-ember-200 to-ember-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="relative font-display font-bold text-obsidian-900 text-sm tracking-widest uppercase flex items-center gap-2">
                   <Zap size={14} />
                   Billetterie bientôt disponible

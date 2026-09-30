@@ -83,7 +83,7 @@ function FundingBar({ current, goal, color = "#C89B3C" }) {
           animate={{ width: inView ? `${pct}%` : 0 }}
           transition={{ duration: 2, ease: EASE_GAME, delay: 0.3 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_2s_infinite]" />
+          <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent animate-[shimmer_2s_infinite]" />
         </motion.div>
       </div>
       <div className="flex justify-between items-center mt-2">
@@ -164,7 +164,7 @@ function TicketOrCard({ data, onPurchase, comingSoon = false }) {
               Moitié-Moitié · Fondation CSF
             </p>
           </div>
-          <div className="text-right flex-shrink-0">
+          <div className="text-right shrink-0">
             <p className="font-display font-black text-4xl text-amber-300">
               {data.ticketOrPrice || 10}$
             </p>
@@ -229,7 +229,7 @@ function TicketOrCard({ data, onPurchase, comingSoon = false }) {
             },
           ].map(({ icon: Icon, text }, i) => (
             <div key={i} className="flex items-start gap-3">
-              <Icon size={13} className="text-amber-500 mt-0.5 flex-shrink-0" />
+              <Icon size={13} className="text-amber-500 mt-0.5 shrink-0" />
               <span className="font-body text-zinc-400 text-sm leading-relaxed">
                 {text}
               </span>
@@ -312,7 +312,7 @@ function TicketOrCard({ data, onPurchase, comingSoon = false }) {
             whileTap={{ scale: 0.98 }}
           >
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+              className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
               animate={{ x: ["-100%", "200%"] }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             />
@@ -360,7 +360,7 @@ function PurchaseModal({ onClose, ticketPrice }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[3000] flex items-center justify-center p-4"
+      className="fixed inset-0 z-3000 flex items-center justify-center p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -443,7 +443,7 @@ function PurchaseModal({ onClose, ticketPrice }) {
                   onChange={(e) => setName(e.target.value)}
                   required
                   placeholder="Jean Tremblay"
-                  className="w-full bg-obsidian-900 border border-zinc-800 focus:border-amber-400/60 text-white text-sm px-3 py-2.5 outline-none transition-colors font-body placeholder-zinc-700"
+                  className="w-full bg-obsidian-900 border border-zinc-800 focus:border-amber-400/60 text-white text-sm px-3 py-2.5 outline-hidden transition-colors font-body placeholder-zinc-700"
                   style={{
                     clipPath:
                       "polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))",
@@ -460,7 +460,7 @@ function PurchaseModal({ onClose, ticketPrice }) {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="ton@courriel.ca"
-                  className="w-full bg-obsidian-900 border border-zinc-800 focus:border-amber-400/60 text-white text-sm px-3 py-2.5 outline-none transition-colors font-body placeholder-zinc-700"
+                  className="w-full bg-obsidian-900 border border-zinc-800 focus:border-amber-400/60 text-white text-sm px-3 py-2.5 outline-hidden transition-colors font-body placeholder-zinc-700"
                   style={{
                     clipPath:
                       "polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))",
@@ -879,7 +879,7 @@ export default function CagnottePage() {
               }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 rounded-sm bg-purple-600/20 border border-purple-600/40 flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 rounded-xs bg-purple-600/20 border border-purple-600/40 flex items-center justify-center shrink-0">
                   <svg
                     width="14"
                     height="14"

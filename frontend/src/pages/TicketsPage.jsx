@@ -111,7 +111,7 @@ function TicketsHero({ salesEnabled }) {
   return (
     <div className="relative h-72 md:h-96 flex items-end overflow-hidden">
       <TicketBackground />
-      <div className="absolute inset-0 bg-gradient-to-b from-obsidian-900/50 via-transparent to-obsidian-900" />
+      <div className="absolute inset-0 bg-linear-to-b from-obsidian-900/50 via-transparent to-obsidian-900" />
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pb-12">
         <motion.p
           className="font-mono text-ember-500 text-xs tracking-[0.5em] uppercase mb-3"
@@ -200,7 +200,7 @@ function EventInfoBar({ showCapacity, inventory }) {
               key={label}
               className="flex items-center gap-3 md:px-6 first:pl-0 last:pr-0"
             >
-              <Icon size={16} className="text-ember-500 flex-shrink-0" />
+              <Icon size={16} className="text-ember-500 shrink-0" />
               <div>
                 <p className="font-mono text-zinc-700 text-[10px] tracking-widest uppercase">
                   {label}
@@ -249,7 +249,7 @@ function CountdownDeadline({ deadline, salesClosed }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        <AlertTriangle size={16} className="text-red-400 flex-shrink-0" />
+        <AlertTriangle size={16} className="text-red-400 shrink-0" />
         <p className="font-mono text-red-400 text-xs tracking-wide">
           <span className="font-bold">Billetterie fermée</span> — La vente de
           billets est terminée. À bientôt dans l'arène !
@@ -276,7 +276,7 @@ function CountdownDeadline({ deadline, salesClosed }) {
     >
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Timer size={15} className="text-ember-400 flex-shrink-0" />
+          <Timer size={15} className="text-ember-400 shrink-0" />
           <div>
             <p className="font-mono text-ember-500 text-[10px] tracking-[0.4em] uppercase">
               Fermeture des ventes
@@ -431,7 +431,7 @@ function FaqItem({ item, index }) {
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: 0.25 }}
-          className="flex-shrink-0 ml-4"
+          className="shrink-0 ml-4"
         >
           <ChevronDown
             size={16}

@@ -15,7 +15,7 @@ function NexusAvatar({ isLoading, isSpeaking }) {
   const pulseSpeed = isLoading ? 0.5 : isSpeaking ? 0.8 : 2.5;
 
   return (
-    <div className="relative w-14 h-14 flex-shrink-0">
+    <div className="relative w-14 h-14 shrink-0">
       {/* Outer orbit ring */}
       <motion.div
         className="absolute inset-0 rounded-full border border-ember-400/35"
@@ -38,7 +38,7 @@ function NexusAvatar({ isLoading, isSpeaking }) {
       {/* Central core */}
       <div className="absolute inset-0 flex items-center justify-center">
         <motion.div
-          className="w-6 h-6 clip-hex bg-gradient-to-br from-obsidian-800 to-obsidian-900 border border-ember-400/60 flex items-center justify-center"
+          className="w-6 h-6 clip-hex bg-linear-to-br from-obsidian-800 to-obsidian-900 border border-ember-400/60 flex items-center justify-center"
           animate={{ scale: isLoading ? [1, 1.18, 1] : isSpeaking ? [1, 1.1, 1] : 1 }}
           transition={{ duration: pulseSpeed, repeat: Infinity }}
         >
@@ -58,7 +58,7 @@ function NexusAvatar({ isLoading, isSpeaking }) {
       {/* Horizontal scan line */}
       <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-ember-400/40 to-transparent"
+          className="absolute left-0 right-0 h-px bg-linear-to-r from-transparent via-ember-400/40 to-transparent"
           animate={{ top: ['0%', '100%', '0%'] }}
           transition={{ duration: isLoading ? 0.9 : 2.5, repeat: Infinity, ease: 'linear' }}
         />
@@ -266,7 +266,7 @@ export default function Chatbot() {
   }, [input, isLoading, isOpen]);
 
   return (
-    <div className="fixed bottom-5 right-5 z-[9000] flex flex-col items-end gap-3">
+    <div className="fixed bottom-5 right-5 z-9000 flex flex-col items-end gap-3">
       {/* ── Chat panel ── */}
       <AnimatePresence>
         {isOpen && (

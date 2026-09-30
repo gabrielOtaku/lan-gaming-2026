@@ -45,7 +45,7 @@ export default function Loader({ onComplete }) {
       {!done && (
         <motion.div
           key="loader"
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-obsidian-900 overflow-hidden"
+          className="fixed inset-0 z-9999 flex flex-col items-center justify-center bg-obsidian-900 overflow-hidden"
           variants={loaderExit}
           initial="initial"
           exit="exit"
@@ -58,7 +58,7 @@ export default function Loader({ onComplete }) {
 
           {/* Horizontal scan line */}
           <motion.div
-            className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-ember-300 to-transparent opacity-40"
+            className="absolute left-0 right-0 h-px bg-linear-to-r from-transparent via-ember-300 to-transparent opacity-40"
             animate={{ top: ['0%', '100%'] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
           />
@@ -153,7 +153,7 @@ export default function Loader({ onComplete }) {
 
               {/* Glow pulse at leading edge */}
               <motion.div
-                className="absolute top-0 h-full w-4 blur-sm bg-ember-200 opacity-80"
+                className="absolute top-0 h-full w-4 blur-xs bg-ember-200 opacity-80"
                 style={{ left: `${Math.max(0, progress - 2)}%` }}
               />
             </div>

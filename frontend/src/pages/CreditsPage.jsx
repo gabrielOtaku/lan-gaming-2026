@@ -70,7 +70,7 @@ function ModelCard({ model, index }) {
       <div className="flex items-start justify-between gap-3 mb-2">
         <h3 className="font-display text-white text-base font-bold leading-snug">{model.name}</h3>
         <span
-          className={`flex-shrink-0 font-mono text-[10px] tracking-widest uppercase px-2 py-0.5 border ${
+          className={`shrink-0 font-mono text-[10px] tracking-widest uppercase px-2 py-0.5 border ${
             model.note
               ? 'text-red-400 border-red-500/30 bg-red-500/10'
               : 'text-ember-400 border-ember-400/30 bg-ember-400/10'

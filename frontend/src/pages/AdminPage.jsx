@@ -46,7 +46,7 @@ function FlagToggle({ label, hint, checked, onChange, disabled }) {
         {hint && <p className="font-mono text-zinc-700 text-[9px] mt-0.5">{hint}</p>}
       </div>
       <span
-        className="relative flex-shrink-0 w-9 h-5 rounded-full transition-colors"
+        className="relative shrink-0 w-9 h-5 rounded-full transition-colors"
         style={{ background: checked ? '#C89B3C' : '#27272a' }}
       >
         <span
@@ -195,7 +195,7 @@ function TicketManager() {
                     max={inv.capacity}
                     value={editVal}
                     onChange={e => setEditVal(e.target.value)}
-                    className="flex-1 bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-2 py-1.5 outline-none font-mono"
+                    className="flex-1 bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-2 py-1.5 outline-hidden font-mono"
                     style={{ clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}
                   />
                   <button
@@ -324,7 +324,7 @@ function CagnotteManager() {
                     min="0"
                     value={val}
                     onChange={e => setVal(e.target.value)}
-                    className="flex-1 bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-2 py-1.5 outline-none font-mono"
+                    className="flex-1 bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-2 py-1.5 outline-hidden font-mono"
                     style={{ clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}
                   />
                   <button
@@ -365,7 +365,7 @@ function MatchScoreRow({ match, game, color, onUpdated }) {
   if (match.status === 'bye' || !match.team1 || !match.team2) return null;
 
   const isDone = match.status === 'completed';
-  const inputBase = "w-12 text-center bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-1 py-1 outline-none font-mono transition-colors";
+  const inputBase = "w-12 text-center bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-1 py-1 outline-hidden font-mono transition-colors";
 
   const save = async () => {
     const n1 = parseInt(s1, 10);
@@ -380,7 +380,7 @@ function MatchScoreRow({ match, game, color, onUpdated }) {
   };
 
   return (
-    <div className={`flex items-center gap-2 py-1.5 px-2 rounded ${isDone ? 'opacity-60' : ''}`}>
+    <div className={`flex items-center gap-2 py-1.5 px-2 rounded-sm ${isDone ? 'opacity-60' : ''}`}>
       {/* Team 1 */}
       <span className="font-mono text-[10px] text-zinc-400 flex-1 text-right truncate max-w-[100px]" title={match.team1?.name}>
         {match.winner?.id === match.team1?.id
@@ -734,7 +734,7 @@ export default function AdminPage() {
               Déconnexion
             </motion.button>
           </div>
-          <div className="h-px max-w-sm mt-6 bg-gradient-to-r from-ember-400/50 to-transparent" />
+          <div className="h-px max-w-sm mt-6 bg-linear-to-r from-ember-400/50 to-transparent" />
         </motion.div>
 
         {/* Stats row */}
@@ -832,7 +832,7 @@ export default function AdminPage() {
                 whileHover={{ x: 3 }}
               >
                 <span className="font-body text-zinc-400 group-hover:text-zinc-200 text-sm transition-colors truncate">{label}</span>
-                <Icon size={13} style={{ color }} className="flex-shrink-0 ml-2" />
+                <Icon size={13} style={{ color }} className="shrink-0 ml-2" />
               </motion.a>
             ))}
           </div>

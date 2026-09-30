@@ -78,7 +78,7 @@ function LoginModal({ onClose }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[2000] flex items-center justify-center p-4"
+      className="fixed inset-0 z-2000 flex items-center justify-center p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -136,7 +136,7 @@ function LoginModal({ onClose }) {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@cegepstfe.ca"
               required
-              className="w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-3 py-2.5 outline-none transition-colors font-body placeholder-zinc-700"
+              className="w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-3 py-2.5 outline-hidden transition-colors font-body placeholder-zinc-700"
               style={{ clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}
             />
           </div>
@@ -148,7 +148,7 @@ function LoginModal({ onClose }) {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-3 py-2.5 outline-none transition-colors font-body placeholder-zinc-700"
+              className="w-full bg-obsidian-900 border border-zinc-800 focus:border-ember-400/60 text-white text-sm px-3 py-2.5 outline-hidden transition-colors font-body placeholder-zinc-700"
               style={{ clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}
             />
           </div>
@@ -198,7 +198,7 @@ export default function Navbar() {
   return (
     <>
       <motion.header
-        className="fixed top-0 left-0 right-0 z-[1000]"
+        className="fixed top-0 left-0 right-0 z-1000"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -212,9 +212,9 @@ export default function Navbar() {
         >
           <nav className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink-0">
+            <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
               <motion.div
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden flex-shrink-0"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden shrink-0"
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 whileTap={{ scale: 0.95 }}
                 animate={{ boxShadow: ['0 0 10px rgba(200,155,60,0.4)', '0 0 25px rgba(255,215,0,0.7)', '0 0 10px rgba(200,155,60,0.4)'] }}
@@ -236,7 +236,7 @@ export default function Navbar() {
                   <Link key={to} to={to}>
                     <motion.div className="relative px-3 py-2 group" whileHover="hover" initial="rest">
                       <motion.span
-                        className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-transparent via-ember-300 to-transparent"
+                        className="absolute bottom-0 left-0 h-px bg-linear-to-r from-transparent via-ember-300 to-transparent"
                         animate={{ width: isActive ? '100%' : '0%' }}
                         variants={{ rest: { width: isActive ? '100%' : '0%' }, hover: { width: '100%' } }}
                         transition={{ duration: 0.3 }}
@@ -263,7 +263,7 @@ export default function Navbar() {
                     {isAdmin && (
                       <Link to="/admin">
                         <motion.div
-                          className="flex items-center gap-1.5 px-2.5 py-1.5 border border-ember-400/40 bg-ember-400/10 hover:bg-ember-400/20 transition-all rounded-sm"
+                          className="flex items-center gap-1.5 px-2.5 py-1.5 border border-ember-400/40 bg-ember-400/10 hover:bg-ember-400/20 transition-all rounded-xs"
                           whileHover={{ scale: 1.05 }}
                         >
                           <Shield size={12} className="text-ember-300" />
@@ -283,7 +283,7 @@ export default function Navbar() {
                     </div>
                     <motion.button
                       onClick={logout}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 border border-zinc-800 hover:border-red-500/40 bg-zinc-900/40 hover:bg-red-500/10 transition-all duration-200 rounded-sm"
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 border border-zinc-800 hover:border-red-500/40 bg-zinc-900/40 hover:bg-red-500/10 transition-all duration-200 rounded-xs"
                       whileHover={{ scale: 1.05 }}
                       title="Déconnexion"
                     >
@@ -295,7 +295,7 @@ export default function Navbar() {
                   <>
                     <motion.button
                       onClick={() => setLoginOpen(true)}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 border border-zinc-800 hover:border-zinc-600 bg-zinc-900/40 hover:bg-zinc-800/60 transition-all duration-200 rounded-sm"
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 border border-zinc-800 hover:border-zinc-600 bg-zinc-900/40 hover:bg-zinc-800/60 transition-all duration-200 rounded-xs"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       title="Connexion Google"
@@ -305,7 +305,7 @@ export default function Navbar() {
                     </motion.button>
                     <motion.button
                       onClick={() => setLoginOpen(true)}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 border border-zinc-800 hover:border-zinc-600 bg-zinc-900/40 hover:bg-zinc-800/60 transition-all duration-200 rounded-sm"
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 border border-zinc-800 hover:border-zinc-600 bg-zinc-900/40 hover:bg-zinc-800/60 transition-all duration-200 rounded-xs"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       title="Connexion Microsoft"
@@ -359,12 +359,12 @@ export default function Navbar() {
         {menuOpen && (
           <>
             <motion.div
-              className="fixed inset-0 z-[998] md:hidden bg-obsidian-900/80 backdrop-blur-sm"
+              className="fixed inset-0 z-998 md:hidden bg-obsidian-900/80 backdrop-blur-xs"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setMenuOpen(false)}
             />
             <motion.aside
-              className="fixed top-0 right-0 bottom-0 z-[999] md:hidden w-72 bg-obsidian-800 border-l border-ember-400/20 flex flex-col"
+              className="fixed top-0 right-0 bottom-0 z-999 md:hidden w-72 bg-obsidian-800 border-l border-ember-400/20 flex flex-col"
               initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 280 }}
             >
